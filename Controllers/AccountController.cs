@@ -90,18 +90,18 @@ namespace SecondhandStore.Controllers
         }
 
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> DeleteRole(int id)
-        //{
-        //    var existingRole = await _roleService.GetRoleById(id);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccount(string id)
+        {
+            var existingAccount = await _accountService.GetAccountById(id);
 
-        //    if (existingRole.ToString() is null)
-        //        return NotFound();
+            if (existingAccount.ToString() is null)
+                return NotFound();
 
-        //    await _roleService.DeleteRole(existingRole);
+            await _accountService.DeleteAccount(existingAccount);
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
 
 
