@@ -6,13 +6,16 @@ namespace SecondhandStore.Infrastructure
 {
     public partial class SecondhandStoreContext : DbContext
     {
-        public SecondhandStoreContext()
+        private readonly IConfiguration _configuration;
+        public SecondhandStoreContext(IConfiguration configuration)
         {
+            this._configuration = configuration;
         }
 
-        public SecondhandStoreContext(DbContextOptions<SecondhandStoreContext> options)
+        public SecondhandStoreContext(DbContextOptions<SecondhandStoreContext> options, IConfiguration configuration)
             : base(options)
         {
+            this._configuration = configuration;
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
@@ -28,11 +31,9 @@ namespace SecondhandStore.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=12345;database=SecondhandStore;TrustServerCertificate=True");
-            }
+            if (optionsBuilder.IsConfigured) 
+                return;
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:SecondhandStoreDB"]);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

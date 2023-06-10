@@ -21,11 +21,11 @@ public class AccountService
         return await _accountRepository.GetAll();
     }
 
-    public async Task<Account> GetAccountById(string id)
+    public async Task<Account?> GetAccountById(string id)
     {
         return await _accountRepository.GetById(id);
     }
-
+    
     public async Task AddAccount(Account account)
     {
         await _accountRepository.Add(account);

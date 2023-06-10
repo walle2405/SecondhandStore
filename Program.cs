@@ -13,7 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<SecondhandStoreContext>();
+builder.Services.AddDbContext<SecondhandStoreContext>(options =>
+    options.EnableSensitiveDataLogging());
 
 builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<RoleService>();

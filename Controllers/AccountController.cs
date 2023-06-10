@@ -34,7 +34,7 @@ namespace SecondhandStore.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountById(string id)
         {   var existingAccount = await _accountService.GetAccountById(id);
-            if (existingAccount == null) 
+            if (existingAccount is null) 
                 return NotFound();
             return Ok(existingAccount);
         }
@@ -54,13 +54,35 @@ namespace SecondhandStore.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
         {
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
-            mappedAccount.AccountId = id;
-
+            /*
             var existingAccount = await _accountService.GetAccountById(id);
 
             if (existingAccount.ToString() is null)
                 return NotFound();
+            
+            existingAccount.Password = accountUpdateRequest.Password;
+            existingAccount.Fullname = accountUpdateRequest.Fullname;
+            existingAccount.Email = accountUpdateRequest.Email;
+            existingAccount.Address = accountUpdateRequest.Address;
+            existingAccount.PhoneNo = accountUpdateRequest.PhoneNo;
+            existingAccount.IsActive = accountUpdateRequest.IsActive;
+            existingAccount.RoleId = existingAccount.RoleId;
+            
+            
+            if (existingAccount.ToString() is null)
+                return NotFound();
+            
+            await _accountService.UpdateAccount(existingAccount);
+
+            return NoContent();
+            */
+            
+            var existingAccount = await _accountService.GetAccountById(id);
+
+            if (existingAccount is null)
+                return NotFound();
+            
+            var mappedAccount = _mapper.Map<Account>(existingAccount);
 
             await _accountService.UpdateAccount(mappedAccount);
 
