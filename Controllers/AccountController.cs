@@ -76,31 +76,47 @@ namespace SecondhandStore.Controllers
 
             return NoContent();
             */
-            
-            var existingAccount = await _accountService.GetAccountById(id);
+            try
+            {
+                var existingAccount = await _accountService.GetAccountById(id);
 
-            if (existingAccount is null)
-                return NotFound();
-            
-            var mappedAccount = _mapper.Map<Account>(existingAccount);
+                if (existingAccount is null)
+                    return NotFound();
 
-            await _accountService.UpdateAccount(mappedAccount);
+                var mappedAccount = _mapper.Map<Account>(existingAccount);
 
-            return NoContent();
+                await _accountService.UpdateAccount(mappedAccount);
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Invalid Request");
+            }
         }
 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
-            var existingAccount = await _accountService.GetAccountById(id);
+            try
+            {
+                var existingAccount = await _accountService.GetAccountById(id);
 
-            if (existingAccount.ToString() is null)
-                return NotFound();
+                if (existingAccount.ToString() is null)
+                    return NotFound();
 
-            await _accountService.DeleteAccount(existingAccount);
+                await _accountService.DeleteAccount(existingAccount);
 
-            return NoContent();
+                return NoContent();
+            } 
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                "Invalid Request");
+            }
+            
         }
 
 
