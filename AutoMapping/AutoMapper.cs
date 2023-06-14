@@ -45,4 +45,9 @@ public class AutoMapper : Profile
         CreateMap<AccountUpdateRequest, Account>()
             .ReverseMap();
     }
+    private void MapDeactivateAccount()
+    {
+        CreateMap<Account, AccountDeactivateRequest>() 
+            .ReverseMap();
+    }
 }

@@ -98,7 +98,8 @@ namespace SecondhandStore.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(string id)
+        
+        public async Task<IActionResult> DeactivateAccount(string id, AccountDeactivateRequest accountDeactivateRequest)
         {
             try
             {
@@ -107,7 +108,11 @@ namespace SecondhandStore.Controllers
                 if (existingAccount.ToString() is null)
                     return NotFound();
 
-                await _accountService.DeleteAccount(existingAccount);
+                //await _accountService.DeleteAccount(existingAccount);
+                var deactivateMappedAccount = _mapper.Map<Account>(existingAccount);
+                deactivateMappedAccount.IsActive = false;
+                await _accountService.UpdateAccount(deactivateMappedAccount);
+
 
                 return NoContent();
             } 
