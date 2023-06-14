@@ -22,6 +22,8 @@ builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<AccountRepository>();
 builder.Services.AddScoped<AccountService>();
 
+builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<PostService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
