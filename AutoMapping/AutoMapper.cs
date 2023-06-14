@@ -52,4 +52,11 @@ public class AutoMapper : Profile
         CreateMap<AccountDeactivateRequest, Account>()
             .ReverseMap();
     }
+    private void MapTopUp()
+    {
+        CreateMap<TopUp, TopUpCreateRequest>()
+            .ReverseMap();
+        CreateMap<TopUpCreateRequest, TopUp>()
+           .ReverseMap();
+    }
 }
