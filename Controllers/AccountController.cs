@@ -83,7 +83,7 @@ namespace SecondhandStore.Controllers
                 if (existingAccount is null)
                     return NotFound();
 
-                var mappedAccount = _mapper.Map<Account>(existingAccount);
+                var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
 
                 await _accountService.UpdateAccount(mappedAccount);
 
@@ -97,22 +97,20 @@ namespace SecondhandStore.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpPut("{id}/toggle-status")]
         
-        public async Task<IActionResult> DeactivateAccount(string id, AccountDeactivateRequest accountDeactivateRequest)
+        public async Task<IActionResult> ToggleAccountStatus(string id)
         {
             try
             {
                 var existingAccount = await _accountService.GetAccountById(id);
 
-                if (existingAccount.ToString() is null)
+                if (existingAccount is null)
                     return NotFound();
-
-                //await _accountService.DeleteAccount(existingAccount);
-                var deactivateMappedAccount = _mapper.Map<Account>(existingAccount);
-                deactivateMappedAccount.IsActive = false;
-                await _accountService.UpdateAccount(deactivateMappedAccount);
-
+                
+                existingAccount.IsActive = !existingAccount.IsActive;
+                
+                await _accountService.UpdateAccount(existingAccount);
 
                 return NoContent();
             } 

@@ -6,16 +6,13 @@ namespace SecondhandStore.Infrastructure
 {
     public partial class SecondhandStoreContext : DbContext
     {
-        private readonly IConfiguration _configuration;
-        public SecondhandStoreContext(IConfiguration configuration)
+        public SecondhandStoreContext()
         {
-            this._configuration = configuration;
         }
 
-        public SecondhandStoreContext(DbContextOptions<SecondhandStoreContext> options, IConfiguration configuration)
+        public SecondhandStoreContext(DbContextOptions<SecondhandStoreContext> options)
             : base(options)
         {
-            this._configuration = configuration;
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
@@ -33,7 +30,6 @@ namespace SecondhandStore.Infrastructure
         {
             if (optionsBuilder.IsConfigured) 
                 return;
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:SecondhandStoreDB"]);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

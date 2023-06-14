@@ -2,6 +2,6 @@
 {
     public class AccountDeactivateRequest
     {
-        public Boolean IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

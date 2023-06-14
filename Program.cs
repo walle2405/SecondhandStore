@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.Repository;
 using SecondhandStore.Services;
@@ -8,13 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var config = builder.Configuration;
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SecondhandStoreContext>(options =>
-    options.EnableSensitiveDataLogging());
+    options.UseSqlServer(config["ConnectionStrings:SecondhandStoreDB"])
+        .EnableSensitiveDataLogging());
+        //.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
 builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<RoleService>();
