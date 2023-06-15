@@ -28,6 +28,9 @@ builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<PostRepository>();
 builder.Services.AddScoped<PostService>();
 
+builder.Services.AddScoped<TopUpRepository>();
+builder.Services.AddScoped<TopUpService>();
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
