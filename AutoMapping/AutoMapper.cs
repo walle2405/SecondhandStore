@@ -11,6 +11,7 @@ public class AutoMapper : Profile
     {
         MapRole();
         MapAccount();
+        MapTopUp();
     }
 
     private void MapRole()
@@ -51,5 +52,12 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<AccountDeactivateRequest, Account>()
             .ReverseMap();
+    }
+    private void MapTopUp()
+    {
+        CreateMap<TopUp, TopUpCreateRequest>()
+            .ReverseMap();
+        CreateMap<TopUpCreateRequest, TopUp>()
+           .ReverseMap();
     }
 }
