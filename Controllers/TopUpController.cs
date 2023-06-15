@@ -40,16 +40,16 @@ namespace SecondhandStore.Controllers
             return Ok(existingTopup);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
-        //{
-        //    var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
+        [HttpPost]
+        public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
+        {
+            var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
 
-        //    await _topupService.AddTopUp(mappedTopup);
+            await _topupService.AddTopUp(mappedTopup);
 
-        //    return CreatedAtAction(nameof(GetTopupList),
-        //        new { id = mappedTopup.OrderId },
-        //        mappedTopup);
-        //}
+            return CreatedAtAction(nameof(GetTopupList),
+                new { id = mappedTopup.OrderId },
+                mappedTopup);
+        }
     }
 }
