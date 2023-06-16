@@ -7,7 +7,7 @@ using SecondhandStore.Services;
 namespace SecondhandStore.Controllers
 {
     [ApiController]
-    [Route("account")]
+    [Route("[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly AccountService _accountService;
@@ -20,6 +20,7 @@ namespace SecondhandStore.Controllers
 
         // GET all action
         [HttpGet]
+        [Route("/api/[controller]/get-account-list")]
         public async Task<IActionResult> GetAccountList()
         {
             var accountList = await _accountService.GetAllAccounts();
@@ -31,7 +32,8 @@ namespace SecondhandStore.Controllers
         }
 
         // GET by Id action
-        [HttpGet("{id}")]
+        [HttpGet("/api/[controller]/get-account/{id}")]
+        
         public async Task<IActionResult> GetAccountById(string id)
         {   var existingAccount = await _accountService.GetAccountById(id);
             if (existingAccount is null) 
@@ -39,7 +41,9 @@ namespace SecondhandStore.Controllers
             return Ok(existingAccount);
         }
         
+        // POST a new account
         [HttpPost]
+        [Route("/api/[controller]/create-new-account")]
         public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
         {
             var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
@@ -51,7 +55,8 @@ namespace SecondhandStore.Controllers
                 mappedAccount);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/api/[controller]/update-account/{id}")]
+        
         public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
         {
             /*
@@ -97,7 +102,8 @@ namespace SecondhandStore.Controllers
         }
 
 
-        [HttpPut("{id}/toggle-status")]
+        [HttpPut("/api/[controller]/toggle-status/{id}")]
+        
         
         public async Task<IActionResult> ToggleAccountStatus(string id)
         {

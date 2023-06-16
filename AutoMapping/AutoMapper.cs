@@ -60,4 +60,12 @@ public class AutoMapper : Profile
         CreateMap<TopUpCreateRequest, TopUp>()
            .ReverseMap();
     }
+
+    private void MapPost()
+    {
+        CreateMap<Post, PostCreateRequest>()
+            .ReverseMap();
+        CreateMap<PostCreateRequest,Post>()
+            .ReverseMap();
+    }
 }
