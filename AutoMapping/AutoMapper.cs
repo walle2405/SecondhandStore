@@ -12,6 +12,7 @@ public class AutoMapper : Profile
         MapRole();
         MapAccount();
         MapTopUp();
+        MapPost();
     }
 
     private void MapRole()

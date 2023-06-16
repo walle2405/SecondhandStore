@@ -18,6 +18,7 @@ namespace SecondhandStore.Controllers
         }
         
         [HttpGet]
+        [Route("/api/[controller]/get-post-list")]
         public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
@@ -26,6 +27,19 @@ namespace SecondhandStore.Controllers
                 return NotFound();
 
             return Ok(postList);
+        }
+        
+        [HttpPost]
+        [Route("/api/[controller]/create-new-post")]
+        public async Task<IActionResult> CreateNewPost(PostCreateRequest postCreateRequest)
+        {
+            var mappedPost = _mapper.Map<Post>(postCreateRequest);
+
+            await _postService.AddPost(mappedPost);
+
+            return CreatedAtAction(nameof(GetPostList),
+                new { id = mappedPost.AccountId },
+                mappedPost);
         }
     }
 }
