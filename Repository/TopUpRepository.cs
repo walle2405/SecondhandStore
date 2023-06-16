@@ -2,13 +2,11 @@
 using SecondhandStore.Models;
 using SecondhandStore.Repository.BaseRepository;
 
-namespace SecondhandStore.Repository
+namespace SecondhandStore.Repository;
+
+public class TopUpRepository : BaseRepository<TopUp>
 {
-    public class TopUpRepository : BaseRepository<TopUp>
+    public TopUpRepository(SecondhandStoreContext dbContext) : base(dbContext)
     {
-        public TopUpRepository(SecondhandStoreContext dbContext) : base(dbContext)
-        {
-        }
-    
     }
 }

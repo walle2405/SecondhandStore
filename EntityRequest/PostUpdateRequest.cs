@@ -1,6 +1,5 @@
-﻿namespace SecondhandStore.EntityRequest
+﻿namespace SecondhandStore.EntityRequest;
+
+public class PostUpdateRequest
 {
-    public class PostUpdateRequest
-    {
-    }
 }

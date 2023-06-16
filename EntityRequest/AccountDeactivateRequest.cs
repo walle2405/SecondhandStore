@@ -1,7 +1,6 @@
-﻿namespace SecondhandStore.EntityRequest
+﻿namespace SecondhandStore.EntityRequest;
+
+public class AccountDeactivateRequest
 {
-    public class AccountDeactivateRequest
-    {
-        public bool IsActive { get; set; }
-    }
+    public bool IsActive { get; set; }
 }
