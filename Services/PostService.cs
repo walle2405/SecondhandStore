@@ -15,5 +15,10 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll();
         }
+
+        public async Task AddPost(Post post)
+        {
+            await _postRepository.Add(post);
+        }
     }
 }
