@@ -9,5 +9,4 @@ public class RoleRepository : BaseRepository<Role>
     public RoleRepository(SecondhandStoreContext dbContext) : base(dbContext)
     {
     }
-    
 }
