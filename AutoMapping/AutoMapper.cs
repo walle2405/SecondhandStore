@@ -22,7 +22,7 @@ public class AutoMapper : Profile
 
         CreateMap<Role, RoleUpdateRequest>()
             .ReverseMap();
-        
+
         CreateMap<RoleCreateRequest, Role>()
             .ReverseMap();
 
@@ -31,7 +31,7 @@ public class AutoMapper : Profile
 
         CreateMap<RoleEntityViewModel, Role>()
             .ReverseMap();
-        
+
         CreateMap<Role, RoleEntityViewModel>()
             .ReverseMap();
     }
@@ -47,19 +47,21 @@ public class AutoMapper : Profile
         CreateMap<AccountUpdateRequest, Account>()
             .ReverseMap();
     }
+
     private void MapDeactivateAccount()
     {
-        CreateMap<Account, AccountDeactivateRequest>() 
+        CreateMap<Account, AccountDeactivateRequest>()
             .ReverseMap();
         CreateMap<AccountDeactivateRequest, Account>()
             .ReverseMap();
     }
+
     private void MapTopUp()
     {
         CreateMap<TopUp, TopUpCreateRequest>()
             .ReverseMap();
         CreateMap<TopUpCreateRequest, TopUp>()
-           .ReverseMap();
+            .ReverseMap();
     }
 
     private void MapPost()
