@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.Models;
+using SecondhandStore.Repository;
 using SecondhandStore.Services;
 
 namespace SecondhandStore.Controllers
@@ -24,13 +25,13 @@ namespace SecondhandStore.Controllers
         public async Task<IActionResult> GetAccountList()
         {
             var accountList = await _accountService.GetAllAccounts();
-
+            
             if (accountList.Count == 0 || !accountList.Any())
                 return NotFound();
 
             return Ok(accountList);
         }
-
+        
         // GET by Id action
         [HttpGet("/api/[controller]/get-account/{id}")]
         
