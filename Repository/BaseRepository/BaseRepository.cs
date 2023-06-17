@@ -8,10 +8,11 @@ using System.Collections.Generic;
 public abstract class BaseRepository<TEntity> where TEntity : class
 {
     private readonly SecondhandStoreContext _dbContext;
-
+    private readonly DbSet<TEntity> _dbSet;
     protected BaseRepository(SecondhandStoreContext dbContext)
     {
         _dbContext = dbContext;
+        _dbSet = dbContext.Set<TEntity>();
     }
 
     public async Task<List<TEntity>> GetAll()
@@ -25,7 +26,8 @@ public abstract class BaseRepository<TEntity> where TEntity : class
             throw new Exception($"Error getting entity: {ex.Message}", ex);
         }
     }
-
+    
+    
     public async Task<TEntity?> GetById(string id)
     {
         try
@@ -52,7 +54,6 @@ public abstract class BaseRepository<TEntity> where TEntity : class
             throw new Exception($"Error getting entity: {ex.Message}", ex);
         }
     }
-    
 
     public async Task Add(TEntity entity)
     {
