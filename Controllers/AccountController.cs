@@ -26,12 +26,20 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> LoginManagement([FromBody] LoginModelRequest loginModel, CancellationToken token)
     {
         // Tự tạo method login trong AccountService
-        var account = _accountService.Login(loginModel);
-        var jwtToken = _accountService.CreateToken(account);
-        return Ok(new
+        var loggedIn = await _accountService.Login(loginModel);
+        if (loggedIn)
         {
-            token = jwtToken
-        });
+            Account account = _mapper.Map<Account>(loginModel);
+            var jwtToken = _accountService.CreateToken(account);
+            return Ok(new
+            {
+                token = jwtToken
+            });
+        }
+        else
+        {
+            return BadRequest(new { message = "Invalid username or password." });
+        }
     }
 
     // GET all action

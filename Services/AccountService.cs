@@ -1,10 +1,15 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SecondhandStore.EntityRequest;
+using SecondhandStore.Infrastructure;
 using SecondhandStore.Models;
 using SecondhandStore.Repository;
-
+using System.Linq;
 namespace SecondhandStore.Services;
 
 public class AccountService
@@ -28,6 +33,22 @@ public class AccountService
         return await _accountRepository.GetById(id);
     }
 
+    public async Task<bool> Login(LoginModelRequest loginModelRequest)
+    {
+        using (var _context = new SecondhandStoreContext())
+        {
+            var account = await _context.Accounts.FirstOrDefaultAsync(u => u.Email.Equals(loginModelRequest.Email)
+                                                             && u.Password.Equals(loginModelRequest.Password));
+            if (account == null)
+            {
+                // User not found in database
+                return false;
+            }
+            // Username and password are correct
+            return true;
+        }
+    }
+    
     public async Task AddAccount(Account account)
     {
         await _accountRepository.Add(account);
