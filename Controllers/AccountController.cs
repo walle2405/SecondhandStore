@@ -44,6 +44,7 @@ public class AccountController : ControllerBase
 
     // GET all action
     [HttpGet]
+    [Route("api/[controller]/get-account-list")]
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
@@ -55,7 +56,8 @@ public class AccountController : ControllerBase
     }
 
     // GET by Id action
-    [HttpGet("{id}")]
+    [HttpGet()]
+    [Route("api/[controller]/get-account-by-id")]
     public async Task<IActionResult> GetAccountById(string id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
@@ -64,7 +66,18 @@ public class AccountController : ControllerBase
         return Ok(existingAccount);
     }
 
+    [HttpGet]
+    [Route("api/[controller]/get-user-by-name")]
+    public async Task<IActionResult> GetUserByName(string fullName)
+    {
+        var existingUser = await _accountService.GetUserByName(fullName);
+        if (existingUser is null)
+            return NotFound();
+        return Ok(existingUser);
+    }
+
     [HttpPost]
+    [Route("api/[controller]/create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);

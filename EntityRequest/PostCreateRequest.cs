@@ -6,7 +6,7 @@ public class PostCreateRequest
     public string ProductName { get; set; }
     public string Image { get; set; }
     public string Description { get; set; }
-    public bool PostStatus { get; set; }
+    public bool PostStatus = false;
     public int CategoryId { get; set; }
     public string PostType { get; set; }
     public int PointCost { get; set; }

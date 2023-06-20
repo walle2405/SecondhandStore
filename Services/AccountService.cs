@@ -33,6 +33,11 @@ public class AccountService
         return await _accountRepository.GetById(id);
     }
 
+    public async Task<Account?> GetUserByName(string name)
+    {
+        return await _accountRepository.GetById(name);
+    }
+
     public async Task<bool> Login(LoginModelRequest loginModelRequest)
     {
         using (var _context = new SecondhandStoreContext())
