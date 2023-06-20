@@ -23,23 +23,21 @@ public class AccountController : ControllerBase
     [SwaggerOperation(Summary =
         "Login for account with username and password. Return JWT Token if login successfully")]
     [HttpPost("login")]
-    public async Task<IActionResult> LoginManagement([FromBody] LoginModelRequest loginModel, CancellationToken token)
+    public async Task<IActionResult> LoginManagement([FromBody] LoginModelRequest loginModel)
     {
         // Tự tạo method login trong AccountService
         var loggedIn = await _accountService.Login(loginModel);
-        if (loggedIn)
-        {
-            Account account = _mapper.Map<Account>(loginModel);
-            var jwtToken = _accountService.CreateToken(account);
-            return Ok(new
-            {
-                token = jwtToken
-            });
-        }
-        else
-        {
+        
+        if (loggedIn == null) 
             return BadRequest(new { message = "Invalid username or password." });
-        }
+        
+        var account = _mapper.Map<Account>(loginModel);
+        var jwtToken = _accountService.CreateToken(account);
+        return Ok(new
+        {
+            token = jwtToken
+        });
+
     }
 
     // GET all action
@@ -49,7 +47,7 @@ public class AccountController : ControllerBase
     {
         var accountList = await _accountService.GetAllAccounts();
 
-        if (accountList.Count == 0 || !accountList.Any())
+        if (!accountList.Any())
             return NotFound();
 
         return Ok(accountList);

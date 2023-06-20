@@ -12,7 +12,7 @@ public abstract class BaseRepository<TEntity> where TEntity : class
         _dbContext = dbContext;
     }
 
-    public async Task<List<TEntity>> GetAll()
+    public async Task<IEnumerable<TEntity>> GetAll()
     {
         try
         {
@@ -23,7 +23,7 @@ public abstract class BaseRepository<TEntity> where TEntity : class
             throw new Exception($"Error getting entity: {ex.Message}", ex);
         }
     }
-
+    
     public async Task<TEntity?> GetById(string id)
     {
         try
