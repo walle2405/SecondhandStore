@@ -31,6 +31,11 @@ builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<TopUpRepository>();
 builder.Services.AddScoped<TopUpService>();
 
+builder.Services.AddScoped<ExchangeRequestRepository>();
+builder.Services.AddScoped<ExchangeRequestService>();
+
+builder.Services.AddScoped<ExchangeOrderRepository>();
+builder.Services.AddScoped<ExchangeOrderService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();

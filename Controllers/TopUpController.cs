@@ -7,7 +7,7 @@ using SecondhandStore.Services;
 namespace SecondhandStore.Controllers
 {
     [ApiController]
-    [Route("topup")]
+    
     public class TopUpController : ControllerBase
     {
         private readonly TopUpService _topupService;
@@ -20,6 +20,7 @@ namespace SecondhandStore.Controllers
 
         // GET all action
         [HttpGet]
+        [Route("/api/[controller]/get-all-topup")]
         public async Task<IActionResult> GetTopupList()
         {
             var topupList = await _topupService.GetAllTopUp();
@@ -31,7 +32,8 @@ namespace SecondhandStore.Controllers
         }
 
         // GET by Id action
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("/api/[controller]/get-topup/{id}")]
         public async Task<IActionResult> GetTopUpById(int id)
         {
             var existingTopup = await _topupService.GetTopUpById(id);
@@ -41,6 +43,7 @@ namespace SecondhandStore.Controllers
         }
 
         [HttpPost]
+        [Route("/api/[controller]/add-topup")]
         public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
         {
             var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);

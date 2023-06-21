@@ -33,7 +33,7 @@ namespace SecondhandStore.Controllers
 
         // GET by Id action
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTopUpById(int id)
+        public async Task<IActionResult> GetRequestById(int id)
         {
             var existingRequest = await _exchangeRequestService.GetRequestById(id);
             if (existingRequest is null)
