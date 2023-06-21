@@ -31,8 +31,7 @@ public class AccountController : ControllerBase
         if (loggedIn == null) 
             return BadRequest(new { message = "Invalid username or password." });
         
-        var account = _mapper.Map<Account>(loginModel);
-        var jwtToken = _accountService.CreateToken(account);
+        var jwtToken = _accountService.CreateToken(loggedIn);
         return Ok(new
         {
             token = jwtToken
