@@ -11,7 +11,7 @@ namespace SecondhandStore.Services
             _postRepository = postRepository;
         }
 
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<IEnumerable<Post>> GetAllPosts()
         {
             return await _postRepository.GetAll();
         }
