@@ -23,7 +23,7 @@ public class AccountService
         _configuration = configuration;
     }
 
-    public async Task<List<Account>> GetAllAccounts()
+    public async Task<IEnumerable<Account>> GetAllAccounts()
     {
         return await _accountRepository.GetAll();
     }
@@ -38,20 +38,9 @@ public class AccountService
         return await _accountRepository.GetById(name);
     }
 
-    public async Task<bool> Login(LoginModelRequest loginModelRequest)
+    public async Task<Account?> Login(LoginModelRequest loginModelRequest)
     {
-        using (var _context = new SecondhandStoreContext())
-        {
-            var account = await _context.Accounts.FirstOrDefaultAsync(u => u.Email.Equals(loginModelRequest.Email)
-                                                             && u.Password.Equals(loginModelRequest.Password));
-            if (account == null)
-            {
-                // User not found in database
-                return false;
-            }
-            // Username and password are correct
-            return true;
-        }
+        return await _accountRepository.Login(loginModelRequest);
     }
     
     public async Task AddAccount(Account account)
