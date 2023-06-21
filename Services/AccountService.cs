@@ -35,7 +35,7 @@ public class AccountService
 
     public async Task<Account?> GetUserByName(string name)
     {
-        return await _accountRepository.GetById(name);
+        return await _accountRepository.GetByName(name);
     }
 
     public async Task<Account?> Login(LoginModelRequest loginModelRequest)
@@ -66,8 +66,13 @@ public class AccountService
         {
             new(ClaimTypes.Role, account.RoleId),
             new(ClaimTypes.Email, account.Email),
-            new("accountId", account.AccountId)
+            new("accountId", account.AccountId),
+            new (ClaimTypes.Name, account.Fullname),
+            new (ClaimTypes.MobilePhone, account.PhoneNo),
+            new (ClaimTypes.StreetAddress, account.Address)
         };
+        
+        
         var securityKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"]));
 

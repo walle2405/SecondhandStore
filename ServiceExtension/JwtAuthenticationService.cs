@@ -12,7 +12,7 @@ public static class JwtAuthenticationService
 {
     public static void AddJwtAuthenticationService(this IServiceCollection services,
         IConfiguration configuration)
-    {// đi qua từng bước implement cái class này đi anh
+    {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {

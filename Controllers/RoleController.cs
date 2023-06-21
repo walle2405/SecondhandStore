@@ -25,7 +25,7 @@ public class RoleController : ControllerBase
     {
         var roleList = await _roleService.GetAllRoles();
 
-        if (roleList.Count == 0 || !roleList.Any())
+        if (!roleList.Any())
             return NotFound();
 
         var mappedRoleList = _mapper.Map<List<RoleEntityViewModel>>(roleList);

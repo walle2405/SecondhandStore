@@ -12,7 +12,7 @@ public class TopUpService
         _topupRepository = topupRepository;
     }
 
-    public async Task<List<TopUp>> GetAllTopUp()
+    public async Task<IEnumerable<TopUp>> GetAllTopUp()
     {
         return await _topupRepository.GetAll();
     }

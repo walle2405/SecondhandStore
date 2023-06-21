@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.Models;
@@ -25,7 +25,7 @@ namespace SecondhandStore.Controllers
         {
             var postList = await _postService.GetAllPosts();
 
-            if (postList.Count == 0 || !postList.Any())
+            if (!postList.Any())
                 return NotFound();
 
             return Ok(postList);
