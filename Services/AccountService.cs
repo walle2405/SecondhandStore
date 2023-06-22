@@ -33,9 +33,9 @@ public class AccountService
         return await _accountRepository.GetById(id);
     }
 
-    public async Task<Account?> GetUserByName(string name)
+    public async Task<IEnumerable<Account>> GetUserByName(string name)
     {
-        return await _accountRepository.GetByName(name);
+        return await _accountRepository.GetUserByName(name);
     }
 
     public async Task<Account?> Login(LoginModelRequest loginModelRequest)
@@ -77,7 +77,7 @@ public class AccountService
             Encoding.UTF8.GetBytes(_configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"]));
 
         var credential = new SigningCredentials(
-            securityKey, SecurityAlgorithms.HmacSha512Signature);
+            securityKey, SecurityAlgorithms.HmacSha256Signature);
 
         var token = new JwtSecurityToken(
             _configuration["JwtToken:Issuer"],

@@ -38,20 +38,6 @@ public abstract class BaseRepository<TEntity> where TEntity : class
         }
     }
     
-    public async Task<TEntity?> GetByName(string name)
-    {
-        try
-        {
-            var entity = await _dbContext.Set<TEntity>().FindAsync(name);
-            _dbContext.Entry(entity).State = EntityState.Detached;
-            return entity;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error getting entity: {ex.Message}", ex);
-        }
-    }
-
     public async Task<TEntity?> GetByIntId(int id)
     {
         try

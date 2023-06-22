@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.Models;
@@ -42,6 +43,7 @@ public class AccountController : ControllerBase
     // GET all action
     [HttpGet]
     [Route("api/[controller]/get-account-list")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
