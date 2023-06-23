@@ -2,12 +2,11 @@
 using SecondhandStore.Models;
 using SecondhandStore.Repository.BaseRepository;
 
-namespace SecondhandStore.Repository
+namespace SecondhandStore.Repository;
+
+public class PostRepository : BaseRepository<Post>
 {
-    public class PostRepository : BaseRepository<Post>
+    public PostRepository(SecondhandStoreContext dbContext) : base(dbContext)
     {
-        public PostRepository(SecondhandStoreContext dbContext) : base(dbContext)
-        {
-        }
     }
 }

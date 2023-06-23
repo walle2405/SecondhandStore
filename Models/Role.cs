@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable disable
 
-#nullable disable
+namespace SecondhandStore.Models;
 
-namespace SecondhandStore.Models
+public class Role
 {
-    public partial class Role
+    public Role()
     {
-        public Role()
-        {
-            Permissions = new HashSet<Permission>();
-        }
-
-        public string RoleId { get; set; }
-        public string RoleName { get; set; }
-
-        public virtual ICollection<Permission> Permissions { get; set; }
+        Permissions = new HashSet<Permission>();
     }
+
+    public string RoleId { get; set; }
+    public string RoleName { get; set; }
+
+    public virtual ICollection<Permission> Permissions { get; set; }
 }
