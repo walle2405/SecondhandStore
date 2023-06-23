@@ -10,7 +10,7 @@ namespace SecondhandStore.Services
         {
             _exchangeOrderRepository = exchangeOrderRepository;
         }
-        public async Task<List<ExchangeOrder>> GetAllRequest()
+        public async Task<IEnumerable<ExchangeOrder>> GetAllRequest()
         {
             return await _exchangeOrderRepository.GetAll();
         }

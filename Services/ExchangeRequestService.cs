@@ -12,7 +12,7 @@ namespace SecondhandStore.Services
             _exchangeRequestRepository = exchangeRequestRepository;
         }
 
-        public async Task<List<ExchangeRequest>> GetAllRequest()
+        public async Task<IEnumerable<ExchangeRequest>> GetAllRequest()
         {
             return await _exchangeRequestRepository.GetAll();
         }

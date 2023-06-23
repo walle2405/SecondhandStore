@@ -25,7 +25,7 @@ public class TopUpController : ControllerBase
     {
         var topupList = await _topupService.GetAllTopUp();
 
-        if (topupList.Count == 0 || !topupList.Any())
+        if (!topupList.Any())
             return NotFound();
 
         return Ok(topupList);

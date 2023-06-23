@@ -25,7 +25,7 @@ namespace SecondhandStore.Controllers
         {
             var requestList = await _exchangeRequestService.GetAllRequest();
 
-            if (requestList.Count == 0 || !requestList.Any())
+            if (!requestList.Any())
                 return NotFound();
 
             return Ok(requestList);
