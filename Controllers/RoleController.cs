@@ -5,74 +5,72 @@ using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 
-namespace SecondhandStore.Controllers
+namespace SecondhandStore.Controllers;
+
+[ApiController]
+[Route("role")]
+public class RoleController : ControllerBase
 {
-    [ApiController]
-    [Route("role")]
-    public class RoleController : ControllerBase
+    private readonly IMapper _mapper;
+    private readonly RoleService _roleService;
+
+    public RoleController(RoleService roleService, IMapper mapper)
     {
-        private readonly RoleService _roleService;
-        private readonly IMapper _mapper;
-        public RoleController(RoleService roleService, IMapper mapper)
-        {
-            _roleService = roleService;
-            _mapper = mapper;
-        }
+        _roleService = roleService;
+        _mapper = mapper;
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetRoleList()
-        {
-            var roleList = await _roleService.GetAllRoles();
-            
-            if (roleList.Count == 0 || !roleList.Any())
-                return NotFound();
-            
-            var mappedRoleList = _mapper.Map<List<RoleEntityViewModel>>(roleList);
-            
-            return Ok(mappedRoleList);
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> CreateNewRole(RoleCreateRequest roleCreateRequest)
-        {
-            var mappedRole = _mapper.Map<Role>(roleCreateRequest);
-            
-            await _roleService.AddRole(mappedRole);
-            
-            return CreatedAtAction(nameof(GetRoleList), 
-                new { id = mappedRole.RoleId }, 
-                mappedRole);
-        }
-        
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateRole(string id, RoleUpdateRequest roleUpdateRequest)
-        {
-            var mappedRole = _mapper.Map<Role>(roleUpdateRequest);
+    [HttpGet]
+    public async Task<IActionResult> GetRoleList()
+    {
+        var roleList = await _roleService.GetAllRoles();
 
-            var existingRole = await _roleService.GetRoleById(id);
-            
-            if (existingRole.ToString() is null)
-                return NotFound();
+        if (!roleList.Any())
+            return NotFound();
 
-            await _roleService.UpdateRole(mappedRole);
-            
-            return NoContent();
-        }
+        var mappedRoleList = _mapper.Map<List<RoleEntityViewModel>>(roleList);
 
-        
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteRole(string id)
-        {
-            var existingRole = await _roleService.GetRoleById(id);
-            
-            if (existingRole.ToString() is null)
-                return NotFound();
+        return Ok(mappedRoleList);
+    }
 
-            await _roleService.DeleteRole(existingRole);
-            
-            return NoContent();
-        }
-       
+    [HttpPost]
+    public async Task<IActionResult> CreateNewRole(RoleCreateRequest roleCreateRequest)
+    {
+        var mappedRole = _mapper.Map<Role>(roleCreateRequest);
+
+        await _roleService.AddRole(mappedRole);
+
+        return CreatedAtAction(nameof(GetRoleList),
+            new { id = mappedRole.RoleId },
+            mappedRole);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateRole(string id, RoleUpdateRequest roleUpdateRequest)
+    {
+        var mappedRole = _mapper.Map<Role>(roleUpdateRequest);
+
+        var existingRole = await _roleService.GetRoleById(id);
+
+        if (existingRole.ToString() is null)
+            return NotFound();
+
+        await _roleService.UpdateRole(mappedRole);
+
+        return NoContent();
+    }
+
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteRole(string id)
+    {
+        var existingRole = await _roleService.GetRoleById(id);
+
+        if (existingRole.ToString() is null)
+            return NotFound();
+
+        await _roleService.DeleteRole(existingRole);
+
+        return NoContent();
     }
 }
-
