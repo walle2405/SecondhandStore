@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.Repository;
 using SecondhandStore.Services;
-using System.Web.Http.Cors;
 
 
 var builder = WebApplication.CreateBuilder(args);

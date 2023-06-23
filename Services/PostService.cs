@@ -15,5 +15,9 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll();
         }
+        public async Task<Post> GetSinglePost(int i)
+        {
+            return await _postRepository.GetByIntId(i);
+        }
     }
 }

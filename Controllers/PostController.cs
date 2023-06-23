@@ -27,5 +27,13 @@ namespace SecondhandStore.Controllers
 
             return Ok(postList);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSinglePost(int id)
+        {
+            var post = await _postService.GetSinglePost(id);
+
+            if(post is null) return NotFound();
+            return Ok(post);
+        }
     }
 }
