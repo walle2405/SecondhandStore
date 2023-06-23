@@ -2,8 +2,22 @@ using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
+using System.Web.Http.Cors;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        });
+});
 
 // Add services to the container.
 
@@ -14,6 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -50,6 +65,7 @@ builder.Services.AddCors(o =>
     });
 });
 
+
 var app = builder.Build();
 
 // auto migrate database
@@ -77,6 +93,8 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors();
 
 app.UseAuthorization();
 

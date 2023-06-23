@@ -25,7 +25,7 @@ public class TopUpController : ControllerBase
     {
         var topupList = await _topupService.GetAllTopUp();
 
-        if (!topupList.Any())
+        if (topupList.Count == 0 || !topupList.Any())
             return NotFound();
 
         return Ok(topupList);
@@ -51,5 +51,6 @@ public class TopUpController : ControllerBase
         return CreatedAtAction(nameof(GetTopupList),
             new { id = mappedTopup.OrderId },
             mappedTopup);
+
     }
 }
