@@ -1,14 +1,16 @@
-﻿#nullable disable
+﻿using System;
+using System.Collections.Generic;
 
-namespace SecondhandStore.Models;
-
-public class TopUp
+namespace SecondhandStore.Models
 {
-    public int OrderId { get; set; }
-    public int TopUpPoint { get; set; }
-    public string AccountId { get; set; }
-    public DateTime TopUpDate { get; set; }
-    public double Price { get; set; }
+    public partial class TopUp
+    {
+        public int OrderId { get; set; }
+        public int TopUpPoint { get; set; }
+        public string AccountId { get; set; } = null!;
+        public DateTime TopUpDate { get; set; }
+        public double Price { get; set; }
 
-    public virtual Account Account { get; set; }
+        public virtual Account Account { get; set; } = null!;
+    }
 }

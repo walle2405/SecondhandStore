@@ -1,16 +1,18 @@
-﻿#nullable disable
+﻿using System;
+using System.Collections.Generic;
 
-namespace SecondhandStore.Models;
-
-public class Category
+namespace SecondhandStore.Models
 {
-    public Category()
+    public partial class Category
     {
-        Posts = new HashSet<Post>();
+        public Category()
+        {
+            Posts = new HashSet<Post>();
+        }
+
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+
+        public virtual ICollection<Post> Posts { get; set; }
     }
-
-    public int CategoryId { get; set; }
-    public string CategoryName { get; set; }
-
-    public virtual ICollection<Post> Posts { get; set; }
 }
