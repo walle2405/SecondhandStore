@@ -3,32 +3,31 @@ using SecondhandStore.Models;
 
 namespace SecondhandStore.Infrastructure;
 
-public partial class SecondhandStoreContext : DbContext
+public class SecondhandStoreContext : DbContext
 {
-    public SecondhandStoreContext()
-    {
-    }
-
+   
     public SecondhandStoreContext(DbContextOptions<SecondhandStoreContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; }
-    public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; }
-    public virtual DbSet<ExchangeRequest> ExchangeRequests { get; set; }
-    public virtual DbSet<Permission> Permissions { get; set; }
-    public virtual DbSet<Post> Posts { get; set; }
-    public virtual DbSet<Report> Reports { get; set; }
-    public virtual DbSet<Review> Reviews { get; set; }
-    public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<TopUp> TopUps { get; set; }
+    public DbSet<Account> Accounts { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<ExchangeOrder> ExchangeOrders { get; set; } = null!;
+    public DbSet<ExchangeRequest> ExchangeRequests { get; set; } = null!;
+    public DbSet<Permission> Permissions { get; set; } = null!;
+    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<Report> Reports { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<TopUp> TopUps { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (optionsBuilder.IsConfigured)
-            return;
+        if (!optionsBuilder.IsConfigured)
+        {
+        }
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -105,7 +104,7 @@ public partial class SecondhandStoreContext : DbContext
 
             entity.Property(e => e.OrderDetailId).HasColumnName("orderDetailId");
 
-            entity.Property(e => e.AccountId)
+            entity.Property(e => e.SellerId)
                 .IsRequired()
                 .HasMaxLength(10)
                 .HasColumnName("accountID");
@@ -118,26 +117,26 @@ public partial class SecondhandStoreContext : DbContext
 
             entity.Property(e => e.PostId).HasColumnName("postId");
 
-            entity.Property(e => e.ReceiverEmail)
+            entity.Property(e => e.BuyerEmail)
                 .IsRequired()
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("receiverEmail");
 
-            entity.Property(e => e.ReceiverId)
+            entity.Property(e => e.BuyerId)
                 .IsRequired()
                 .HasMaxLength(10)
                 .HasColumnName("receiverId");
 
-            entity.Property(e => e.ReceiverPhoneNumber)
+            entity.Property(e => e.BuyerPhoneNumber)
                 .IsRequired()
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("receiverPhoneNumber");
 
-            entity.HasOne(d => d.Account)
+            entity.HasOne(d => d.Seller)
                 .WithMany(p => p.ExchangeOrderAccounts)
-                .HasForeignKey(d => d.AccountId)
+                .HasForeignKey(d => d.SellerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ExchangeO__accou__34C8D9D1");
 
@@ -147,9 +146,9 @@ public partial class SecondhandStoreContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ExchangeO__postI__35BCFE0A");
 
-            entity.HasOne(d => d.Receiver)
+            entity.HasOne(d => d.Buyer)
                 .WithMany(p => p.ExchangeOrderReceivers)
-                .HasForeignKey(d => d.ReceiverId)
+                .HasForeignKey(d => d.BuyerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ExchangeO__recei__33D4B598");
         });
@@ -416,5 +415,7 @@ public partial class SecondhandStoreContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    private static void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    {
+    }
 }
