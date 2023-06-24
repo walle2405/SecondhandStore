@@ -12,6 +12,8 @@ public class AutoMapper : Profile
         MapRole();
         MapAccount();
         MapTopUp();
+        MapExchangeRequest();
+        MapExchangeOrder();
         MapPost();
     }
 
@@ -66,6 +68,24 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<TopUpCreateRequest, TopUp>()
             .ReverseMap();
+    }
+
+    public void MapExchangeRequest() { 
+        CreateMap<ExchangeRequest,ExchangeRequestCreateRequest>()
+            .ReverseMap();
+        CreateMap<ExchangeRequestCreateRequest, ExchangeRequest>()
+            .ReverseMap();
+    }
+
+    private void MapExchangeOrder()
+    {
+        CreateMap<ExchangeOrder, ExchangeOrderCreateRequest>()
+            .ReverseMap();
+        CreateMap<ExchangeOrderCreateRequest, ExchangeOrder>()
+            .ReverseMap();
+        CreateMap<ExchangeOrder, ExchangeOrderUpdateRequest>()
+            .ReverseMap();
+        CreateMap<ExchangeOrderUpdateRequest, ExchangeOrder>();
     }
 
     private void MapPost()
