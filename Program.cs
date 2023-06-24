@@ -70,14 +70,14 @@ builder.Services.AddCors(o =>
 var app = builder.Build();
 
 // auto migrate database
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider
-        .GetRequiredService<SecondhandStoreContext>();
-
-    // Here is the migration executed
-    dbContext.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider
+//         .GetRequiredService<SecondhandStoreContext>();
+//
+//     // Here is the migration executed
+//     dbContext.Database.Migrate();
+// }
 
 
 // Configure the HTTP request pipeline.

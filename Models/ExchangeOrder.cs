@@ -11,10 +11,9 @@ namespace SecondhandStore.Models
         public string BuyerId { get; set; } = null!;
         public DateTime OrderDate { get; set; }
         public bool OrderStatus { get; set; }
-        public string BuyerPhoneNumber { get; set; } = null!;
-        public string BuyerEmail { get; set; } = null!;
 
         public virtual Account Buyer { get; set; } = null!;
         public virtual Post? Post { get; set; }
+        public virtual Account Seller { get; set; } = null!;
     }
 }

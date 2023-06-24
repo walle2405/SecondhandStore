@@ -7,9 +7,11 @@ namespace SecondhandStore.Models
     {
         public Account()
         {
-            ExchangeOrders = new HashSet<ExchangeOrder>();
+            ExchangeOrderBuyers = new HashSet<ExchangeOrder>();
+            ExchangeOrderSellers = new HashSet<ExchangeOrder>();
             Posts = new HashSet<Post>();
-            Reports = new HashSet<Report>();
+            ReportReportedAccounts = new HashSet<Report>();
+            ReportReporters = new HashSet<Report>();
             Reviews = new HashSet<Review>();
             TopUps = new HashSet<TopUp>();
         }
@@ -25,9 +27,12 @@ namespace SecondhandStore.Models
         public double UserRatingScore { get; set; }
         public int PointBalance { get; set; }
 
-        public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
+        public virtual Role Role { get; set; } = null!;
+        public virtual ICollection<ExchangeOrder> ExchangeOrderBuyers { get; set; }
+        public virtual ICollection<ExchangeOrder> ExchangeOrderSellers { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
-        public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<Report> ReportReportedAccounts { get; set; }
+        public virtual ICollection<Report> ReportReporters { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<TopUp> TopUps { get; set; }
     }
