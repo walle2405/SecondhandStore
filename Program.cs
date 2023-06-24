@@ -33,6 +33,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Add services to the container.
+builder.Services.AddApplicationService(config);
+
+// Add services to the container.
 builder.Services.AddSwaggerService();
 
 // Add services to the container.
@@ -41,8 +44,6 @@ builder.Services.AddScopedService();
 // Add services to the container.
 builder.Services.AddJwtAuthenticationService(config);
 
-// Add services to the container.
-builder.Services.AddApplicationService(config);
 
 // Add services to the container.
 builder.Services.AddAuthorizationService();
