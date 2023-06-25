@@ -41,8 +41,7 @@ public class AccountController : ControllerBase
     }
 
     // GET all action
-    [HttpGet]
-    [Route("api/[controller]/get-account-list")]
+    [HttpGet("get-account-list")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountList()
     {
@@ -55,8 +54,7 @@ public class AccountController : ControllerBase
     }
 
     // GET by Id action
-    [HttpGet()]
-    [Route("api/[controller]/get-account-by-id")]
+    [HttpGet("get-account-by-id")]
     public async Task<IActionResult> GetAccountById(string id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
@@ -65,8 +63,7 @@ public class AccountController : ControllerBase
         return Ok(existingAccount);
     }
 
-    [HttpGet]
-    [Route("api/[controller]/get-user-by-name")]
+    [HttpGet("get-user-by-name")]
     public async Task<IActionResult> GetUserByName(string fullName)
     {
         var existingUser = await _accountService.GetUserByName(fullName);
@@ -75,8 +72,7 @@ public class AccountController : ControllerBase
         return Ok(existingUser);
     }
 
-    [HttpPost]
-    [Route("api/[controller]/create-new-account")]
+    [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
@@ -88,31 +84,9 @@ public class AccountController : ControllerBase
             mappedAccount);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("update-account")]
     public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
     {
-        /*
-        var existingAccount = await _accountService.GetAccountById(id);
-
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        existingAccount.Password = accountUpdateRequest.Password;
-        existingAccount.Fullname = accountUpdateRequest.Fullname;
-        existingAccount.Email = accountUpdateRequest.Email;
-        existingAccount.Address = accountUpdateRequest.Address;
-        existingAccount.PhoneNo = accountUpdateRequest.PhoneNo;
-        existingAccount.IsActive = accountUpdateRequest.IsActive;
-        existingAccount.RoleId = existingAccount.RoleId;
-        
-        
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        await _accountService.UpdateAccount(existingAccount);
-
-        return NoContent();
-        */
         try
         {
             var existingAccount = await _accountService.GetAccountById(id);
@@ -134,7 +108,7 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPut("{id}/toggle-status")]
+    [HttpPut("toggle-account-status")]
     public async Task<IActionResult> ToggleAccountStatus(string id)
     {
         try

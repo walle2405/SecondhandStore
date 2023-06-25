@@ -21,9 +21,9 @@ namespace SecondhandStore.Services
             await _postRepository.Add(post);
         }
         
-        public async Task<Post?> GetPostByName(string name)
+        public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
         {
-            return await _postRepository.GetById(name);
+            return await _postRepository.GetPostByProductName(productName);
         }
         
         public async Task<Post?> GetPostById(int id)
