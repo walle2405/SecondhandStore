@@ -1,4 +1,5 @@
-﻿﻿using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.Models;
@@ -31,6 +32,7 @@ namespace SecondhandStore.Controllers
         }
         
         [HttpPost("create-new-post")]
+        [Authorize(Roles = "US")]
         public async Task<IActionResult> CreateNewPost(PostCreateRequest postCreateRequest)
         {
             var mappedPost = _mapper.Map<Post>(postCreateRequest);
@@ -76,6 +78,7 @@ namespace SecondhandStore.Controllers
         }
 
         [HttpPut("update-post")]
+        [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> UpdatePost(int postId, PostUpdateRequest postUpdateRequest)
         {
             try

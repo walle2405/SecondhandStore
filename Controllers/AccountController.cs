@@ -55,6 +55,7 @@ public class AccountController : ControllerBase
 
     // GET by Id action
     [HttpGet("get-account-by-id")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountById(string id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
@@ -85,6 +86,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPut("update-account")]
+    [Authorize(Roles="AD,US")]
     public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
     {
         try
@@ -109,6 +111,7 @@ public class AccountController : ControllerBase
 
 
     [HttpPut("toggle-account-status")]
+    [Authorize(Roles="AD")]
     public async Task<IActionResult> ToggleAccountStatus(string id)
     {
         try
