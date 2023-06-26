@@ -2,7 +2,9 @@ using AutoMapper;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
-
+using SecondhandStore.Services;
+using SecondhandStore.Repository;
+using SecondhandStore.Infrastructure;
 namespace SecondhandStore.AutoMapping;
 
 public class AutoMapper : Profile
@@ -12,6 +14,7 @@ public class AutoMapper : Profile
         MapRole();
         MapAccount();
         MapTopUp();
+        MapPost();
     }
 
     private void MapRole()
@@ -21,7 +24,7 @@ public class AutoMapper : Profile
 
         CreateMap<Role, RoleUpdateRequest>()
             .ReverseMap();
-        
+
         CreateMap<RoleCreateRequest, Role>()
             .ReverseMap();
 
@@ -30,7 +33,7 @@ public class AutoMapper : Profile
 
         CreateMap<RoleEntityViewModel, Role>()
             .ReverseMap();
-        
+
         CreateMap<Role, RoleEntityViewModel>()
             .ReverseMap();
     }
@@ -48,7 +51,7 @@ public class AutoMapper : Profile
     }
     private void MapDeactivateAccount()
     {
-        CreateMap<Account, AccountDeactivateRequest>() 
+        CreateMap<Account, AccountDeactivateRequest>()
             .ReverseMap();
         CreateMap<AccountDeactivateRequest, Account>()
             .ReverseMap();
@@ -59,5 +62,19 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<TopUpCreateRequest, TopUp>()
            .ReverseMap();
+    }
+    private void MapPost()
+    {
+        CreateMap<Post, PostEntityViewModel>()
+        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname));
+        CreateMap<PostEntityViewModel, Post>()
+        .ForMember(d => d.Account, map => map.Ignore())
+        .ForMember(d => d.Category, map => map.Ignore())
+        .ForMember(d => d.ExchangeOrders, map => map.Ignore())
+        .ForMember(d => d.ExchangeRequests, map => map.Ignore())
+        .ForMember(d => d.Reviews, map => map.Ignore());
+        CreateMap<PostCreateRequest, Post>()
+        .ReverseMap();
+
     }
 }

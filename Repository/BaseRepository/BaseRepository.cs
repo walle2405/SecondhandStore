@@ -8,17 +8,18 @@ using System.Collections.Generic;
 public abstract class BaseRepository<TEntity> where TEntity : class
 {
     private readonly SecondhandStoreContext _dbContext;
+    
 
     protected BaseRepository(SecondhandStoreContext dbContext)
     {
         _dbContext = dbContext;
     }
-
-    public async Task<List<TEntity>> GetAll()
+    
+    public IQueryable<TEntity> GetAll()
     {
         try
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return _dbContext.Set<TEntity>();
         }
         catch (Exception ex)
         {

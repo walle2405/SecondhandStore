@@ -1,4 +1,5 @@
-﻿using SecondhandStore.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
 namespace SecondhandStore.Services
@@ -14,7 +15,7 @@ namespace SecondhandStore.Services
 
         public async Task<List<TopUp>> GetAllTopUp()
         {
-            return await _topupRepository.GetAll();
+            return await _topupRepository.GetAll().ToListAsync();
         }
 
         public async Task<TopUp> GetTopUpById(int topupid)

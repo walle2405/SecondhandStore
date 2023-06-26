@@ -18,7 +18,8 @@ public class AccountService
 
     public async Task<List<Account>> GetAllAccounts()
     {
-        return await _accountRepository.GetAll();
+        //.Include(p => p) all you need
+        return await _accountRepository.GetAll().ToListAsync();
     }
 
     public async Task<Account?> GetAccountById(string id)

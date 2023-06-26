@@ -66,8 +66,7 @@ namespace SecondhandStore.Infrastructure
                     .IsRequired()
                     .HasMaxLength(64)
                     .IsUnicode(false)
-                    .HasColumnName("password")
-                    .IsFixedLength(true);
+                    .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNo)
                     .IsRequired()

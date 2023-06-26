@@ -34,4 +34,5 @@ namespace SecondhandStore.Models
         public virtual ICollection<ExchangeRequest> ExchangeRequests { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
     }
+    
 }
