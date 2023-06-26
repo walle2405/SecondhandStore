@@ -50,6 +50,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<LoginModelRequest, Account>()
             .ReverseMap();
+        CreateMap<Account, AccountEntityViewModel>()
+            .ReverseMap();
+        CreateMap<AccountEntityViewModel, Account>()
+            .ReverseMap();
     }
 
     private void MapDeactivateAccount()

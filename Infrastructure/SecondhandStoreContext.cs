@@ -347,7 +347,6 @@ namespace SecondhandStore.Infrastructure
 
             OnModelCreatingPartial(modelBuilder);
         }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
