@@ -66,15 +66,10 @@ public class AutoMapper : Profile
     private void MapPost()
     {
         CreateMap<Post, PostEntityViewModel>()
-        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname));
-        CreateMap<PostEntityViewModel, Post>()
-        .ForMember(d => d.Account, map => map.Ignore())
-        .ForMember(d => d.Category, map => map.Ignore())
-        .ForMember(d => d.ExchangeOrders, map => map.Ignore())
-        .ForMember(d => d.ExchangeRequests, map => map.Ignore())
-        .ForMember(d => d.Reviews, map => map.Ignore());
+        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+        .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName));
+        CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()
         .ReverseMap();
-
     }
 }

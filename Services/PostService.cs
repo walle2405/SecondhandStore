@@ -14,22 +14,18 @@ namespace SecondhandStore.Services
 
         public async Task<List<Post>> GetAllPosts()
         {
-            return await _postRepository.GetAll().Include(p => p.Account).ToListAsync();
+            return await _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).ToListAsync();
         }
         
         public async Task<Post> GetPostById(int id)
         {
-            return await _postRepository.GetAll().Include(p => p.Account).FirstOrDefaultAsync(p => p.PostId == id);
+            return await _postRepository.GetByIntId(id);
         }
 
         public async Task<Post> AddPost(Post p)
         {
             await _postRepository.Add(p);
             return await _postRepository.GetByIntId(p.PostId);
-        }
-        public async Task<Post> GetSinglePost(int i)
-        {
-            return await _postRepository.GetByIntId(i);
         }
     }
 }

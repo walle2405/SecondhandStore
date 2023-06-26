@@ -21,7 +21,6 @@ namespace SecondhandStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPostList()
         {
-           
             var postList = await _postService.GetAllPosts();
 
             if (postList.Count == 0 || !postList.Any())
@@ -48,14 +47,6 @@ namespace SecondhandStore.Controllers
             var created = await _postService.AddPost(p);
             if(created is null) return NoContent();
             return Ok(created);
-        }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetSinglePost(int id)
-        {
-            var post = await _postService.GetSinglePost(id);
-
-            if(post is null) return NotFound();
-            return Ok(post);
         }
     }
 }
