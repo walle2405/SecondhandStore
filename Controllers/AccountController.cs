@@ -44,8 +44,7 @@ public class AccountController : ControllerBase
     }
 
     // GET all action
-    [HttpGet]
-    [Route("api/[controller]/get-account-list")]
+    [HttpGet("get-account-list")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountList()
     {
@@ -58,8 +57,8 @@ public class AccountController : ControllerBase
     }
 
     // GET by Id action
-    [HttpGet()]
-    [Route("api/[controller]/get-account-by-id")]
+    [HttpGet("get-account-by-id")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountById(string id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
@@ -68,8 +67,7 @@ public class AccountController : ControllerBase
         return Ok(existingAccount);
     }
 
-    [HttpGet]
-    [Route("api/[controller]/get-user-by-name")]
+    [HttpGet("get-user-by-name")]
     public async Task<IActionResult> GetUserByName(string fullName)
     {
         var existingUser = await _accountService.GetUserByName(fullName);
@@ -80,8 +78,7 @@ public class AccountController : ControllerBase
         
     }
 
-    [HttpPost]
-    [Route("api/[controller]/create-new-account")]
+    [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
@@ -93,7 +90,8 @@ public class AccountController : ControllerBase
             mappedAccount);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("update-account")]
+    [Authorize(Roles="AD,US")]
     public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
     {
         try
@@ -117,7 +115,8 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPut("{id}/toggle-status")]
+    [HttpPut("toggle-account-status")]
+    [Authorize(Roles="AD")]
     public async Task<IActionResult> ToggleAccountStatus(string id)
     {
         try

@@ -65,11 +65,8 @@ public class AccountService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Role, account.RoleId),
-            new(ClaimTypes.Email, account.Email),
             new("accountId", account.AccountId),
-            new (ClaimTypes.Name, account.Fullname),
-            new (ClaimTypes.MobilePhone, account.PhoneNo),
-            new (ClaimTypes.StreetAddress, account.Address)
+            new (ClaimTypes.Name, account.Fullname)
         };
         
         

@@ -1,4 +1,5 @@
-﻿﻿using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.Models;
@@ -19,8 +20,7 @@ namespace SecondhandStore.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("/api/[controller]/get-post-list")]
+        [HttpGet("get-post-list")]
         public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
@@ -30,9 +30,9 @@ namespace SecondhandStore.Controllers
 
             return Ok(postList);
         }
-
-        [HttpPost]
-        [Route("/api/[controller]/create-new-post")]
+        
+        [HttpPost("create-new-post")]
+        [Authorize(Roles = "US")]
         public async Task<IActionResult> CreateNewPost(PostCreateRequest postCreateRequest)
         {
             var mappedPost = _mapper.Map<Post>(postCreateRequest);
@@ -44,17 +44,16 @@ namespace SecondhandStore.Controllers
                 mappedPost);
         }
 
-        [HttpGet]
-        [Route("api/[controller]/search-post")]
+        [HttpGet("search-post")]
         public async Task<IActionResult> GetPostByName(string productName)
         {
-            var existingPost = await _postService.GetPostByName(productName);
+            var existingPost = await _postService.GetPostByProductName(productName);
             if (existingPost is null)
                 return NotFound();
             return Ok(existingPost);
         }
 
-        [HttpPut("{postId}/toggle-status")]
+        [HttpPut("toggle-post-status")]
         public async Task<IActionResult> TogglePostStatus(int id)
         {
             try
@@ -76,6 +75,30 @@ namespace SecondhandStore.Controllers
                     "Invalid Request");
             }
 
+        }
+
+        [HttpPut("update-post")]
+        [Authorize(Roles = "AD,US")]
+        public async Task<IActionResult> UpdatePost(int postId, PostUpdateRequest postUpdateRequest)
+        {
+            try
+            {
+                var existingPost = await _postService.GetPostById(postId);
+
+                if (existingPost is null)
+                    return NotFound();
+
+                var mappedPost = _mapper.Map<Post>(postUpdateRequest);
+
+                await _postService.UpdatePost(mappedPost);
+
+                return Ok(mappedPost);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Invalid Request");
+            }
         }
     }
 }
