@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -137,6 +140,13 @@ public class AccountController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Invalid Request");
         }
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
+
+        return Ok(new { message = "Logged out successfully." });
     }
     
 }
