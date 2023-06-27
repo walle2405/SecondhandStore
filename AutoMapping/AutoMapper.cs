@@ -72,6 +72,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<TopUpCreateRequest, TopUp>()
             .ReverseMap();
+        CreateMap<TopUp, TopUpEntityViewModel>()
+            .ReverseMap();
+        CreateMap<TopUpEntityViewModel,TopUp>()
+            .ReverseMap();
     }
     
     private void MapPost()

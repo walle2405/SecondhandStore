@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
+using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
+using System.Data;
 
 namespace SecondhandStore.Controllers;
 
@@ -27,8 +30,9 @@ public class TopUpController : ControllerBase
 
         if (!topupList.Any())
             return NotFound();
-
-        return Ok(topupList);
+        var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(topupList);
+        return Ok(mappedExistTopup);
+        
     }
 
     // GET by Id action
@@ -38,7 +42,8 @@ public class TopUpController : ControllerBase
         var existingTopup = await _topupService.GetTopUpById(id);
         if (existingTopup is null)
             return NotFound();
-        return Ok(existingTopup);
+        var mappedExistTopup = _mapper.Map<TopUpEntityViewModel>(existingTopup);
+        return Ok(mappedExistTopup);
     }
 
     [HttpPost]
@@ -52,5 +57,10 @@ public class TopUpController : ControllerBase
             new { id = mappedTopup.OrderId },
             mappedTopup);
 
+    }
+    [HttpGet("get-revenue")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> ReturnRevenue() {
+        return Ok(await _topupService.GetTotalRevenue());
     }
 }
