@@ -2,7 +2,9 @@ using AutoMapper;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
-
+using SecondhandStore.Services;
+using SecondhandStore.Repository;
+using SecondhandStore.Infrastructure;
 namespace SecondhandStore.AutoMapping;
 
 public class AutoMapper : Profile
@@ -78,5 +80,14 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<PostCreateRequest,Post>()
             .ReverseMap();
+    }
+    private void MapPost()
+    {
+        CreateMap<Post, PostEntityViewModel>()
+        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+        .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName));
+        CreateMap<PostEntityViewModel, Post>();
+        CreateMap<PostCreateRequest, Post>()
+        .ReverseMap();
     }
 }

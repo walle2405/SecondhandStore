@@ -30,4 +30,5 @@ namespace SecondhandStore.Models
         public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
     }
+    
 }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
-using System.Web.Http.Cors;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +23,7 @@ builder.Services.AddCors(options =>
 var config = builder.Configuration;
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 

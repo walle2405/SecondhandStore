@@ -62,8 +62,7 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.Password)
                     .HasMaxLength(64)
                     .IsUnicode(false)
-                    .HasColumnName("password")
-                    .IsFixedLength();
+                    .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNo)
                     .HasMaxLength(50)
