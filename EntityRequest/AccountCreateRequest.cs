@@ -8,4 +8,5 @@ public class AccountCreateRequest
     public string Address { get; set; }
     public string PhoneNo { get; set; }
     public string RoleId = "US";
+    public bool IsActive = true;
 }
