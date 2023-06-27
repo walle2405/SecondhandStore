@@ -90,9 +90,9 @@ public class AutoMapper : Profile
 
     public void MapReview()
     {
-        CreateMap<Review, ReviewRequest >()
+        CreateMap<Review, ReviewRequest>()
             .ReverseMap();
-        CreateMap<Review, Review>()
+        CreateMap<ReviewRequest, Review>()
             .ReverseMap();
     }
 }
