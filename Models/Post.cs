@@ -1,33 +1,32 @@
-﻿#nullable disable
+﻿using System;
+using System.Collections.Generic;
 
-namespace SecondhandStore.Models;
-
-public class Post
+namespace SecondhandStore.Models
 {
-    public Post()
+    public partial class Post
     {
-        ExchangeOrders = new HashSet<ExchangeOrder>();
-        ExchangeRequests = new HashSet<ExchangeRequest>();
-        Reviews = new HashSet<Review>();
+        public Post()
+        {
+            ExchangeOrders = new HashSet<ExchangeOrder>();
+            Reviews = new HashSet<Review>();
+        }
+
+        public int PostId { get; set; }
+        public string AccountId { get; set; }
+        public string ProductName { get; set; }
+        public string Image { get; set; }
+        public string Description { get; set; }
+        public string PostStatus { get; set; }
+        public int CategoryId { get; set; }
+        public int PointCost { get; set; }
+        public DateTime PostDate { get; set; }
+        public int PostPriority { get; set; }
+        public DateTime PostExpiryDate { get; set; }
+        public double Price { get; set; }
+
+        public virtual Account Account { get; set; } = null!;
+        public virtual Category Category { get; set; } = null!;
+        public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
-
-    public int PostId { get; set; }
-    public string AccountId { get; set; }
-    public string ProductName { get; set; }
-    public string Image { get; set; }
-    public string Description { get; set; }
-    public bool PostStatus { get; set; }
-    public int CategoryId { get; set; }
-    public string PostType { get; set; }
-    public int PointCost { get; set; }
-    public DateTime PostDate { get; set; }
-    public int PostPriority { get; set; }
-    public DateTime PostExpiryDate { get; set; }
-    public double Price { get; set; }
-
-    public virtual Account Account { get; set; }
-    public virtual Category Category { get; set; }
-    public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
-    public virtual ICollection<ExchangeRequest> ExchangeRequests { get; set; }
-    public virtual ICollection<Review> Reviews { get; set; }
 }

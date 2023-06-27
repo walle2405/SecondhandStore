@@ -1,5 +1,6 @@
 ﻿using SecondhandStore.Models;
 using SecondhandStore.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace SecondhandStore.Services
 {
@@ -12,7 +13,7 @@ namespace SecondhandStore.Services
         }
         public async Task<IEnumerable<ExchangeOrder>> GetAllRequest()
         {
-            return await _exchangeOrderRepository.GetAll();
+            return await _exchangeOrderRepository.GetAll().ToListAsync();
         }
         public async Task<ExchangeOrder> GetOrderById(int orderId)
         {

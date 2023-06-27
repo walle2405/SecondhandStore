@@ -1,12 +1,14 @@
-﻿#nullable disable
+﻿using System;
+using System.Collections.Generic;
 
-namespace SecondhandStore.Models;
-
-public class Permission
+namespace SecondhandStore.Models
 {
-    public int PermissionId { get; set; }
-    public string PermissionName { get; set; }
-    public string RoleId { get; set; }
+    public partial class Permission
+    {
+        public int PermissionId { get; set; }
+        public string PermissionName { get; set; } = null!;
+        public string RoleId { get; set; } = null!;
 
-    public virtual Role Role { get; set; }
+        public virtual Role Role { get; set; } = null!;
+    }
 }

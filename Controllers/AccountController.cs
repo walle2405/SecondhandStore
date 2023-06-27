@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SecondhandStore.EntityRequest;
+using SecondhandStore.EntityViewModel;
+using SecondhandStore.Infrastructure;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -41,8 +44,7 @@ public class AccountController : ControllerBase
     }
 
     // GET all action
-    [HttpGet]
-    [Route("api/[controller]/get-account-list")]
+    [HttpGet("get-account-list")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountList()
     {
@@ -55,8 +57,8 @@ public class AccountController : ControllerBase
     }
 
     // GET by Id action
-    [HttpGet()]
-    [Route("api/[controller]/get-account-by-id")]
+    [HttpGet("get-account-by-id")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountById(string id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
@@ -65,18 +67,18 @@ public class AccountController : ControllerBase
         return Ok(existingAccount);
     }
 
-    [HttpGet]
-    [Route("api/[controller]/get-user-by-name")]
+    [HttpGet("get-user-by-name")]
     public async Task<IActionResult> GetUserByName(string fullName)
     {
         var existingUser = await _accountService.GetUserByName(fullName);
         if (existingUser is null)
             return NotFound();
-        return Ok(existingUser);
+        var mappedExistingUser = _mapper.Map<List<AccountEntityViewModel>>(existingUser);
+        return Ok(mappedExistingUser);
+        
     }
 
-    [HttpPost]
-    [Route("api/[controller]/create-new-account")]
+    [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
@@ -88,31 +90,10 @@ public class AccountController : ControllerBase
             mappedAccount);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("update-account")]
+    [Authorize(Roles="AD,US")]
     public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
     {
-        /*
-        var existingAccount = await _accountService.GetAccountById(id);
-
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        existingAccount.Password = accountUpdateRequest.Password;
-        existingAccount.Fullname = accountUpdateRequest.Fullname;
-        existingAccount.Email = accountUpdateRequest.Email;
-        existingAccount.Address = accountUpdateRequest.Address;
-        existingAccount.PhoneNo = accountUpdateRequest.PhoneNo;
-        existingAccount.IsActive = accountUpdateRequest.IsActive;
-        existingAccount.RoleId = existingAccount.RoleId;
-        
-        
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        await _accountService.UpdateAccount(existingAccount);
-
-        return NoContent();
-        */
         try
         {
             var existingAccount = await _accountService.GetAccountById(id);
@@ -134,7 +115,8 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPut("{id}/toggle-status")]
+    [HttpPut("toggle-account-status")]
+    [Authorize(Roles="AD")]
     public async Task<IActionResult> ToggleAccountStatus(string id)
     {
         try
@@ -156,45 +138,5 @@ public class AccountController : ControllerBase
                 "Invalid Request");
         }
     }
-
-
-    // POST action 
-    //[HttpPost]
-    //public IActionResult CreateNewAccount(Account account)
-    //{
-    //    AccountService.Create(account);
-    //    return CreatedAtAction(nameof(Get), new { id = account.AccountId }, account);
-    //}
-
-    //// PUT action
-    //[HttpPut("{id}")]
-    //public IActionResult Update(string id, Account account)
-    //{
-    //    // This code will update the account and return a result
-    //    if (id != account.AccountId)
-    //        return BadRequest();
-
-    //    var existingAccount = accountService.GetAll().Where(p => p.AccountId.Equals(id)).FirstOrDefault();
-    //    if (existingAccount is null)
-    //        return NotFound();
-
-    //    accountService.Update(account);
-
-    //    return NoContent();
-    //}
-
-    //// DELETE action
-    //[HttpDelete("{id}")]
-    //public IActionResult Delete(string id)
-    //{
-    //    // This code will delete the pizza and return a result
-    //    var account = accountService.GetAll().Where(p => p.AccountId.Equals(id)).FirstOrDefault();
-
-    //    if (account is null)
-    //        return NotFound();
-
-    //    accountService.Delete(account);
-
-    //    return NoContent();
-    //}
+    
 }

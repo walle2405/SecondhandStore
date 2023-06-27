@@ -1,16 +1,20 @@
-﻿#nullable disable
+﻿using System;
+using System.Collections.Generic;
 
-namespace SecondhandStore.Models;
-
-public class Report
+namespace SecondhandStore.Models
 {
-    public int ReportId { get; set; }
-    public string Reason { get; set; }
-    public string ReportedAccountId { get; set; }
-    public DateTime ReportDate { get; set; }
-    public string Evidence1 { get; set; }
-    public string Evidence2 { get; set; }
-    public string Evidence3 { get; set; }
+    public partial class Report
+    {
+        public int ReportId { get; set; }
+        public string Reason { get; set; } = null!;
+        public string ReporterId { get; set; } = null!;
+        public string ReportedAccountId { get; set; } = null!;
+        public DateTime ReportDate { get; set; }
+        public string Evidence1 { get; set; } = null!;
+        public string? Evidence2 { get; set; }
+        public string? Evidence3 { get; set; }
 
-    public virtual Account ReportedAccount { get; set; }
+        public virtual Account ReportedAccount { get; set; } = null!;
+        public virtual Account Reporter { get; set; } = null!;
+    }
 }

@@ -26,6 +26,6 @@ public class AccountRepository : BaseRepository<Account>
 
     public async Task<IEnumerable<Account>> GetUserByName(string Fullname)
     {
-        return await _dbContext.Accounts.Where(c => c.Fullname.ToLower().Contains(Fullname.ToLower())).Skip(1).ToListAsync();
+        return await _dbContext.Accounts.Where(c => c.Fullname.ToLower().Contains(Fullname.ToLower()) && c.RoleId.Equals("US")).ToListAsync();
     }
 }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
-using System.Web.Http.Cors;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +23,7 @@ builder.Services.AddCors(options =>
 var config = builder.Configuration;
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -31,6 +31,9 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+// Add services to the container.
+builder.Services.AddApplicationService(config);
 
 // Add services to the container.
 builder.Services.AddSwaggerService();
@@ -41,8 +44,6 @@ builder.Services.AddScopedService();
 // Add services to the container.
 builder.Services.AddJwtAuthenticationService(config);
 
-// Add services to the container.
-builder.Services.AddApplicationService(config);
 
 // Add services to the container.
 builder.Services.AddAuthorizationService();
@@ -69,14 +70,14 @@ builder.Services.AddCors(o =>
 var app = builder.Build();
 
 // auto migrate database
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider
-        .GetRequiredService<SecondhandStoreContext>();
-
-    // Here is the migration executed
-    dbContext.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider
+//         .GetRequiredService<SecondhandStoreContext>();
+//
+//     // Here is the migration executed
+//     dbContext.Database.Migrate();
+// }
 
 
 // Configure the HTTP request pipeline.

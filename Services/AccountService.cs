@@ -25,7 +25,8 @@ public class AccountService
 
     public async Task<IEnumerable<Account>> GetAllAccounts()
     {
-        return await _accountRepository.GetAll();
+        //.Include(p => p) all you need
+        return await _accountRepository.GetAll().ToListAsync();
     }
 
     public async Task<Account?> GetAccountById(string id)
@@ -65,11 +66,8 @@ public class AccountService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Role, account.RoleId),
-            new(ClaimTypes.Email, account.Email),
             new("accountId", account.AccountId),
-            new (ClaimTypes.Name, account.Fullname),
-            new (ClaimTypes.MobilePhone, account.PhoneNo),
-            new (ClaimTypes.StreetAddress, account.Address)
+            new (ClaimTypes.Name, account.Fullname)
         };
         
         
@@ -88,4 +86,6 @@ public class AccountService
 
         return tokenHandler.WriteToken(token);
     }
+    
+    
 }
