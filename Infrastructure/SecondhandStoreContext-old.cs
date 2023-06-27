@@ -1,5 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using SecondhandStore.Models;
 
 namespace SecondhandStore.Infrastructure
@@ -15,6 +17,7 @@ namespace SecondhandStore.Infrastructure
         {
         }
 
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; }
@@ -29,12 +32,27 @@ namespace SecondhandStore.Infrastructure
         {
             if (optionsBuilder.IsConfigured)
                 return;
+=======
+        public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; } = null!;
+        public virtual DbSet<Permission> Permissions { get; set; } = null!;
+        public virtual DbSet<Post> Posts { get; set; } = null!;
+        public virtual DbSet<Report> Reports { get; set; } = null!;
+        public virtual DbSet<Review> Reviews { get; set; } = null!;
+        public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<TopUp> TopUps { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+            }
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.ToTable("Account");
@@ -44,31 +62,26 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("accountId");
 
                 entity.Property(e => e.Address)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.Fullname)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("fullname");
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNo)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("phoneNo");
@@ -76,7 +89,6 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.PointBalance).HasColumnName("pointBalance");
 
                 entity.Property(e => e.RoleId)
-                    .IsRequired()
                     .HasMaxLength(2)
                     .HasColumnName("roleId");
 
@@ -96,7 +108,6 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
                 entity.Property(e => e.CategoryName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("categoryName");
             });
@@ -104,14 +115,21 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .HasName("PK__Exchange__0809335DC9D26264");
+=======
+                    .HasName("PK__Exchange__0809335DF3C52DBC");
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
 
                 entity.ToTable("ExchangeOrder");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
                 entity.Property(e => e.BuyerId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .IsRequired()
+=======
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
                     .HasMaxLength(10)
                     .HasColumnName("buyerId");
 
@@ -127,7 +145,10 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.PostId).HasColumnName("postId");
 
                 entity.Property(e => e.SellerId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .IsRequired()
+=======
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
                     .HasMaxLength(10)
                     .HasColumnName("sellerId");
 
@@ -140,7 +161,10 @@ namespace SecondhandStore.Infrastructure
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.ExchangeOrders)
                     .HasForeignKey(d => d.PostId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .OnDelete(DeleteBehavior.ClientSetNull)
+=======
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
                     .HasConstraintName("FK__ExchangeO__postI__34C8D9D1");
 
                 entity.HasOne(d => d.Seller)
@@ -157,12 +181,10 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.PermissionId).HasColumnName("permissionId");
 
                 entity.Property(e => e.PermissionName)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("permissionName");
 
                 entity.Property(e => e.RoleId)
-                    .IsRequired()
                     .HasMaxLength(2)
                     .HasColumnName("roleId");
 
@@ -180,19 +202,16 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.PostId).HasColumnName("postId");
 
                 entity.Property(e => e.AccountId)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("accountId");
 
                 entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
                 entity.Property(e => e.Description)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("description");
 
                 entity.Property(e => e.Image)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("image");
 
@@ -208,15 +227,23 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.PostPriority).HasColumnName("postPriority");
 
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                 entity.Property(e => e.PostStatus)
                     .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("postStatus");
+=======
+                entity.Property(e => e.PostStatus).HasColumnName("postStatus");
+
+                entity.Property(e => e.PostType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("postType");
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
                 entity.Property(e => e.ProductName)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .HasColumnName("productName");
 
@@ -240,7 +267,6 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.ReportId).HasColumnName("reportId");
 
                 entity.Property(e => e.Evidence1)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence1");
@@ -256,7 +282,6 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("evidence3");
 
                 entity.Property(e => e.Reason)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("reason");
 
@@ -265,12 +290,14 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("reportDate");
 
                 entity.Property(e => e.ReportedAccountId)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("reportedAccountId");
 
                 entity.Property(e => e.ReporterId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .IsRequired()
+=======
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
                     .HasMaxLength(10)
                     .HasColumnName("reporterId");
 
@@ -294,17 +321,14 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.ReviewId).HasColumnName("reviewId");
 
                 entity.Property(e => e.Content)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("content");
 
                 entity.Property(e => e.FeedbackUserId)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("feedbackUserId");
 
                 entity.Property(e => e.FeedbackUsername)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("feedbackUsername");
@@ -335,7 +359,10 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("roleId");
 
                 entity.Property(e => e.RoleName)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .IsRequired()
+=======
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
                     .HasMaxLength(6)
                     .HasColumnName("roleName");
             });
@@ -343,14 +370,17 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
+<<<<<<< HEAD:Infrastructure/SecondhandStoreContext-old.cs
                     .HasName("PK__TopUp__0809335D351A579D");
+=======
+                    .HasName("PK__TopUp__0809335D025601EA");
+>>>>>>> 0328c1e978e95085f75972c075248f9a53d59742:Infrastructure/SecondhandStoreContext.cs
 
                 entity.ToTable("TopUp");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
                 entity.Property(e => e.AccountId)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("accountId");
 
@@ -371,7 +401,6 @@ namespace SecondhandStore.Infrastructure
 
             OnModelCreatingPartial(modelBuilder);
         }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

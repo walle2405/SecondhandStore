@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Models;
 using SecondhandStore.Repository;
@@ -13,28 +14,28 @@ public class RoleService
         _roleRepository = roleRepository;
     }
 
-    public async Task<List<Role>> GetAllRoles()
+    public async Task<IEnumerable<Role>> GetAllRoles()
     {
         //.Include(p => p) all you need
         return await _roleRepository.GetAll().ToListAsync();
     }
-    
-    public async Task<Role> GetRoleById(string id)
+
+    public async Task<Role?> GetRoleById(string id)
     {
         return await _roleRepository.GetById(id);
     }
-    
+
     public async Task AddRole(Role role)
     {
         await _roleRepository.Add(role);
     }
-    
+
     public async Task UpdateRole(Role role)
     {
         await _roleRepository.Update(role);
     }
-    
-    public async Task DeleteRole(Role role)
+
+    public async Task DeleteRole(Role? role)
     {
         await _roleRepository.Delete(role);
     }

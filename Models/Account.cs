@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace SecondhandStore.Models
 {
     public partial class Account
@@ -18,13 +16,13 @@ namespace SecondhandStore.Models
             TopUps = new HashSet<TopUp>();
         }
 
-        public string AccountId { get; set; }
-        public string Password { get; set; }
-        public string Fullname { get; set; }
-        public string Email { get; set; }
-        public string RoleId { get; set; }
-        public string Address { get; set; }
-        public string PhoneNo { get; set; }
+        public string AccountId { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Fullname { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string RoleId { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        public string PhoneNo { get; set; } = null!;
         public bool IsActive { get; set; }
         public double UserRatingScore { get; set; }
         public int PointBalance { get; set; }
