@@ -142,6 +142,7 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPost("/logout")]
     public async Task<IActionResult> Logout()
     {
         HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
