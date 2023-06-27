@@ -18,7 +18,6 @@ namespace SecondhandStore.Infrastructure
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; }
-        public virtual DbSet<ExchangeRequest> ExchangeRequests { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
@@ -28,7 +27,7 @@ namespace SecondhandStore.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (optionsBuilder.IsConfigured) 
+            if (optionsBuilder.IsConfigured)
                 return;
         }
 
@@ -82,6 +81,12 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("roleId");
 
                 entity.Property(e => e.UserRatingScore).HasColumnName("userRatingScore");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account__roleId__267ABA7A");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -98,105 +103,51 @@ namespace SecondhandStore.Infrastructure
 
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
-                entity.HasKey(e => e.OrderDetailId)
-                    .HasName("PK__Exchange__E4FEDE4A0591CCC7");
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK__Exchange__0809335DC9D26264");
 
                 entity.ToTable("ExchangeOrder");
 
-                entity.Property(e => e.OrderDetailId).HasColumnName("orderDetailId");
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
 
-                entity.Property(e => e.AccountId)
+                entity.Property(e => e.BuyerId)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .HasColumnName("accountID");
+                    .HasColumnName("buyerId");
 
                 entity.Property(e => e.OrderDate)
                     .HasColumnType("date")
                     .HasColumnName("orderDate");
 
-                entity.Property(e => e.OrderStatus).HasColumnName("orderStatus");
+                entity.Property(e => e.OrderStatus)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("orderStatus");
 
                 entity.Property(e => e.PostId).HasColumnName("postId");
-
-                entity.Property(e => e.ReceiverEmail)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("receiverEmail");
-
-                entity.Property(e => e.ReceiverId)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("receiverId");
-
-                entity.Property(e => e.ReceiverPhoneNumber)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("receiverPhoneNumber");
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.ExchangeOrderAccounts)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ExchangeO__accou__34C8D9D1");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.ExchangeOrders)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ExchangeO__postI__35BCFE0A");
-
-                entity.HasOne(d => d.Receiver)
-                    .WithMany(p => p.ExchangeOrderReceivers)
-                    .HasForeignKey(d => d.ReceiverId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ExchangeO__recei__33D4B598");
-            });
-
-            modelBuilder.Entity<ExchangeRequest>(entity =>
-            {
-                entity.HasKey(e => e.RequestDetailId)
-                    .HasName("PK__Exchange__6FB55063FA6005F9");
-
-                entity.ToTable("ExchangeRequest");
-
-                entity.Property(e => e.RequestDetailId).HasColumnName("requestDetailId");
-
-                entity.Property(e => e.OrderDate)
-                    .HasColumnType("date")
-                    .HasColumnName("orderDate");
-
-                entity.Property(e => e.PostId).HasColumnName("postId");
-
-                entity.Property(e => e.SellerEmail)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("sellerEmail");
 
                 entity.Property(e => e.SellerId)
                     .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("sellerId");
 
-                entity.Property(e => e.SellerPhoneNumber)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("sellerPhoneNumber");
+                entity.HasOne(d => d.Buyer)
+                    .WithMany(p => p.ExchangeOrderBuyers)
+                    .HasForeignKey(d => d.BuyerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ExchangeO__buyer__36B12243");
 
                 entity.HasOne(d => d.Post)
-                    .WithMany(p => p.ExchangeRequests)
+                    .WithMany(p => p.ExchangeOrders)
                     .HasForeignKey(d => d.PostId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ExchangeR__postI__398D8EEE");
+                    .HasConstraintName("FK__ExchangeO__postI__34C8D9D1");
 
                 entity.HasOne(d => d.Seller)
-                    .WithMany(p => p.ExchangeRequests)
+                    .WithMany(p => p.ExchangeOrderSellers)
                     .HasForeignKey(d => d.SellerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ExchangeR__selle__38996AB5");
+                    .HasConstraintName("FK__ExchangeO__selle__35BCFE0A");
             });
 
             modelBuilder.Entity<Permission>(entity =>
@@ -219,7 +170,7 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.Permissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Permissio__roleI__2E1BDC42");
+                    .HasConstraintName("FK__Permissio__roleI__2F10007B");
             });
 
             modelBuilder.Entity<Post>(entity =>
@@ -257,13 +208,10 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.PostPriority).HasColumnName("postPriority");
 
-                entity.Property(e => e.PostStatus).HasColumnName("postStatus");
-
-                entity.Property(e => e.PostType)
+                entity.Property(e => e.PostStatus)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("postType");
+                    .HasMaxLength(255)
+                    .HasColumnName("postStatus");
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
@@ -276,13 +224,13 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Post__accountId__286302EC");
+                    .HasConstraintName("FK__Post__accountId__2B3F6F97");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Post__categoryId__29572725");
+                    .HasConstraintName("FK__Post__categoryId__2C3393D0");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -298,13 +246,11 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("evidence1");
 
                 entity.Property(e => e.Evidence2)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence2");
 
                 entity.Property(e => e.Evidence3)
-                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence3");
@@ -323,11 +269,22 @@ namespace SecondhandStore.Infrastructure
                     .HasMaxLength(10)
                     .HasColumnName("reportedAccountId");
 
+                entity.Property(e => e.ReporterId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("reporterId");
+
                 entity.HasOne(d => d.ReportedAccount)
-                    .WithMany(p => p.Reports)
+                    .WithMany(p => p.ReportReportedAccounts)
                     .HasForeignKey(d => d.ReportedAccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Report__reported__403A8C7D");
+                    .HasConstraintName("FK__Report__reported__3E52440B");
+
+                entity.HasOne(d => d.Reporter)
+                    .WithMany(p => p.ReportReporters)
+                    .HasForeignKey(d => d.ReporterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__reporter__3D5E1FD2");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -360,13 +317,13 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.FeedbackUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Review__feedback__3D5E1FD2");
+                    .HasConstraintName("FK__Review__feedback__3A81B327");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.PostId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Review__postId__3C69FB99");
+                    .HasConstraintName("FK__Review__postId__398D8EEE");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -379,15 +336,14 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.RoleName)
                     .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
+                    .HasMaxLength(6)
                     .HasColumnName("roleName");
             });
 
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335D46A767E4");
+                    .HasName("PK__TopUp__0809335D351A579D");
 
                 entity.ToTable("TopUp");
 
@@ -410,7 +366,7 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.TopUps)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TopUp__accountId__30F848ED");
+                    .HasConstraintName("FK__TopUp__accountId__31EC6D26");
             });
 
             OnModelCreatingPartial(modelBuilder);

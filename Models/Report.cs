@@ -9,6 +9,7 @@ namespace SecondhandStore.Models
     {
         public int ReportId { get; set; }
         public string Reason { get; set; }
+        public string ReporterId { get; set; }
         public string ReportedAccountId { get; set; }
         public DateTime ReportDate { get; set; }
         public string Evidence1 { get; set; }
@@ -16,5 +17,6 @@ namespace SecondhandStore.Models
         public string Evidence3 { get; set; }
 
         public virtual Account ReportedAccount { get; set; }
+        public virtual Account Reporter { get; set; }
     }
 }
