@@ -24,6 +24,7 @@ public class TopUpController : ControllerBase
 
     // GET all action
     [HttpGet]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetTopupList()
     {
         var topupList = await _topupService.GetAllTopUp();
@@ -37,6 +38,7 @@ public class TopUpController : ControllerBase
 
     // GET by Id action
     [HttpGet("{id}")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> GetTopUpById(int id)
     {
         var existingTopup = await _topupService.GetTopUpById(id);
@@ -47,6 +49,7 @@ public class TopUpController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
     {
         var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
