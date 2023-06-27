@@ -83,4 +83,12 @@ public class AutoMapper : Profile
         CreateMap<PostCreateRequest, Post>()
         .ReverseMap();
     }
+
+    public void MapReview()
+    {
+        CreateMap<Review, ReviewRequest >()
+            .ReverseMap();
+        CreateMap<Review, Review>()
+            .ReverseMap();
+    }
 }
