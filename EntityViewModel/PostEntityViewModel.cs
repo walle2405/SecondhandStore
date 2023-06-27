@@ -1,4 +1,6 @@
-﻿namespace SecondhandStore.EntityViewModel
+﻿namespace SecondhandStore.EntityViewModel;
+
+public class PostEntityViewModel
 {
     public class PostEntityViewModel
     {
@@ -20,3 +22,4 @@
 
     }
 }
+

@@ -12,7 +12,7 @@ namespace SecondhandStore.Services
             _postRepository = postRepository;
         }
 
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<IEnumerable<Post>> GetAllPosts()
         {
             return await _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).ToListAsync();
         }
@@ -26,6 +26,26 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Add(p);
             return await _postRepository.GetByIntId(p.PostId);
+        }
+
+        public async Task AddPost(Post post)
+        {
+            await _postRepository.Add(post);
+        }
+        
+        public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
+        {
+            return await _postRepository.GetPostByProductName(productName);
+        }
+        
+        public async Task<Post?> GetPostById(int id)
+        {
+            return await _postRepository.GetByIntId(id);
+        }
+        
+        public async Task UpdatePost(Post post)
+        {
+            await _postRepository.Update(post);
         }
     }
 }
