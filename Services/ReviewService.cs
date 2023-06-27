@@ -1,4 +1,5 @@
-﻿using SecondhandStore.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
 namespace SecondhandStore.Services
@@ -18,7 +19,7 @@ namespace SecondhandStore.Services
 
         public async Task<IEnumerable<Review>> GetAllReview()
         {
-            return await _reviewRepository.GetAll();
+            return await _reviewRepository.GetAll().ToListAsync();
         }
     }
 }
