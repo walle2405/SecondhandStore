@@ -16,7 +16,7 @@ public class TopUpService
 
     public async Task<IEnumerable<TopUp>> GetAllTopUp()
     {
-        return await _topupRepository.GetAll();
+        return await _topupRepository.GetAll().ToListAsync();
     }
 
     public async Task<TopUp?> GetTopUpById(int topupid)

@@ -51,9 +51,6 @@ namespace SecondhandStore.Controllers
             if(created is null) return NoContent();
             return Ok(created);
         }
-<<<<<<< HEAD
-
-=======
         
         [HttpPost("create-new-post")]
         [Authorize(Roles = "US")]
@@ -87,7 +84,7 @@ namespace SecondhandStore.Controllers
                 if (existingPost is null)
                     return NotFound();
 
-                existingPost.PostStatus = !existingPost.PostStatus;
+                // existingPost.PostStatus = !existingPost.PostStatus;
 
                 await _postService.UpdatePost(existingPost);
 
@@ -124,6 +121,5 @@ namespace SecondhandStore.Controllers
                     "Invalid Request");
             }
         }
->>>>>>> 0328c1e978e95085f75972c075248f9a53d59742
     }
 }
