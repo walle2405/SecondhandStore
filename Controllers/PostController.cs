@@ -84,7 +84,7 @@ namespace SecondhandStore.Controllers
                 if (existingPost is null)
                     return NotFound();
 
-                existingPost.PostStatus = !existingPost.PostStatus;
+                // existingPost.PostStatus = !existingPost.PostStatus;
 
                 await _postService.UpdatePost(existingPost);
 

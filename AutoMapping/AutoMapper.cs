@@ -76,13 +76,6 @@ public class AutoMapper : Profile
     
     private void MapPost()
     {
-        CreateMap<Post, PostCreateRequest>()
-            .ReverseMap();
-        CreateMap<PostCreateRequest,Post>()
-            .ReverseMap();
-    }
-    private void MapPost()
-    {
         CreateMap<Post, PostEntityViewModel>()
         .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
         .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName));

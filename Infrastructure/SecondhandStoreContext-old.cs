@@ -105,6 +105,7 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
                 entity.Property(e => e.BuyerId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("buyerId");
 
@@ -112,11 +113,15 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnType("date")
                     .HasColumnName("orderDate");
 
-                entity.Property(e => e.OrderStatus).HasColumnName("orderStatus");
+                entity.Property(e => e.OrderStatus)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("orderStatus");
 
                 entity.Property(e => e.PostId).HasColumnName("postId");
 
                 entity.Property(e => e.SellerId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("sellerId");
 
@@ -129,6 +134,7 @@ namespace SecondhandStore.Infrastructure
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.ExchangeOrders)
                     .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ExchangeO__postI__34C8D9D1");
 
                 entity.HasOne(d => d.Seller)
@@ -191,12 +197,10 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.PostPriority).HasColumnName("postPriority");
 
-                entity.Property(e => e.PostStatus).HasColumnName("postStatus");
-
-                entity.Property(e => e.PostType)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("postType");
+                entity.Property(e => e.PostStatus)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("postStatus");
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
@@ -312,6 +316,7 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("roleId");
 
                 entity.Property(e => e.RoleName)
+                    .IsRequired()
                     .HasMaxLength(6)
                     .HasColumnName("roleName");
             });
@@ -319,7 +324,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335D025601EA");
+                    .HasName("PK__TopUp__0809335D351A579D");
 
                 entity.ToTable("TopUp");
 
