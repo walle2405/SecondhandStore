@@ -38,7 +38,7 @@ public class TopUpController : ControllerBase
 
     // GET by Id action
     [HttpGet("{id}")]
-    [Authorize(Roles = "US")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetTopUpById(int id)
     {
         var existingTopup = await _topupService.GetTopUpById(id);
@@ -53,7 +53,8 @@ public class TopUpController : ControllerBase
     public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
     {
         var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
-
+        mappedTopup.Price = mappedTopup.TopUpPoint * 1000;
+        mappedTopup.TopUpDate = DateTime.Now;
         await _topupService.AddTopUp(mappedTopup);
 
         return CreatedAtAction(nameof(GetTopupList),
