@@ -60,8 +60,7 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.Password)
                     .HasMaxLength(64)
                     .IsUnicode(false)
-                    .HasColumnName("password")
-                    .IsFixedLength();
+                    .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNo)
                     .HasMaxLength(50)
@@ -97,7 +96,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__Exchange__0809335D0FBE06FB");
+                    .HasName("PK__Exchange__0809335D45E51469");
 
                 entity.ToTable("ExchangeOrder");
 
@@ -217,22 +216,22 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.ReportId).HasColumnName("reportId");
 
                 entity.Property(e => e.Evidence1)
-                    .HasMaxLength(4000)
+                    .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence1");
 
                 entity.Property(e => e.Evidence2)
-                    .HasMaxLength(4000)
+                    .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence2");
 
                 entity.Property(e => e.Evidence3)
-                    .HasMaxLength(4000)
+                    .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasColumnName("evidence3");
 
                 entity.Property(e => e.Reason)
-                    .HasMaxLength(4000)
+                    .HasMaxLength(1)
                     .HasColumnName("reason");
 
                 entity.Property(e => e.ReportDate)
@@ -306,7 +305,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335DBFFA227F");
+                    .HasName("PK__TopUp__0809335D077F54BC");
 
                 entity.ToTable("TopUp");
 

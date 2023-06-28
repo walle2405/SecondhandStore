@@ -32,9 +32,9 @@ namespace SecondhandStore.Controllers
 
         [HttpPost]
         [Route("api/[controller]/create-review")]
-        public async Task<IActionResult> Review(ReviewRequest reviewRequest)
+        public async Task<IActionResult> Review(ReviewCreateRequest reviewCreateRequest)
         {
-            var mappedReview = _mapper.Map<Review>(reviewRequest);
+            var mappedReview = _mapper.Map<Review>(reviewCreateRequest);
 
             await _reviewService.AddReview(mappedReview);
 
