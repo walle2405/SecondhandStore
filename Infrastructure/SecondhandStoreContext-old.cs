@@ -228,22 +228,22 @@ namespace SecondhandStore.Infrastructure
                 entity.Property(e => e.ReportId).HasColumnName("reportId");
 
                 entity.Property(e => e.Evidence1)
-                    .HasMaxLength(1)
+                    .HasMaxLength(4000)
                     .IsUnicode(false)
                     .HasColumnName("evidence1");
 
                 entity.Property(e => e.Evidence2)
-                    .HasMaxLength(1)
+                    .HasMaxLength(4000)
                     .IsUnicode(false)
                     .HasColumnName("evidence2");
 
                 entity.Property(e => e.Evidence3)
-                    .HasMaxLength(1)
+                    .HasMaxLength(4000)
                     .IsUnicode(false)
                     .HasColumnName("evidence3");
 
                 entity.Property(e => e.Reason)
-                    .HasMaxLength(1)
+                    .HasMaxLength(4000)
                     .HasColumnName("reason");
 
                 entity.Property(e => e.ReportDate)

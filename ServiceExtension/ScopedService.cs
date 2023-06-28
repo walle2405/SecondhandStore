@@ -18,5 +18,8 @@ public static class ScopedService
 
         services.AddScoped<TopUpRepository>();
         services.AddScoped<TopUpService>();
+
+        services.AddScoped<ReportRepository>();
+        services.AddScoped<ReportService>();
     }
 }
