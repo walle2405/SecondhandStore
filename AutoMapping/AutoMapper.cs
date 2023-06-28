@@ -15,6 +15,8 @@ public class AutoMapper : Profile
         MapAccount();
         MapTopUp();
         MapPost();
+        MapReport();
+        MapReview();
     }
 
     private void MapRole()
@@ -93,6 +95,16 @@ public class AutoMapper : Profile
         CreateMap<Review, ReviewRequest>()
             .ReverseMap();
         CreateMap<ReviewRequest, Review>()
+            .ReverseMap();
+    }
+    public void MapReport() { 
+        CreateMap<Report,ReportCreateRequest>()
+            .ReverseMap();
+        CreateMap<ReportCreateRequest,Report>()
+            .ReverseMap();
+        CreateMap<Report, ReportEntityViewModel>()
+            .ReverseMap();
+        CreateMap<ReportEntityViewModel, Report>()
             .ReverseMap();
     }
 }
