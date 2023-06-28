@@ -23,7 +23,7 @@ public class TokenService
         {
             new(ClaimTypes.Role, user.RoleId),
             new(ClaimTypes.Email, user.Email),
-            new("accountId", user.AccountId)
+            new("accountId", user.AccountId.ToString())
         };
 
         var securityKey = new SymmetricSecurityKey(

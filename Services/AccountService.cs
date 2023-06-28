@@ -29,9 +29,9 @@ public class AccountService
         return await _accountRepository.GetAll().ToListAsync();
     }
 
-    public async Task<Account?> GetAccountById(string id)
+    public async Task<Account?> GetAccountById(int id)
     {
-        return await _accountRepository.GetById(id);
+        return await _accountRepository.GetByIntId(id);
     }
 
     public async Task<IEnumerable<Account>> GetUserByName(string name)
@@ -66,7 +66,7 @@ public class AccountService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Role, account.RoleId),
-            new("accountId", account.AccountId),
+            new("accountId", account.AccountId.ToString()),
             new (ClaimTypes.Name, account.Fullname)
         };
         

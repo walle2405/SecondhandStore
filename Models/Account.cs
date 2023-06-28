@@ -16,7 +16,7 @@ namespace SecondhandStore.Models
             TopUps = new HashSet<TopUp>();
         }
 
-        public string AccountId { get; set; } = null!;
+        public int AccountId { get; set; }
         public string Password { get; set; } = null!;
         public string Fullname { get; set; } = null!;
         public string Email { get; set; } = null!;
@@ -27,7 +27,7 @@ namespace SecondhandStore.Models
         public double UserRatingScore { get; set; }
         public int PointBalance { get; set; }
 
-        public virtual Role Role { get; set; }
+        public virtual Role Role { get; set; } = null!;
         public virtual ICollection<ExchangeOrder> ExchangeOrderBuyers { get; set; }
         public virtual ICollection<ExchangeOrder> ExchangeOrderSellers { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
