@@ -67,7 +67,8 @@ public class AccountService
         {
             new(ClaimTypes.Role, account.RoleId),
             new("accountId", account.AccountId.ToString()),
-            new (ClaimTypes.Name, account.Fullname)
+            new (ClaimTypes.Name, account.Fullname),
+            new (ClaimTypes.Email, account.Email)
         };
         
         
