@@ -1,8 +1,7 @@
 ﻿namespace SecondhandStore.EntityRequest
 {
-    public class ReviewRequest
+    public class ReviewCreateRequest
     {
-        public int ReviewId { get; set; }
         public int PostId { get; set;}
         public string Content { get; set;}
         public int StarRating { get; set; }
