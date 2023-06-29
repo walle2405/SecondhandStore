@@ -33,7 +33,8 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPostList);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get-post-by-id")]
+        [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await _postService.GetPostById(id);
@@ -41,15 +42,6 @@ namespace SecondhandStore.Controllers
                 return NotFound();
             var mappedPost= _mapper.Map<PostEntityViewModel>(post);
             return Ok(mappedPost);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddPost(PostCreateRequest pcr)
-        {
-            var p = _mapper.Map<Post>(pcr);
-            var created = await _postService.AddPost(p);
-            if(created is null) return NoContent();
-            return Ok(created);
         }
         
         [HttpPost("create-new-post")]
@@ -71,10 +63,12 @@ namespace SecondhandStore.Controllers
             var existingPost = await _postService.GetPostByProductName(productName);
             if (existingPost is null)
                 return NotFound();
-            return Ok(existingPost);
+            var mappedExistingPost = existingPost.Select(c => _mapper.Map<PostEntityViewModel>(c));
+            return Ok(mappedExistingPost);
         }
 
         [HttpPut("toggle-post-status")]
+        [Authorize(Roles = "AD")]
         public async Task<IActionResult> TogglePostStatus(int id)
         {
             try

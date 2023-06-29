@@ -39,9 +39,14 @@ public class TopUpController : ControllerBase
     [Authorize(Roles = "US")]
     public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
     {
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+       
         var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
+        mappedTopup.AccountId = Int32.Parse(userId);
         mappedTopup.Price = mappedTopup.TopUpPoint * 1000;
+       
         mappedTopup.TopUpDate = DateTime.Now;
+      
         await _topupService.AddTopUp(mappedTopup);
 
         return CreatedAtAction(nameof(GetTopupList),
@@ -49,14 +54,22 @@ public class TopUpController : ControllerBase
             mappedTopup);
 
     }
+    
+    // function de user tu xem top-up cua minh
     [HttpGet("get-topup-by-userId")]
-    [Authorize(Roles = "AD")]
-    public async Task<IActionResult> GetTopUpByUserId(int id) {
+    [Authorize(Roles = "US")]
+    public async Task<IActionResult> GetTopUpByUserId(int id)
+    {
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+        
         var existingTopup = await _topupService.GetTopUpByUserId(id);
+      
         if (existingTopup is null)
             return NotFound();
+        
         var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);
-        return Ok(mappedExistTopup);
+        var userMappedExistTopUp = mappedExistTopup.Where(c => c.AccountId == Int32.Parse(userId)).ToList();
+        return Ok(userMappedExistTopUp);
     }
 
     [HttpGet("get-revenue")]
