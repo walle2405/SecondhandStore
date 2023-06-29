@@ -49,11 +49,12 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
-
+        
         if (!accountList.Any())
             return NotFound();
 
-        return Ok(accountList);
+        var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
+        return Ok(mappedAccountList);
     }
 
     // GET by Id action
