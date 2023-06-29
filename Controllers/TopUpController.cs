@@ -35,19 +35,6 @@ public class TopUpController : ControllerBase
         return Ok(mappedExistTopup);
         
     }
-
-    // GET by Id action
-    [HttpGet("{id}")]
-    [Authorize(Roles = "AD")]
-    public async Task<IActionResult> GetTopUpById(int id)
-    {
-        var existingTopup = await _topupService.GetTopUpById(id);
-        if (existingTopup is null)
-            return NotFound();
-        var mappedExistTopup = _mapper.Map<TopUpEntityViewModel>(existingTopup);
-        return Ok(mappedExistTopup);
-    }
-
     [HttpPost]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
@@ -62,6 +49,16 @@ public class TopUpController : ControllerBase
             mappedTopup);
 
     }
+    [HttpGet("get-topup-by-userId")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> GetTopUpByUserId(string id) {
+        var existingTopup = await _topupService.GetTopUpByUserId(id);
+        if (existingTopup is null)
+            return NotFound();
+        var mappedExistTopup = _mapper.Map<TopUpEntityViewModel>(existingTopup);
+        return Ok(mappedExistTopup);
+    }
+
     [HttpGet("get-revenue")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> ReturnRevenue() {
