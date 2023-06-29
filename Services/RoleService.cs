@@ -35,7 +35,7 @@ public class RoleService
         await _roleRepository.Update(role);
     }
 
-    public async Task DeleteRole(Role? role)
+    public async Task DeleteRole(Role role)
     {
         await _roleRepository.Delete(role);
     }

@@ -1,4 +1,6 @@
-﻿namespace SecondhandStore.EntityRequest;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+
+namespace SecondhandStore.EntityRequest;
 
 public class AccountCreateRequest
 {

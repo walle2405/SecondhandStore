@@ -52,7 +52,7 @@ public class RoleController : ControllerBase
 
         var existingRole = await _roleService.GetRoleById(id);
 
-        if (existingRole.ToString() is null)
+        if (existingRole is null)
             return NotFound();
 
         await _roleService.UpdateRole(mappedRole);
@@ -66,7 +66,7 @@ public class RoleController : ControllerBase
     {
         var existingRole = await _roleService.GetRoleById(id);
 
-        if (existingRole.ToString() is null)
+        if (existingRole is null)
             return NotFound();
 
         await _roleService.DeleteRole(existingRole);
