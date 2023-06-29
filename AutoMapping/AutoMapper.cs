@@ -15,6 +15,8 @@ public class AutoMapper : Profile
         MapAccount();
         MapTopUp();
         MapPost();
+        MapReport();
+        MapReview();
     }
 
     private void MapRole()
@@ -72,6 +74,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<TopUpCreateRequest, TopUp>()
             .ReverseMap();
+        CreateMap<TopUp, TopUpEntityViewModel>()
+            .ReverseMap();
+        CreateMap<TopUpEntityViewModel,TopUp>()
+            .ReverseMap();
     }
     
     private void MapPost()
@@ -82,5 +88,23 @@ public class AutoMapper : Profile
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()
         .ReverseMap();
+    }
+
+    public void MapReview()
+    {
+        CreateMap<Review, ReviewCreateRequest>()
+            .ReverseMap();
+        CreateMap<ReviewCreateRequest, Review>()
+            .ReverseMap();
+    }
+    public void MapReport() { 
+        CreateMap<Report,ReportCreateRequest>()
+            .ReverseMap();
+        CreateMap<ReportCreateRequest,Report>()
+            .ReverseMap();
+        CreateMap<Report, ReportEntityViewModel>()
+            .ReverseMap();
+        CreateMap<ReportEntityViewModel, Report>()
+            .ReverseMap();
     }
 }
