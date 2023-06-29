@@ -53,7 +53,7 @@ public class AccountService
     {
         await _accountRepository.Update(account);
     }
-
+    
     public async Task DeleteAccount(Account account)
     {
         await _accountRepository.Delete(account);

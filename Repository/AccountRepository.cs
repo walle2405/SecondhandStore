@@ -30,16 +30,17 @@ public class AccountRepository : BaseRepository<Account>
         return await _dbContext.Accounts.Where(c => c.Fullname.ToLower().Contains(Fullname.ToLower()) && c.RoleId.Equals("US")).ToListAsync();
     }
 
-    // public async Task UpdateAccount(Account updatedAccount)
-    // {
-    //     var existingAccount = _dbContext.Accounts.Find(updatedAccount.AccountId);
-    //     if (existingAccount != null)
-    //     {
-    //         existingAccount.Password = updatedAccount.Password;
-    //         existingAccount.Fullname = updatedAccount.Fullname;
-    //         existingAccount.Address = updatedAccount.Address;
-    //         existingAccount.PhoneNo = updatedAccount.PhoneNo;
-    //         await _dbContext.SaveChangesAsync();
-    //     }
-    // }
+    public new async Task Update(Account updatedAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == updatedAccount.AccountId);
+
+         if (existingAccount != null)
+         {
+             existingAccount.Password = updatedAccount.Password;
+             existingAccount.Fullname = updatedAccount.Fullname;
+             existingAccount.Address = updatedAccount.Address;
+             existingAccount.PhoneNo = updatedAccount.PhoneNo;
+             await _dbContext.SaveChangesAsync();
+         } 
+    }
 }

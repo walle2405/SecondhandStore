@@ -1,15 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
-using SecondhandStore.Infrastructure;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -99,23 +94,14 @@ public class AccountController : ControllerBase
     [Authorize(Roles="US")]
     public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)
     {
-            string userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
-            string email = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email) ?.Value ?? string.Empty;
-            string roleId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email) ?.Value ?? string.Empty;
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
-            mappedAccount.AccountId = Int32.Parse(userId);
-            mappedAccount.Email = email;
-            mappedAccount.RoleId = roleId;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            
+            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);  
+            mappedAccount.AccountId = int.Parse(userId);
 
             await _accountService.UpdateAccount(mappedAccount);
 
-            return Ok(GetUserByName("Hai"));
-        // }
-        // catch (Exception)
-        // {
-        //     return StatusCode(StatusCodes.Status500InternalServerError,
-        //         "Invalid Request");
-        // }
+            return NoContent();
     }
 
 
