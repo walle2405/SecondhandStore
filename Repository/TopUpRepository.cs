@@ -10,8 +10,9 @@ public class TopUpRepository : BaseRepository<TopUp>
     private readonly SecondhandStoreContext _dbContext;
     public TopUpRepository(SecondhandStoreContext dbContext) : base(dbContext)
     {
+        _dbContext = dbContext;
     }
-    public async Task<IEnumerable<TopUp>> GetUsesId(string userId)
+    public async Task<IEnumerable<TopUp>> GetUserId(int userId)
     {
         return await _dbContext.TopUps.Where(c => c.AccountId == userId).ToListAsync();
     }

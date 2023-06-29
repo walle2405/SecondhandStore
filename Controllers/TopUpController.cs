@@ -51,11 +51,11 @@ public class TopUpController : ControllerBase
     }
     [HttpGet("get-topup-by-userId")]
     [Authorize(Roles = "AD")]
-    public async Task<IActionResult> GetTopUpByUserId(string id) {
+    public async Task<IActionResult> GetTopUpByUserId(int id) {
         var existingTopup = await _topupService.GetTopUpByUserId(id);
         if (existingTopup is null)
             return NotFound();
-        var mappedExistTopup = _mapper.Map<TopUpEntityViewModel>(existingTopup);
+        var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);
         return Ok(mappedExistTopup);
     }
 
