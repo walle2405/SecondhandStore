@@ -1,4 +1,3 @@
-/*
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using SecondhandStore.Infrastructure;
@@ -22,4 +21,3 @@ public class CreateDbContextService
         }
     }
 }
-*/

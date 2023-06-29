@@ -3,17 +3,32 @@ using SecondhandStore.Infrastructure;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        });
+});
 
 // Add services to the container.
 
 var config = builder.Configuration;
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -51,17 +66,18 @@ builder.Services.AddCors(o =>
     });
 });
 
+
 var app = builder.Build();
 
 // auto migrate database
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider
-        .GetRequiredService<SecondhandStoreContext>();
-
-    // Here is the migration executed
-    dbContext.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider
+//         .GetRequiredService<SecondhandStoreContext>();
+//
+//     // Here is the migration executed
+//     dbContext.Database.Migrate();
+// }
 
 
 // Configure the HTTP request pipeline.
@@ -78,6 +94,8 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors();
 
 app.UseAuthorization();
 

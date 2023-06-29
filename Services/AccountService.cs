@@ -25,12 +25,13 @@ public class AccountService
 
     public async Task<IEnumerable<Account>> GetAllAccounts()
     {
-        return await _accountRepository.GetAll();
+        //.Include(p => p) all you need
+        return await _accountRepository.GetAll().ToListAsync();
     }
 
-    public async Task<Account?> GetAccountById(string id)
+    public async Task<Account?> GetAccountById(int id)
     {
-        return await _accountRepository.GetById(id);
+        return await _accountRepository.GetByIntId(id);
     }
 
     public async Task<IEnumerable<Account>> GetUserByName(string name)
@@ -52,7 +53,7 @@ public class AccountService
     {
         await _accountRepository.Update(account);
     }
-
+    
     public async Task DeleteAccount(Account account)
     {
         await _accountRepository.Delete(account);
@@ -65,11 +66,9 @@ public class AccountService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Role, account.RoleId),
-            new(ClaimTypes.Email, account.Email),
-            new("accountId", account.AccountId),
+            new("accountId", account.AccountId.ToString()),
             new (ClaimTypes.Name, account.Fullname),
-            new (ClaimTypes.MobilePhone, account.PhoneNo),
-            new (ClaimTypes.StreetAddress, account.Address)
+            new (ClaimTypes.Email, account.Email)
         };
         
         
@@ -88,4 +87,6 @@ public class AccountService
 
         return tokenHandler.WriteToken(token);
     }
+    
+    
 }

@@ -6,17 +6,18 @@ namespace SecondhandStore.Repository.BaseRepository;
 public abstract class BaseRepository<TEntity> where TEntity : class
 {
     private readonly SecondhandStoreContext _dbContext;
+    
 
     protected BaseRepository(SecondhandStoreContext dbContext)
     {
         _dbContext = dbContext;
     }
-
-    public async Task<IEnumerable<TEntity>> GetAll()
+ 
+    public IQueryable<TEntity> GetAll()
     {
         try
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return _dbContext.Set<TEntity>();
         }
         catch (Exception ex)
         {
@@ -69,7 +70,7 @@ public abstract class BaseRepository<TEntity> where TEntity : class
     public async Task Update(TEntity entity)
     {
         try
-        {
+        {            
             _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
         }

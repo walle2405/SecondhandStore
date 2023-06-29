@@ -1,3 +1,5 @@
+
+using Microsoft.EntityFrameworkCore;
 using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
@@ -14,7 +16,8 @@ public class RoleService
 
     public async Task<IEnumerable<Role>> GetAllRoles()
     {
-        return await _roleRepository.GetAll();
+        //.Include(p => p) all you need
+        return await _roleRepository.GetAll().ToListAsync();
     }
 
     public async Task<Role?> GetRoleById(string id)
@@ -32,7 +35,7 @@ public class RoleService
         await _roleRepository.Update(role);
     }
 
-    public async Task DeleteRole(Role? role)
+    public async Task DeleteRole(Role role)
     {
         await _roleRepository.Delete(role);
     }

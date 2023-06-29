@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
+using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -41,23 +44,23 @@ public class AccountController : ControllerBase
     }
 
     // GET all action
-    [HttpGet]
-    [Route("api/[controller]/get-account-list")]
+    [HttpGet("get-account-list")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
-
+        
         if (!accountList.Any())
             return NotFound();
 
-        return Ok(accountList);
+        var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
+        return Ok(mappedAccountList);
     }
 
     // GET by Id action
-    [HttpGet()]
-    [Route("api/[controller]/get-account-by-id")]
-    public async Task<IActionResult> GetAccountById(string id)
+    [HttpGet("get-account-by-id")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> GetAccountById(int id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
         if (existingAccount is null)
@@ -65,18 +68,18 @@ public class AccountController : ControllerBase
         return Ok(existingAccount);
     }
 
-    [HttpGet]
-    [Route("api/[controller]/get-user-by-name")]
+    [HttpGet("get-user-by-name")]
     public async Task<IActionResult> GetUserByName(string fullName)
     {
         var existingUser = await _accountService.GetUserByName(fullName);
         if (existingUser is null)
             return NotFound();
-        return Ok(existingUser);
+        var mappedExistingUser = _mapper.Map<List<AccountEntityViewModel>>(existingUser);
+        return Ok(mappedExistingUser);
+        
     }
 
-    [HttpPost]
-    [Route("api/[controller]/create-new-account")]
+    [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
@@ -88,54 +91,24 @@ public class AccountController : ControllerBase
             mappedAccount);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAccount(string id, AccountUpdateRequest accountUpdateRequest)
+    [HttpPut("update-account")]
+    [Authorize(Roles="US")]
+    public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)
     {
-        /*
-        var existingAccount = await _accountService.GetAccountById(id);
-
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        existingAccount.Password = accountUpdateRequest.Password;
-        existingAccount.Fullname = accountUpdateRequest.Fullname;
-        existingAccount.Email = accountUpdateRequest.Email;
-        existingAccount.Address = accountUpdateRequest.Address;
-        existingAccount.PhoneNo = accountUpdateRequest.PhoneNo;
-        existingAccount.IsActive = accountUpdateRequest.IsActive;
-        existingAccount.RoleId = existingAccount.RoleId;
-        
-        
-        if (existingAccount.ToString() is null)
-            return NotFound();
-        
-        await _accountService.UpdateAccount(existingAccount);
-
-        return NoContent();
-        */
-        try
-        {
-            var existingAccount = await _accountService.GetAccountById(id);
-
-            if (existingAccount is null)
-                return NotFound();
-
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            
+            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);  
+            mappedAccount.AccountId = int.Parse(userId);
 
             await _accountService.UpdateAccount(mappedAccount);
 
             return NoContent();
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Invalid Request");
-        }
     }
 
 
-    [HttpPut("{id}/toggle-status")]
-    public async Task<IActionResult> ToggleAccountStatus(string id)
+    [HttpPut("toggle-account-status")]
+    [Authorize(Roles="AD")]
+    public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         try
         {
@@ -157,44 +130,12 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
 
-    // POST action 
-    //[HttpPost]
-    //public IActionResult CreateNewAccount(Account account)
-    //{
-    //    AccountService.Create(account);
-    //    return CreatedAtAction(nameof(Get), new { id = account.AccountId }, account);
-    //}
-
-    //// PUT action
-    //[HttpPut("{id}")]
-    //public IActionResult Update(string id, Account account)
-    //{
-    //    // This code will update the account and return a result
-    //    if (id != account.AccountId)
-    //        return BadRequest();
-
-    //    var existingAccount = accountService.GetAll().Where(p => p.AccountId.Equals(id)).FirstOrDefault();
-    //    if (existingAccount is null)
-    //        return NotFound();
-
-    //    accountService.Update(account);
-
-    //    return NoContent();
-    //}
-
-    //// DELETE action
-    //[HttpDelete("{id}")]
-    //public IActionResult Delete(string id)
-    //{
-    //    // This code will delete the pizza and return a result
-    //    var account = accountService.GetAll().Where(p => p.AccountId.Equals(id)).FirstOrDefault();
-
-    //    if (account is null)
-    //        return NotFound();
-
-    //    accountService.Delete(account);
-
-    //    return NoContent();
-    //}
+        return Ok(new { message = "Logged out successfully." });
+    }
+    
 }

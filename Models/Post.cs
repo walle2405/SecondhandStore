@@ -12,7 +12,7 @@ namespace SecondhandStore.Models
         }
 
         public int PostId { get; set; }
-        public string AccountId { get; set; } = null!;
+        public int AccountId { get; set; }
         public string ProductName { get; set; } = null!;
         public string Image { get; set; } = null!;
         public string Description { get; set; } = null!;

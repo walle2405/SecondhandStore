@@ -1,4 +1,7 @@
-﻿using SecondhandStore.Models;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SecondhandStore.EntityViewModel;
+using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
 namespace SecondhandStore.Services;
@@ -6,15 +9,17 @@ namespace SecondhandStore.Services;
 public class TopUpService
 {
     private readonly TopUpRepository _topupRepository;
+    private readonly IMapper _mapper;
 
     public TopUpService(TopUpRepository topupRepository)
     {
         _topupRepository = topupRepository;
     }
 
+
     public async Task<IEnumerable<TopUp>> GetAllTopUp()
     {
-        return await _topupRepository.GetAll();
+        return await _topupRepository.GetAll().ToListAsync();
     }
 
     public async Task<TopUp?> GetTopUpById(int topupid)
@@ -25,5 +30,15 @@ public class TopUpService
     public async Task AddTopUp(TopUp topUp)
     {
         await _topupRepository.Add(topUp);
+    }
+    public async Task<Double> GetTotalRevenue()
+    {
+        var topupList = await GetAllTopUp();
+        if (!topupList.Any())
+        {
+            return 0;
+        }
+        double total = topupList.Sum(p => p.Price);
+        return total;
     }
 }

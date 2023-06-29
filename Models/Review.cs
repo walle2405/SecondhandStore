@@ -9,7 +9,7 @@ namespace SecondhandStore.Models
         public int PostId { get; set; }
         public string Content { get; set; } = null!;
         public int StarRating { get; set; }
-        public string FeedbackUserId { get; set; } = null!;
+        public int FeedbackUserId { get; set; }
         public string FeedbackUsername { get; set; } = null!;
 
         public virtual Account FeedbackUser { get; set; } = null!;

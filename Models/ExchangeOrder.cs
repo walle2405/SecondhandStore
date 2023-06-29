@@ -7,14 +7,13 @@ namespace SecondhandStore.Models
     {
         public int OrderId { get; set; }
         public int? PostId { get; set; }
-        public string SellerId { get; set; } = null!;
-        public string BuyerId { get; set; } = null!;
+        public int SellerId { get; set; }
+        public int BuyerId { get; set; }
         public DateTime OrderDate { get; set; }
         public bool OrderStatus { get; set; }
-        public string BuyerPhoneNumber { get; set; } = null!;
-        public string BuyerEmail { get; set; } = null!;
 
         public virtual Account Buyer { get; set; } = null!;
         public virtual Post? Post { get; set; }
+        public virtual Account Seller { get; set; } = null!;
     }
 }
