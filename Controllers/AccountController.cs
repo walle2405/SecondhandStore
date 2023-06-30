@@ -1,13 +1,10 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
-using SecondhandStore.Infrastructure;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 using Swashbuckle.AspNetCore.Annotations;
@@ -94,27 +91,17 @@ public class AccountController : ControllerBase
     }
 
     [HttpPut("update-account")]
-    [Authorize(Roles="AD,US")]
-    public async Task<IActionResult> UpdateAccount(int id, AccountUpdateRequest accountUpdateRequest)
+    [Authorize(Roles="US")]
+    public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)
     {
-        try
-        {
-            var existingAccount = await _accountService.GetAccountById(id);
-
-            if (existingAccount is null)
-                return NotFound();
-
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            
+            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);  
+            mappedAccount.AccountId = int.Parse(userId);
 
             await _accountService.UpdateAccount(mappedAccount);
 
             return NoContent();
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Invalid Request");
-        }
     }
 
 

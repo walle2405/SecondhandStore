@@ -70,7 +70,7 @@ public abstract class BaseRepository<TEntity> where TEntity : class
     public async Task Update(TEntity entity)
     {
         try
-        {
+        {            
             _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
         }

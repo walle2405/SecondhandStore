@@ -16,7 +16,8 @@ public class PostRepository : BaseRepository<Post>
 
     public async Task<IEnumerable<Post>> GetPostByProductName(string ProductName)
     {
-        return await _dbContext.Posts.Where(c => c.ProductName.ToLower().Contains(ProductName.ToLower())).Skip(1)
-            .ToListAsync();
+        return await _dbContext.Posts.Where(c => c.ProductName.ToLower().Contains(ProductName.ToLower()))
+            .Include(p => p.Account).Include(p => p.Category).ToListAsync();
+            
     }
 }

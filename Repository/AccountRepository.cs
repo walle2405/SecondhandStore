@@ -3,6 +3,7 @@ using SecondhandStore.EntityRequest;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.Models;
 using SecondhandStore.Repository.BaseRepository;
+using SecondhandStore.Services;
 
 namespace SecondhandStore.Repository;
 
@@ -27,5 +28,19 @@ public class AccountRepository : BaseRepository<Account>
     public async Task<IEnumerable<Account>> GetUserByName(string Fullname)
     {
         return await _dbContext.Accounts.Where(c => c.Fullname.ToLower().Contains(Fullname.ToLower()) && c.RoleId.Equals("US")).ToListAsync();
+    }
+
+    public new async Task Update(Account updatedAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == updatedAccount.AccountId);
+
+         if (existingAccount != null)
+         {
+             existingAccount.Password = updatedAccount.Password;
+             existingAccount.Fullname = updatedAccount.Fullname;
+             existingAccount.Address = updatedAccount.Address;
+             existingAccount.PhoneNo = updatedAccount.PhoneNo;
+             await _dbContext.SaveChangesAsync();
+         } 
     }
 }

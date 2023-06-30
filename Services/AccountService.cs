@@ -53,7 +53,7 @@ public class AccountService
     {
         await _accountRepository.Update(account);
     }
-
+    
     public async Task DeleteAccount(Account account)
     {
         await _accountRepository.Delete(account);
@@ -67,7 +67,8 @@ public class AccountService
         {
             new(ClaimTypes.Role, account.RoleId),
             new("accountId", account.AccountId.ToString()),
-            new (ClaimTypes.Name, account.Fullname)
+            new (ClaimTypes.Name, account.Fullname),
+            new (ClaimTypes.Email, account.Email)
         };
         
         

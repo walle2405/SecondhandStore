@@ -31,6 +31,9 @@ public class TopUpService
     {
         await _topupRepository.Add(topUp);
     }
+    public async Task<IEnumerable<TopUp>> GetTopUpByUserId(int userId) { 
+        return await _topupRepository.GetUserId(userId);
+    }
     public async Task<Double> GetTotalRevenue()
     {
         var topupList = await GetAllTopUp();
