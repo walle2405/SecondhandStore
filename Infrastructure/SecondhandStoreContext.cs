@@ -185,11 +185,6 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.PostStatus).HasColumnName("postStatus");
 
-                entity.Property(e => e.PostType)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("postType");
-
                 entity.Property(e => e.Price).HasColumnName("price");
 
                 entity.Property(e => e.ProductName)

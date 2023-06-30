@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
+using System.Data;
 
 namespace SecondhandStore.Controllers
 {
@@ -21,29 +22,33 @@ namespace SecondhandStore.Controllers
         }
 
         // GET all action
-        [HttpGet]
-        [Route("api/[controller]/get-all-request-list")]
-        public async Task<IActionResult> GetOrderListByBuyerId(int userId)
+        [HttpGet("get-all-request-list")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetExchangeRequest()
         {
-            var orderList = await _exchangeOrderService.GetExchangeByBuyerId(userId);
-            if (orderList is null)
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var id = Int32.Parse(userId);
+            var requestList = await _exchangeOrderService.GetExchangeRequest(id);
+            if (requestList is null)
             {
                 return NotFound();
             }
-            var mappedExchangeOrder = _mapper.Map<List<ExchangeOrderEntityViewModel>>(orderList);
-            return Ok(mappedExchangeOrder);
-            
+            var mappedExchangeRequest = requestList.Select(p => _mapper.Map<ExchangeRequestEntityViewModel>(p));
+            return Ok(mappedExchangeRequest);
+
         }
-        [HttpGet]
-        [Route("api/[controller]/get-all-order-list")]
-        public async Task<IActionResult> GetOrderListBySellerId(int userId)
+        [HttpGet("get-all-order-list")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetGetExchangeOrder()
         {
-            var orderList = await _exchangeOrderService.GetExchangeBySellerId(userId);
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var id = Int32.Parse(userId);
+            var orderList = await _exchangeOrderService.GetExchangeOrder(id);
             if (orderList is null)
             {
                 return NotFound();
             }
-            var mappedExchangeOrder = _mapper.Map<List<ExchangeRequestEntityViewModel>>(orderList);
+            var mappedExchangeOrder = orderList.Select(p => _mapper.Map<ExchangeOrderEntityViewModel>(p));
             return Ok(mappedExchangeOrder);
 
         }

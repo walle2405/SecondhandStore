@@ -16,9 +16,8 @@ namespace SecondhandStore.Models
         public string ProductName { get; set; } = null!;
         public string Image { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public bool PostStatus { get; set; }
+        public string PostStatus { get; set; }
         public int CategoryId { get; set; }
-        public string PostType { get; set; } = null!;
         public int PointCost { get; set; }
         public DateTime PostDate { get; set; }
         public int PostPriority { get; set; }

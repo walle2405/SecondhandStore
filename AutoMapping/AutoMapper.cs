@@ -110,14 +110,19 @@ public class AutoMapper : Profile
     }
     public void MapExchangeOrder() {
         CreateMap<ExchangeOrder, ExchangeOrderEntityViewModel>()
-            .ReverseMap();
-        CreateMap<ExchangeOrderEntityViewModel, ExchangeOrder>()
-            .ReverseMap();
+            .ForMember(d => d.BuyerName, map => map.MapFrom(p => p.Buyer.Fullname))
+            .ForMember(d => d.BuyerPhoneNumber, map => map.MapFrom(p => p.Buyer.PhoneNo))
+            .ForMember(d => d.BuyerEmail, map => map.MapFrom(p => p.Buyer.Email))
+            .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName));
+        CreateMap<ExchangeOrderEntityViewModel, ExchangeOrder>();
+            
     }
     public void MapExchangeRequest() {
         CreateMap<ExchangeOrder, ExchangeRequestEntityViewModel>()
-            .ReverseMap();
-        CreateMap<ExchangeRequestEntityViewModel, ExchangeOrder>()
-            .ReverseMap();
+            .ForMember(d => d.SellerName, map => map.MapFrom(p => p.Seller.Fullname))
+            .ForMember(d => d.SellerPhoneNumber, map => map.MapFrom(p => p.Seller.PhoneNo))
+            .ForMember(d => d.SellerEmail, map => map.MapFrom(p => p.Seller.Email))
+            .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName));
+        CreateMap<ExchangeRequestEntityViewModel, ExchangeOrder>();
     }
 }
