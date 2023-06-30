@@ -84,6 +84,9 @@ public class AutoMapper : Profile
     {
         CreateMap<Post, PostEntityViewModel>()
         .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+        .ForMember(d => d.PhoneNo, map => map.MapFrom(p => p.Account.PhoneNo))
+        .ForMember(d => d.Address, map => map.MapFrom(p => p.Account.Address))
+        .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
         .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName));
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>();
