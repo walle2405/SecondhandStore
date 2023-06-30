@@ -7,24 +7,18 @@ namespace SecondhandStore.Services;
 public class ExchangeOrderService
 {
     private readonly ExchangeOrderRepository _exchangeOrderRepository;
-    public ExchangeOrderService(ExchangeOrderRepository exchangeOrderRepository)
+    private readonly IConfiguration _configuration;
+    public ExchangeOrderService(ExchangeOrderRepository exchangeOrderRepository, IConfiguration configuration)
     {
         _exchangeOrderRepository = exchangeOrderRepository;
+        _configuration = configuration;
     }
-    public async Task<IEnumerable<ExchangeOrder>> GetAllRequest()
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeByBuyerId(int userId) {
+        return await _exchangeOrderRepository.GetExchangeByBuyerId(userId);
+    }
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeBySellerId(int userId)
     {
-        return await _exchangeOrderRepository.GetAll().ToListAsync();
+        return await _exchangeOrderRepository.GetExchangeBySellerId(userId);
     }
-    public async Task<ExchangeOrder?> GetOrderById(int orderId)
-    {
-        return await _exchangeOrderRepository.GetByIntId(orderId);
-    }
-    public async Task AddOrder(ExchangeOrder exchangeOrder)
-    {
-        await _exchangeOrderRepository.Add(exchangeOrder);
-    }
-    public async Task UpdateOrder(ExchangeOrder exchangeOrder) 
-    { 
-        await _exchangeOrderRepository.Update(exchangeOrder);
-    }
+    
 }

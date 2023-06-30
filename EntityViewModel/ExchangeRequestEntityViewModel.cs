@@ -2,11 +2,10 @@
 {
     public class ExchangeRequestEntityViewModel
     {
-        public int RequestDetailId { get; set; }
-        public string SellerId { get; set; }
+        public int OrderId { get; set; }
+        public int? PostId { get; set; }
+        public int BuyerId { get; set; }
         public DateTime OrderDate { get; set; }
-        public int PostId { get; set; }
-        public string SellerPhoneNumber { get; set; }
-        public string SellerEmail { get; set; }
+        public bool OrderStatus { get; set; }
     }
 }

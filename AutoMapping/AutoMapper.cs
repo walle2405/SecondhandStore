@@ -17,6 +17,8 @@ public class AutoMapper : Profile
         MapPost();
         MapReport();
         MapReview();
+        MapExchangeOrder();
+        MapExchangeRequest();
     }
 
     private void MapRole()
@@ -105,6 +107,18 @@ public class AutoMapper : Profile
         CreateMap<Report, ReportEntityViewModel>()
             .ReverseMap();
         CreateMap<ReportEntityViewModel, Report>()
+            .ReverseMap();
+    }
+    public void MapExchangeOrder() {
+        CreateMap<ExchangeOrder, ExchangeOrderEntityViewModel>()
+            .ReverseMap();
+        CreateMap<ExchangeOrderEntityViewModel, ExchangeOrder>()
+            .ReverseMap();
+    }
+    public void MapExchangeRequest() {
+        CreateMap<ExchangeOrder, ExchangeRequestEntityViewModel>()
+            .ReverseMap();
+        CreateMap<ExchangeRequestEntityViewModel, ExchangeOrder>()
             .ReverseMap();
     }
 }

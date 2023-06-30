@@ -115,10 +115,8 @@ public class AccountController : ControllerBase
 
             if (existingAccount is null)
                 return NotFound();
-
-            existingAccount.IsActive = !existingAccount.IsActive;
-
-            await _accountService.UpdateAccount(existingAccount);
+            
+            await _accountService.ToggleAccountStatus(existingAccount);
 
             return NoContent();
         }
