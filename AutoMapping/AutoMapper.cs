@@ -71,14 +71,13 @@ public class AutoMapper : Profile
 
     private void MapTopUp()
     {
+        CreateMap<TopUp, TopUpEntityViewModel>()
+            .ForMember(d => d.FullName, map => map.MapFrom(p => p.Account.Fullname))
+            .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email));
+        CreateMap<TopUpEntityViewModel, TopUp>();
         CreateMap<TopUp, TopUpCreateRequest>()
             .ReverseMap();
-        CreateMap<TopUpCreateRequest, TopUp>()
-            .ReverseMap();
-        CreateMap<TopUp, TopUpEntityViewModel>()
-            .ReverseMap();
-        CreateMap<TopUpEntityViewModel,TopUp>()
-            .ReverseMap();
+        
     }
     
     private void MapPost()

@@ -19,7 +19,7 @@ public class TopUpService
 
     public async Task<IEnumerable<TopUp>> GetAllTopUp()
     {
-        return await _topupRepository.GetAll().ToListAsync();
+        return await _topupRepository.GetAll().Include(p=>p.Account).ToListAsync();
     }
 
     public async Task<TopUp?> GetTopUpById(int topupid)
