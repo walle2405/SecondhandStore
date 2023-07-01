@@ -16,8 +16,27 @@ public class PostRepository : BaseRepository<Post>
 
     public async Task<IEnumerable<Post>> GetPostByProductName(string ProductName)
     {
-        return await _dbContext.Posts.Where(c => c.ProductName.ToLower().Contains(ProductName.ToLower()))
-            .Include(p => p.Account).Include(p => p.Category).ToListAsync();
+        return await _dbContext.Posts.Where(c => c.ProductName.ToLower()
+                .Contains(ProductName.ToLower()))
+                .Include(p => p.Account)
+                .Include(p => p.Category)
+                .Include(p => p.PostType)
+                .ToListAsync();
             
+    }
+
+    // Override update method of base repository
+    public new async Task Update(Post updatedPost)
+    {
+        var existingPost = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == updatedPost.PostId);
+
+        if (existingPost != null)
+        {
+            existingPost.ProductName = updatedPost.ProductName;
+            existingPost.Image = updatedPost.Image;
+            existingPost.Description = updatedPost.Description;
+            existingPost.Price = updatedPost.Price;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

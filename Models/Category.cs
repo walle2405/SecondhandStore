@@ -11,7 +11,7 @@ namespace SecondhandStore.Models
         }
 
         public int CategoryId { get; set; }
-        public string CategoryName { get; set; } = null!;
+        public string CategoryName { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
     }

@@ -84,11 +84,20 @@ public class AutoMapper : Profile
     private void MapPost()
     {
         CreateMap<Post, PostEntityViewModel>()
-        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
-        .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName));
+            .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+            .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
+            .ForMember(d => d.PostTypeName, map => map.MapFrom(p => p.PostType.PostTypeName));
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()
-        .ReverseMap();
+            .ReverseMap();
+        CreateMap<Post, PostUpdateRequest>()
+            .ReverseMap();
+        CreateMap<PostUpdateRequest, Post>()
+            .ReverseMap();
+        CreateMap<Post, PostType>()
+            .ReverseMap();
+        CreateMap<PostType, Post>()
+            .ReverseMap();
     }
 
     public void MapReview()

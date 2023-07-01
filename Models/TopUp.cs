@@ -11,6 +11,6 @@ namespace SecondhandStore.Models
         public DateTime TopUpDate { get; set; }
         public double Price { get; set; }
 
-        public virtual Account Account { get; set; } = null!;
+        public virtual Account Account { get; set; }
     }
 }

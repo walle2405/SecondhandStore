@@ -14,7 +14,11 @@ namespace SecondhandStore.Services
 
         public async Task<IEnumerable<Post>> GetAllPosts()
         {
-            return await _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).ToListAsync();
+            return await _postRepository.GetAll()
+                .Include(p => p.Account)
+                .Include(p => p.Category)
+                .Include(p => p.PostType)
+                .ToListAsync();
         }
         
         public async Task<Post?> GetPostById(int id)
@@ -30,6 +34,7 @@ namespace SecondhandStore.Services
         public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
         {
             return await _postRepository.GetPostByProductName(productName);
+
         }
     
         
