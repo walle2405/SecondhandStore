@@ -23,7 +23,7 @@ namespace SecondhandStore.Controllers
 
         // GET all action
         [HttpGet("get-all-request-list")]
-        [Authorize(Roles = "US")]
+        [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> GetExchangeRequest()
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
@@ -38,8 +38,8 @@ namespace SecondhandStore.Controllers
 
         }
         [HttpGet("get-all-order-list")]
-        [Authorize(Roles = "US")]
-        public async Task<IActionResult> GetGetExchangeOrder()
+        [Authorize(Roles = "AD,US")]
+        public async Task<IActionResult> GetExchangeOrder()
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             var id = Int32.Parse(userId);

@@ -48,8 +48,12 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "US")]
         public async Task<IActionResult> CreateNewPost(PostCreateRequest postCreateRequest)
         {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            
             var mappedPost = _mapper.Map<Post>(postCreateRequest);
-
+            
+            mappedPost.AccountId = Int32.Parse(userId);
+            
             await _postService.AddPost(mappedPost);
 
             return CreatedAtAction(nameof(GetPostList),
@@ -77,8 +81,8 @@ namespace SecondhandStore.Controllers
 
                 if (existingPost is null)
                     return NotFound();
-
-                // existingPost.PostStatus = !existingPost.PostStatus;
+                
+                // existingPost.IsActive = !existingPost.PostStatus;
 
                 await _postService.UpdatePost(existingPost);
 
@@ -96,6 +100,7 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> UpdatePost(int postId, PostUpdateRequest postUpdateRequest)
         {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
             try
             {
                 var existingPost = await _postService.GetPostById(postId);
@@ -104,10 +109,12 @@ namespace SecondhandStore.Controllers
                     return NotFound();
 
                 var mappedPost = _mapper.Map<Post>(postUpdateRequest);
-
+                mappedPost.AccountId = Int32.Parse(userId);
+                mappedPost.PostId = existingPost.PostId;
+                mappedPost.CategoryId = existingPost.CategoryId;
                 await _postService.UpdatePost(mappedPost);
 
-                return Ok(mappedPost);
+                return NoContent();
             }
             catch (Exception)
             {
