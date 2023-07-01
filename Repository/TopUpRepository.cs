@@ -14,6 +14,7 @@ public class TopUpRepository : BaseRepository<TopUp>
     }
     public async Task<IEnumerable<TopUp>> GetUserId(int userId)
     {
-        return await _dbContext.TopUps.Where(c => c.AccountId == userId).ToListAsync();
+        return await _dbContext.TopUps.Where(c => c.AccountId == userId)
+            .Include(p=>p.Account).ToListAsync();
     }
 }

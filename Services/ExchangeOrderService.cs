@@ -13,12 +13,12 @@ public class ExchangeOrderService
         _exchangeOrderRepository = exchangeOrderRepository;
         _configuration = configuration;
     }
-    public async Task<IEnumerable<ExchangeOrder>> GetExchangeByBuyerId(int userId) {
-        return await _exchangeOrderRepository.GetExchangeByBuyerId(userId);
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeRequest(int userId) {
+        return await _exchangeOrderRepository.GetExchangeRequest(userId);
     }
-    public async Task<IEnumerable<ExchangeOrder>> GetExchangeBySellerId(int userId)
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeOrder(int userId)
     {
-        return await _exchangeOrderRepository.GetExchangeBySellerId(userId);
+        return await _exchangeOrderRepository.GetExchangeOrder(userId);
     }
     
 }
