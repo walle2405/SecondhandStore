@@ -11,7 +11,7 @@ namespace SecondhandStore.Models
         }
 
         public int PostTypeId { get; set; }
-        public string PostTypeName { get; set; }
+        public string PostTypeName { get; set; } = null!;
 
         public virtual ICollection<Post> Posts { get; set; }
     }

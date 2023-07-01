@@ -12,9 +12,9 @@ namespace SecondhandStore.Models
         public DateTime OrderDate { get; set; }
         public int OrderStatusId { get; set; }
 
-        public virtual Account Buyer { get; set; }
-        public virtual PostStatus OrderStatus { get; set; }
-        public virtual Post Post { get; set; }
-        public virtual Account Seller { get; set; }
+        public virtual Account Buyer { get; set; } = null!;
+        public virtual PostStatus OrderStatus { get; set; } = null!;
+        public virtual Post Post { get; set; } = null!;
+        public virtual Account Seller { get; set; } = null!;
     }
 }
