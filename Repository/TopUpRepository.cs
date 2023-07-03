@@ -15,6 +15,24 @@ public class TopUpRepository : BaseRepository<TopUp>
     public async Task<IEnumerable<TopUp>> GetUserId(int userId)
     {
         return await _dbContext.TopUps.Where(c => c.AccountId == userId)
-            .Include(p=>p.Account).ToListAsync();
+            .Include(p=>p.Account).Include(p=>p.TopupStatus).ToListAsync();
     }
+    public new async Task AcceptTopup(TopUp acceptedTopup) {
+        var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == acceptedTopup.OrderId);
+        if (topup != null)
+        {
+            topup.TopupStatusId = 6;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+    public new async Task RejectTopUp(TopUp rejectedTopup)
+    {
+        var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == rejectedTopup.OrderId);
+        if (topup != null)
+        {
+            topup.TopupStatusId = 1;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+
 }

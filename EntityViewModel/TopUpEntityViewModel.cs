@@ -9,4 +9,5 @@ public class TopUpEntityViewModel
     public string Email { get; set; }
     public DateTime TopUpDate { get; set; }
     public double Price { get; set; }
+    public string TopUpStatus { get; set; }
 }

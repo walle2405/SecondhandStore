@@ -62,6 +62,9 @@ public class AccountService
     {
         await _accountRepository.Delete(account);
     }
+    public async Task UpdatePointAutomatic(Account topupAccount) { 
+        await _accountRepository.UpdatePointAutomatic(topupAccount);
+    }
 
     public string CreateToken(Account account)
     {

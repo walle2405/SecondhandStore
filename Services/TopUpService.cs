@@ -19,7 +19,7 @@ public class TopUpService
 
     public async Task<IEnumerable<TopUp>> GetAllTopUp()
     {
-        return await _topupRepository.GetAll().Include(p=>p.Account).ToListAsync();
+        return await _topupRepository.GetAll().Include(p=>p.Account).Include(p => p.TopupStatus).ToListAsync();
     }
 
     public async Task<TopUp?> GetTopUpById(int topupid)
@@ -36,12 +36,29 @@ public class TopUpService
     }
     public async Task<Double> GetTotalRevenue()
     {
-        var topupList = await GetAllTopUp();
+        var topupList = await _topupRepository.GetAll().Where(p=>p.TopupStatusId == 6).ToListAsync();
         if (!topupList.Any())
         {
             return 0;
         }
         double total = topupList.Sum(p => p.Price);
         return total;
+    }
+    public async Task<Double> GetTotalValueOfUserTransaction(int userId)
+    {
+        var userTopupList = await _topupRepository.GetAll().Where(p => p.AccountId == userId && p.TopupStatusId == 6).ToListAsync();
+        if (!userTopupList.Any())
+        {
+            return 0;
+        }
+        double total = userTopupList.Sum(p => p.Price);
+        return total;
+    }
+    public async Task AcceptTopup(TopUp acceptedTopup) { 
+        await _topupRepository.AcceptTopup(acceptedTopup);
+    }
+    public async Task RejectTopup(TopUp rejectedTopup)
+    {
+        await _topupRepository.RejectTopUp(rejectedTopup);
     }
 }
