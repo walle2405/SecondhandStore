@@ -17,6 +17,7 @@ public class PostEntityViewModel
     public int PostPriority { get; set; }
     public DateTime PostExpiryDate { get; set; }
     public double Price { get; set; }
+    public string PostStatusName { get; set; }
 
 }
 

@@ -18,6 +18,7 @@ namespace SecondhandStore.Services
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostType)
+                .Include(p => p.PostStatus)
                 .ToListAsync();
         }
         
@@ -42,5 +43,6 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Update(post);
         }
+        
     }
 }

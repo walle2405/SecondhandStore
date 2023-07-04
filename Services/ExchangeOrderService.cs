@@ -20,5 +20,7 @@ public class ExchangeOrderService
     {
         return await _exchangeOrderRepository.GetExchangeOrder(userId);
     }
-    
+    public async Task AddExchangeRequest(ExchangeOrder exchangeOrder) {
+        await _exchangeOrderRepository.Add(exchangeOrder);
+    }
 }

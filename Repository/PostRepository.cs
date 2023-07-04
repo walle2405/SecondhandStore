@@ -21,6 +21,7 @@ public class PostRepository : BaseRepository<Post>
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostType)
+                .Include(p => p.PostStatus)
                 .ToListAsync();
             
     }
