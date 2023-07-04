@@ -27,5 +27,8 @@ public static class ScopedService
 
         services.AddScoped<ExchangeOrderRepository>();
         services.AddScoped<ExchangeOrderService>();
+
+        services.AddScoped<AzureStorageRepository>();
+        services.AddScoped<AzureService>();
     }
 }

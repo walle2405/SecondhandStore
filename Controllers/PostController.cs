@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
+using SecondhandStore.Extension;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 
@@ -14,11 +15,13 @@ namespace SecondhandStore.Controllers
     {
         private readonly PostService _postService;
         private readonly IMapper _mapper;
+        private readonly AzureService _azureService;
 
-        public PostController(PostService postService, IMapper mapper)
+        public PostController(PostService postService, IMapper mapper, AzureService azureService)
         {
             _postService = postService;
             _mapper = mapper;
+            _azureService = azureService;
         }
 
         [HttpGet("get-post-list")]
@@ -44,21 +47,40 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPost);
         }
         
+        
         [HttpPost("create-new-post")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> CreateNewPost(PostCreateRequest postCreateRequest)
+        public async Task<IActionResult> CreateNewPost([FromForm]PostCreateRequest postCreateRequest)
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
-            
-            var mappedPost = _mapper.Map<Post>(postCreateRequest);
-            
-            mappedPost.AccountId = Int32.Parse(userId);
-            
-            await _postService.AddPost(mappedPost);
 
-            return CreatedAtAction(nameof(GetPostList),
-                new { id = mappedPost.AccountId },
-                mappedPost);
+            var CreatedPost = new Post()
+            {
+                AccountId = Int32.Parse(userId),
+                PostDate = DateTime.Now,
+                ProductName = postCreateRequest.ProductName,
+                Description = postCreateRequest.Description,
+                PostStatusId = postCreateRequest.PostStatusId,
+                CategoryId = postCreateRequest.CategoryId,
+                PostTypeId = postCreateRequest.PostTypeId,
+                Price = postCreateRequest.Price
+            };
+            
+            if (postCreateRequest.ImageUploadRequest != null)
+                foreach (var image in postCreateRequest.ImageUploadRequest)
+                {
+                    var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+                    var fileNameCheck = CreatedPost.Image?.Split('/').Last();
+                    CreatedPost.Image = (await _azureService.UploadImage(image, fileNameCheck,
+                        "Post", imageExtension, false))?.Blob.Uri;
+                }
+            
+            await _postService.AddPost(CreatedPost);
+
+            // return CreatedAtAction(nameof(GetPostList),
+            //     new { id = CreatedPost.AccountId },
+            //     CreatedPost);
+            return Ok();
         }
 
         [HttpGet("search-post")]
@@ -122,5 +144,6 @@ namespace SecondhandStore.Controllers
                     "Invalid Request");
             }
         }
+        
     }
 }
