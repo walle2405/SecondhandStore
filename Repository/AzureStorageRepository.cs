@@ -22,32 +22,44 @@ public class AzureStorageRepository
         BlobResponse? response = new();
 
         // Get a reference to a container named in appsettings.json and then create it
-        var container = new BlobContainerClient(_storageConnectionString, GetContainerName(containerName));
-        //await container.CreateAsync();
+        var blogService = new BlobServiceClient(_storageConnectionString);
 
-        // switch (isPrivate)
-        // {
-        //     case true:
-                // await container.CreateIfNotExistsAsync();
-                // break;
-            // case false:
-            //     await container.CreateIfNotExistsAsync(PublicAccessType.Blob);
-            //     break;
-        // }
+        var containerClient = blogService.GetBlobContainerClient(containerName);
+            
+        switch (isPrivate)
+        {
+             case true:
+                 await containerClient.CreateIfNotExistsAsync();
+                 break;
+             case false:
+                 await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+                 break;
+        }
 
         try
         {
-            var fileToDelete = container.GetBlobClient(fileName);
+            var fileToDelete = containerClient.GetBlobClient(fileName);
             
             // check if the file exists
             if (file == null)
                 return response = null;
+            try
+            {
+                // delete current file to upload new one if exist
+                await fileToDelete.DeleteIfExistsAsync();
 
+            }
+            catch (RequestFailedException ex)
+                when (ex.ErrorCode == BlobErrorCode.BlobNotFound)
+            {
+                // File did not exist, log to console and return new response to requesting method
+               
+            }
             // Get a reference to the blob just uploaded from the API in a container from configuration settings
 
             var uniqueId = Guid.NewGuid();
 
-            var client = container.GetBlobClient(uniqueId + file.FileName);
+            var client = containerClient.GetBlobClient(uniqueId + file.FileName);
 
             // Open a stream for the file we want to upload
             await using (var data = file.OpenReadStream())
@@ -81,9 +93,5 @@ public class AzureStorageRepository
         return response;
     }
     
-    private string GetContainerName(string containerName)
-    {
-        return _configuration.GetValue<string>($"ContainerNames:{containerName}");
-    }
 }
 

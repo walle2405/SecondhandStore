@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SecondhandStore.Custom;
 using SecondhandStore.EntityRequest;
 using SecondhandStore.EntityViewModel;
 using SecondhandStore.Extension;
@@ -54,9 +55,9 @@ namespace SecondhandStore.Controllers
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
 
-            var CreatedPost = new Post()
+            var createdPost = new Post
             {
-                AccountId = Int32.Parse(userId),
+                AccountId = int.Parse(userId),
                 PostDate = DateTime.Now,
                 ProductName = postCreateRequest.ProductName,
                 Description = postCreateRequest.Description,
@@ -70,17 +71,22 @@ namespace SecondhandStore.Controllers
                 foreach (var image in postCreateRequest.ImageUploadRequest)
                 {
                     var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
-                    var fileNameCheck = CreatedPost.Image?.Split('/').Last();
-                    CreatedPost.Image = (await _azureService.UploadImage(image, fileNameCheck,
-                        "Post", imageExtension, false))?.Blob.Uri;
+                    var fileNameCheck = createdPost.Image?.Split('/').LastOrDefault();
+                    
+                    var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
+
+                    createdPost.Image = uri;
                 }
             
-            await _postService.AddPost(CreatedPost);
+            Console.Write(createdPost);
+            
+            await _postService.AddPost(createdPost);
 
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
-            //     CreatedPost);
+            //     CreatedPost;
             return Ok();
+           
         }
 
         [HttpGet("search-post")]

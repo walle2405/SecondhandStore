@@ -12,7 +12,7 @@ public class AzureService
         _azureStorageRepository = azureStorageRepository;
     }
     
-    public async Task<BlobResponse> UploadImage(IFormFile? file, string? fileName, string containerName,
+    public async Task<BlobResponse?> UploadImage(IFormFile? file, string? fileName, string containerName,
         string? fileExtension, bool isPrivate)
     {
         return await _azureStorageRepository.UpdateFileAsync(file, fileName, containerName, fileExtension, isPrivate);
