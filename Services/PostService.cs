@@ -24,7 +24,7 @@ namespace SecondhandStore.Services
         
         public async Task<Post?> GetPostById(int id)
         {
-            return await _postRepository.GetByIntId(id);
+            return _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).FirstOrDefault(p => p.PostId == id);
         }
 
         public async Task<Post?> AddPost(Post p)
