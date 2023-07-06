@@ -28,7 +28,7 @@ namespace SecondhandStore.Services
             return await _postRepository.GetByIntId(id);
         }
 
-        public async void AddPost(Post p)
+        public async Task AddPost(Post p)
         {
            await _postRepository.Add(p);
         }
