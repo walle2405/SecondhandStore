@@ -20,12 +20,13 @@ namespace SecondhandStore.Services
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostType)
+                .Include(p => p.PostStatus)
                 .ToListAsync();
         }
         
         public async Task<Post?> GetPostById(int id)
         {
-            return await _postRepository.GetByIntId(id);
+            return _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).FirstOrDefault(p => p.PostId == id);
         }
 
         public async Task AddPost(Post p)
