@@ -37,6 +37,18 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPostList);
         }
 
+        [HttpGet("get-user-post/")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetPostByUserId()
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
+            if (postList is null)
+                return NotFound();
+            var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
+            return Ok(mappedPostList);
+        }
+
         [HttpGet("get-post-by-id")]
         [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPost(int id)
@@ -44,16 +56,15 @@ namespace SecondhandStore.Controllers
             var post = await _postService.GetPostById(id);
             if (post is null)
                 return NotFound();
-            var mappedPost= _mapper.Map<PostEntityViewModel>(post);
+            var mappedPost = _mapper.Map<PostEntityViewModel>(post);
             return Ok(mappedPost);
         }
-        
-        
+
+
         [HttpPost("create-new-post")]
-        [Authorize(Roles = "US")]
-        public async Task<IActionResult> CreateNewPost([FromForm]PostCreateRequest postCreateRequest)
+        public async Task<IActionResult> CreateNewPost([FromForm] PostCreateRequest postCreateRequest)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
 
             var createdPost = new Post
             {
@@ -66,27 +77,27 @@ namespace SecondhandStore.Controllers
                 PostTypeId = postCreateRequest.PostTypeId,
                 Price = postCreateRequest.Price
             };
-            
+
             if (postCreateRequest.ImageUploadRequest != null)
                 foreach (var image in postCreateRequest.ImageUploadRequest)
                 {
                     var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
                     var fileNameCheck = createdPost.Image?.Split('/').LastOrDefault();
-                    
+
                     var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
 
                     createdPost.Image = uri;
                 }
-            
+
             Console.Write(createdPost);
-            
+
             await _postService.AddPost(createdPost);
 
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
             return Ok();
-           
+
         }
 
         [HttpGet("search-post")]
@@ -109,7 +120,7 @@ namespace SecondhandStore.Controllers
 
                 if (existingPost is null)
                     return NotFound();
-                
+
                 // existingPost.IsActive = !existingPost.PostStatus;
 
                 await _postService.UpdatePost(existingPost);
@@ -126,9 +137,9 @@ namespace SecondhandStore.Controllers
 
         [HttpPut("update-post")]
         [Authorize(Roles = "AD,US")]
-        public async Task<IActionResult> UpdatePost(int postId, [FromForm]PostUpdateRequest postUpdateRequest)
+        public async Task<IActionResult> UpdatePost(int postId, [FromForm] PostUpdateRequest postUpdateRequest)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             try
             {
                 var existingPost = await _postService.GetPostById(postId);
@@ -140,14 +151,14 @@ namespace SecondhandStore.Controllers
                 mappedPost.AccountId = Int32.Parse(userId);
                 mappedPost.PostId = existingPost.PostId;
                 mappedPost.CategoryId = existingPost.CategoryId;
-                
+
 
                 if (postUpdateRequest.ImageUploadRequest != null)
                     foreach (var image in postUpdateRequest.ImageUploadRequest)
                     {
                         var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
                         var fileNameCheck = mappedPost.Image?.Split('/').LastOrDefault();
-                    
+
                         var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
 
                         mappedPost.Image = uri;
@@ -161,6 +172,6 @@ namespace SecondhandStore.Controllers
                     "Invalid Request");
             }
         }
-        
+
     }
 }

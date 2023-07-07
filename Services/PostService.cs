@@ -23,6 +23,10 @@ namespace SecondhandStore.Services
                 .Include(p => p.PostStatus)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Post>?> GetPostByAccountId(int id)
+        {
+            return _postRepository.GetAll().Include(p => p.Account).Include(p => p.Category).Where(p => p.AccountId == id);
+        }
         
         public async Task<Post?> GetPostById(int id)
         {
