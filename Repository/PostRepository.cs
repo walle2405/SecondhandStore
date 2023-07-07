@@ -40,4 +40,14 @@ public class PostRepository : BaseRepository<Post>
             await _dbContext.SaveChangesAsync();
         }
     }
+    public async Task InactivePost(Post updatePost) {
+        var currentDate = DateTime.Now;
+        var existingPost = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == updatePost.PostId);
+        if (existingPost != null)
+        {
+            if (currentDate == existingPost.PostExpiryDate) {
+                existingPost.PostStatusId = 7;
+            }
+        }
+    }
 }

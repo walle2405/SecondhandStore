@@ -60,7 +60,7 @@ namespace SecondhandStore.Controllers
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
-            var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.postId);
+            var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.PostId);
             if (chosenPost is null)
             {
                 return NotFound();
