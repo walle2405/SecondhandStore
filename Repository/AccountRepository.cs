@@ -36,10 +36,10 @@ public class AccountRepository : BaseRepository<Account>
 
          if (existingAccount != null)
          {
-             existingAccount.Password = updatedAccount.Password;
-             existingAccount.Fullname = updatedAccount.Fullname;
-             existingAccount.Address = updatedAccount.Address;
-             existingAccount.PhoneNo = updatedAccount.PhoneNo;
+             existingAccount.Password = existingAccount.Password; 
+             existingAccount.Fullname = updatedAccount.Fullname ?? existingAccount.Fullname;
+             existingAccount.Address = updatedAccount.Address ?? existingAccount.Address;
+             existingAccount.PhoneNo = updatedAccount.PhoneNo ?? existingAccount.PhoneNo;
              await _dbContext.SaveChangesAsync();
          } 
     }

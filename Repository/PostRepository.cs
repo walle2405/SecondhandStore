@@ -34,7 +34,7 @@ public class PostRepository : BaseRepository<Post>
         if (existingPost != null)
         {
             existingPost.ProductName = updatedPost.ProductName;
-            existingPost.Image = updatedPost.Image;
+            existingPost.Image = updatedPost.Image ?? existingPost.Image;
             existingPost.Description = updatedPost.Description;
             existingPost.Price = updatedPost.Price;
             await _dbContext.SaveChangesAsync();
