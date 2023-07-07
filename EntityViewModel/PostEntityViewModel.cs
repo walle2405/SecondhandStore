@@ -12,8 +12,9 @@ public class PostEntityViewModel
     public string ProductName { get; set; }
     public string Image { get; set; }
     public string Description { get; set; }
-    public string PostStatus { get; set; }
-    public string PostType { get; set; } = null!;
+    public string PostStatusId { get; set; }
+    public string PostStatusName { get; set; }
+    public string PostTypeName { get; set; } = null!;
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
     public int PointCost { get; set; }
@@ -21,7 +22,7 @@ public class PostEntityViewModel
     public int PostPriority { get; set; }
     public DateTime PostExpiryDate { get; set; }
     public double Price { get; set; }
-    public string PostStatusName { get; set; }
+    
 
 }
 
