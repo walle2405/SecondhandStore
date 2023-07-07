@@ -65,14 +65,14 @@ namespace SecondhandStore.Controllers
             {
                 return NotFound();
             }
-            if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 8) {
+            if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 7) {
                 return BadRequest("You cannot choose this post!");
             }
             var mappedExchange = _mapper.Map<ExchangeOrder>(exchangeOrderCreateRequest);
             mappedExchange.BuyerId = parseUserId;
             mappedExchange.SellerId = chosenPost.AccountId;
             mappedExchange.OrderDate = DateTime.Now;
-            mappedExchange.OrderStatusId = 2;
+            mappedExchange.OrderStatusId = 5;
             mappedExchange.PostId = chosenPost.PostId;
             await _exchangeOrderService.AddExchangeRequest(mappedExchange);
             return CreatedAtAction(nameof(GetExchangeRequest),
@@ -80,5 +80,40 @@ namespace SecondhandStore.Controllers
                     mappedExchange);
 
         }
+        [HttpPut("complete-request")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> AcceptExchangeRequest(int orderId) {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else {
+                exchange.OrderStatusId = 6;
+                await _exchangeOrderService.UpdateExchange(exchange);
+                return Ok(exchange);
+            }
+        }
+        [HttpPut("cancel-request")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> RejectExchangeRequest(int orderId)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else
+            {
+                exchange.OrderStatusId = 4;
+                await _exchangeOrderService.UpdateExchange(exchange);
+                return Ok(exchange);
+            }
+        }
+
     }
 }

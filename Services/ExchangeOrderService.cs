@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
@@ -22,5 +23,12 @@ public class ExchangeOrderService
     }
     public async Task AddExchangeRequest(ExchangeOrder exchangeOrder) {
         await _exchangeOrderRepository.Add(exchangeOrder);
+    }
+    public async Task UpdateExchange(ExchangeOrder exchangeOrder) { 
+        await _exchangeOrderRepository.Update(exchangeOrder);
+    }
+    public async Task<ExchangeOrder?> GetExchangeById(int id)
+    {
+        return await _exchangeOrderRepository.GetByIntId(id);
     }
 }
