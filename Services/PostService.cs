@@ -44,6 +44,9 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Update(post);
         }
+        public async Task InActivePost(Post post) {
+            await _postRepository.InactivePost(post);
+        }
 
         
     }
