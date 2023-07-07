@@ -92,7 +92,7 @@ namespace SecondhandStore.Controllers
             else {
                 exchange.OrderStatusId = 6;
                 await _exchangeOrderService.UpdateExchange(exchange);
-                return Ok(exchange);
+                return Ok("Thank you, Your exchange has been completed !");
             }
         }
         [HttpPut("cancel-request")]
