@@ -24,5 +24,11 @@ public static class ScopedService
 
         services.AddScoped<ReviewRepository>();
         services.AddScoped<ReviewService>();
+
+        services.AddScoped<ExchangeOrderRepository>();
+        services.AddScoped<ExchangeOrderService>();
+
+        services.AddScoped<AzureStorageRepository>();
+        services.AddScoped<AzureService>();
     }
 }

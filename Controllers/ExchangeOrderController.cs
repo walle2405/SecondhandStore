@@ -1,83 +1,119 @@
-﻿// using AutoMapper;
-// using Microsoft.AspNetCore.Http;
-// using Microsoft.AspNetCore.Mvc;
-// using SecondhandStore.EntityRequest;
-// using SecondhandStore.Models;
-// using SecondhandStore.Services;
-//
-// namespace SecondhandStore.Controllers
-// {
-//     
-//     [ApiController]
-//     public class ExchangeOrderController : ControllerBase
-//     {
-//         private readonly ExchangeOrderService _exchangeOrderService;
-//         private readonly IMapper _mapper;
-//         public ExchangeOrderController(ExchangeOrderService exchangeOrderService, IMapper mapper)
-//         {
-//             _exchangeOrderService = exchangeOrderService;
-//             _mapper = mapper;
-//         }
-//
-//         // GET all action
-//         [HttpGet]
-//         [Route("api/[controller]/get-all-order-list")]
-//         public async Task<IActionResult> GetOrderList()
-//         {
-//             var orderList = await _exchangeOrderService.GetAllRequest();
-//
-//             if (!orderList.Any())
-//                 return NotFound();
-//
-//             return Ok(orderList);
-//         }
-//
-//         // GET by Id action
-//         [HttpGet]
-//         [Route("api/[controller]/get-order-by-id")]
-//         public async Task<IActionResult> GetOrderById(int id)
-//         {
-//             var existingOrder = await _exchangeOrderService.GetOrderById(id);
-//             if (existingOrder is null)
-//                 return NotFound();
-//             return Ok(existingOrder);
-//         }
-//
-//         // [HttpPost]
-//         // [Route("api/[controller]/add-order")]
-//         // //public async Task<IActionResult> CreateOrder(ExchangeOrderCreateRequest exchangeOrderCreateRequest)
-//         // //{
-//         //     //var mappedOrder = _mapper.Map<ExchangeOrder>(exchangeOrderCreateRequest);
-//         //
-//         //     //await _exchangeOrderService.AddOrder(mappedOrder);
-//         //
-//         //     //return CreatedAtAction(nameof(GetOrderList),
-//         //        // new { id = mappedOrder.OrderDetailId },
-//         //         //mappedOrder);
-//         // //}
-//         // [HttpPut]
-//         // [Route("api/[controller]/update-order-status/{toggle}")]
-//         // public async Task<IActionResult> ToggleOrderStatus(int id)
-//         // {
-//         //     try
-//         //     {
-//         //         var existingOrder = await _exchangeOrderService.GetOrderById(id);
-//         //
-//         //         if (existingOrder is null)
-//         //             return NotFound();
-//         //
-//         //         existingOrder.OrderStatus = !existingOrder.OrderStatus;
-//         //
-//         //         await _exchangeOrderService.UpdateOrder(existingOrder);
-//         //
-//         //         return NoContent();
-//         //     }
-//         //     catch (Exception)
-//         //     {
-//         //         return StatusCode(StatusCodes.Status500InternalServerError,
-//         //                         "Invalid Request");
-//         //     }
-//
-//         }
-//     }
-// }
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SecondhandStore.EntityRequest;
+using SecondhandStore.EntityViewModel;
+using SecondhandStore.Models;
+using SecondhandStore.Services;
+using System.Data;
+
+namespace SecondhandStore.Controllers
+{
+
+    [ApiController]
+    public class ExchangeOrderController : ControllerBase
+    {
+        private readonly ExchangeOrderService _exchangeOrderService;
+        private readonly PostService _postService;
+        private readonly IMapper _mapper;
+        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService, IMapper mapper)
+        {
+            _postService = postService; 
+            _exchangeOrderService = exchangeOrderService;
+            _mapper = mapper;
+        }
+
+        // GET all action
+        [HttpGet("get-all-request-list")]
+        [Authorize(Roles = "AD,US")]
+        public async Task<IActionResult> GetExchangeRequest()
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var id = Int32.Parse(userId);
+            var requestList = await _exchangeOrderService.GetExchangeRequest(id);
+            if (requestList is null)
+            {
+                return NotFound();
+            }
+            var mappedExchangeRequest = requestList.Select(p => _mapper.Map<ExchangeRequestEntityViewModel>(p));
+            return Ok(mappedExchangeRequest);
+
+        }
+        [HttpGet("get-all-order-list")]
+        [Authorize(Roles = "AD,US")]
+        public async Task<IActionResult> GetExchangeOrder()
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var id = Int32.Parse(userId);
+            var orderList = await _exchangeOrderService.GetExchangeOrder(id);
+            if (orderList is null)
+            {
+                return NotFound();
+            }
+            var mappedExchangeOrder = orderList.Select(p => _mapper.Map<ExchangeOrderEntityViewModel>(p));
+            return Ok(mappedExchangeOrder);
+
+        }
+        [HttpPost("send-exchange-request")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> SendExchangeRequest(ExchangeOrderCreateRequest exchangeOrderCreateRequest) 
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.postId);
+            if (chosenPost is null)
+            {
+                return NotFound();
+            }
+            if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 7) {
+                return BadRequest("You cannot choose this post!");
+            }
+            var mappedExchange = _mapper.Map<ExchangeOrder>(exchangeOrderCreateRequest);
+            mappedExchange.BuyerId = parseUserId;
+            mappedExchange.SellerId = chosenPost.AccountId;
+            mappedExchange.OrderDate = DateTime.Now;
+            mappedExchange.OrderStatusId = 5;
+            mappedExchange.PostId = chosenPost.PostId;
+            await _exchangeOrderService.AddExchangeRequest(mappedExchange);
+            return CreatedAtAction(nameof(GetExchangeRequest),
+                    new { id = mappedExchange.OrderId },
+                    mappedExchange);
+
+        }
+        [HttpPut("complete-request")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> AcceptExchangeRequest(int orderId) {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else {
+                exchange.OrderStatusId = 6;
+                await _exchangeOrderService.UpdateExchange(exchange);
+                return Ok(exchange);
+            }
+        }
+        [HttpPut("cancel-request")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> RejectExchangeRequest(int orderId)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else
+            {
+                exchange.OrderStatusId = 4;
+                await _exchangeOrderService.UpdateExchange(exchange);
+                return Ok(exchange);
+            }
+        }
+
+    }
+}

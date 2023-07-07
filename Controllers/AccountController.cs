@@ -49,11 +49,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
-
+        var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
         if (!accountList.Any())
             return NotFound();
 
-        return Ok(accountList);
+        return Ok(mappedAccountList);
     }
 
     // GET by Id action
@@ -115,10 +115,8 @@ public class AccountController : ControllerBase
 
             if (existingAccount is null)
                 return NotFound();
-
-            existingAccount.IsActive = !existingAccount.IsActive;
-
-            await _accountService.UpdateAccount(existingAccount);
+            
+            await _accountService.ToggleAccountStatus(existingAccount);
 
             return NoContent();
         }
@@ -128,13 +126,6 @@ public class AccountController : ControllerBase
                 "Invalid Request");
         }
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Logout()
-    {
-        HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
-
-        return Ok(new { message = "Logged out successfully." });
-    }
+    
     
 }

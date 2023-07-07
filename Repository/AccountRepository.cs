@@ -43,4 +43,24 @@ public class AccountRepository : BaseRepository<Account>
              await _dbContext.SaveChangesAsync();
          } 
     }
+
+    public new async Task ToggleAccountStatus(Account updatedAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == updatedAccount.AccountId);
+        if (existingAccount != null)
+        {
+            existingAccount.IsActive = !existingAccount.IsActive;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+    public new async Task UpdatePointAutomatic(Account topupAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == topupAccount.AccountId);
+        if (existingAccount != null)
+        {
+            existingAccount.PointBalance = topupAccount.PointBalance;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+
 }

@@ -10,7 +10,9 @@ namespace SecondhandStore.Models
         public int AccountId { get; set; }
         public DateTime TopUpDate { get; set; }
         public double Price { get; set; }
+        public int TopupStatusId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
+        public virtual PostStatus TopupStatus { get; set; } = null!;
     }
 }

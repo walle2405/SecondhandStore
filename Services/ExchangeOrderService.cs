@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using SecondhandStore.Models;
 using SecondhandStore.Repository;
 
@@ -7,24 +8,27 @@ namespace SecondhandStore.Services;
 public class ExchangeOrderService
 {
     private readonly ExchangeOrderRepository _exchangeOrderRepository;
-    public ExchangeOrderService(ExchangeOrderRepository exchangeOrderRepository)
+    private readonly IConfiguration _configuration;
+    public ExchangeOrderService(ExchangeOrderRepository exchangeOrderRepository, IConfiguration configuration)
     {
         _exchangeOrderRepository = exchangeOrderRepository;
+        _configuration = configuration;
     }
-    public async Task<IEnumerable<ExchangeOrder>> GetAllRequest()
-    {
-        return await _exchangeOrderRepository.GetAll().ToListAsync();
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeRequest(int userId) {
+        return await _exchangeOrderRepository.GetExchangeRequest(userId);
     }
-    public async Task<ExchangeOrder?> GetOrderById(int orderId)
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeOrder(int userId)
     {
-        return await _exchangeOrderRepository.GetByIntId(orderId);
+        return await _exchangeOrderRepository.GetExchangeOrder(userId);
     }
-    public async Task AddOrder(ExchangeOrder exchangeOrder)
-    {
+    public async Task AddExchangeRequest(ExchangeOrder exchangeOrder) {
         await _exchangeOrderRepository.Add(exchangeOrder);
     }
-    public async Task UpdateOrder(ExchangeOrder exchangeOrder) 
-    { 
+    public async Task UpdateExchange(ExchangeOrder exchangeOrder) { 
         await _exchangeOrderRepository.Update(exchangeOrder);
+    }
+    public async Task<ExchangeOrder?> GetExchangeById(int id)
+    {
+        return await _exchangeOrderRepository.GetByIntId(id);
     }
 }
