@@ -13,7 +13,7 @@ public class PostEntityViewModel
     public string Image { get; set; }
     public string Description { get; set; }
     public string PostStatus { get; set; }
-    public string PostType { get; set; } = null!;
+    public string PostTypeName { get; set; } = null!;
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
     public int PointCost { get; set; }

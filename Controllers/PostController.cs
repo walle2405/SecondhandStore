@@ -37,16 +37,29 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPostList);
         }
 
-        [HttpGet("get-user-post/")]
+        [HttpGet("get-user-posts/")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> GetPostByUserId()
+        public async Task<IActionResult> GetPostsByUserId()
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
             if (postList is null)
                 return NotFound();
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
             return Ok(mappedPostList);
+        }
+
+        [HttpGet("get-user-post-by-id")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetPostByUserId(int id)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
+            var post = postList.FirstOrDefault(p => p.PostId == id);
+            if (post is null)
+                return NotFound();
+            var mappedPost = _mapper.Map<PostEntityViewModel>(post);
+            return Ok(mappedPost);
         }
 
         [HttpGet("get-post-by-id")]
