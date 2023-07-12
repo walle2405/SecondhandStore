@@ -37,8 +37,8 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPostList);
         }
 
-        [HttpGet("get-user-posts/")]
-        [Authorize(Roles = "US")]
+        [HttpGet("get-user-posts")]
+        [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> GetPostsByUserId()
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
@@ -125,17 +125,17 @@ namespace SecondhandStore.Controllers
 
         [HttpPut("toggle-post-status")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> TogglePostStatus(int id)
+        public async Task<IActionResult> TogglePostStatus(PostVerifiedRequest pvr)
         {
             try
             {
-                var existingPost = await _postService.GetPostById(id);
+                var existingPost = await _postService.GetPostById(pvr.id);
 
                 if (existingPost is null)
                     return NotFound();
 
                 // existingPost.IsActive = !existingPost.PostStatus;
-
+                existingPost.PostStatusId = (pvr.choice.Equals("accept")? 3  : 1);
                 await _postService.UpdatePost(existingPost);
 
                 return NoContent();
