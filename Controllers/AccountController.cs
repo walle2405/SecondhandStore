@@ -31,10 +31,10 @@ public class AccountController : ControllerBase
     {
         // Tự tạo method login trong AccountService
         var loggedIn = await _accountService.Login(loginModel);
-        
-        if (loggedIn == null) 
+
+        if (loggedIn == null)
             return BadRequest(new { message = "Invalid username or password." });
-        
+
         var jwtToken = _accountService.CreateToken(loggedIn);
         return Ok(new
         {
@@ -56,6 +56,15 @@ public class AccountController : ControllerBase
         return Ok(mappedAccountList);
     }
 
+    [HttpGet("get-user-account")]
+    public async Task<IActionResult> GetAccountByUserId()
+    {
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+        var existingAccount = await _accountService.GetAccountById(Int32.Parse(userId));
+        if (existingAccount is null)
+            return NotFound();
+        return Ok(existingAccount);
+    }
     // GET by Id action
     [HttpGet("get-account-by-id")]
     [Authorize(Roles = "AD")]
@@ -75,7 +84,7 @@ public class AccountController : ControllerBase
             return NotFound();
         var mappedExistingUser = _mapper.Map<List<AccountEntityViewModel>>(existingUser);
         return Ok(mappedExistingUser);
-        
+
     }
 
     [HttpPost("create-new-account")]
@@ -91,22 +100,22 @@ public class AccountController : ControllerBase
     }
 
     [HttpPut("update-account")]
-    [Authorize(Roles="US")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)
     {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
-            
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);  
-            mappedAccount.AccountId = int.Parse(userId);
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
 
-            await _accountService.UpdateAccount(mappedAccount);
+        var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
+        mappedAccount.AccountId = int.Parse(userId);
 
-            return NoContent();
+        await _accountService.UpdateAccount(mappedAccount);
+
+        return NoContent();
     }
 
 
     [HttpPut("toggle-account-status")]
-    [Authorize(Roles="AD")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         try
@@ -115,7 +124,7 @@ public class AccountController : ControllerBase
 
             if (existingAccount is null)
                 return NotFound();
-            
+
             await _accountService.ToggleAccountStatus(existingAccount);
 
             return NoContent();
@@ -126,6 +135,6 @@ public class AccountController : ControllerBase
                 "Invalid Request");
         }
     }
-    
-    
+
+
 }
