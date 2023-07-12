@@ -54,18 +54,6 @@ builder.Services.AddResponseCaching(options =>
     options.UseCaseSensitivePaths = true;
 });
 
-builder.Services.AddCors(o =>
-{
-    o.AddPolicy("AllowAnyOrigin", corsPolicyBuilder =>
-    {
-        corsPolicyBuilder
-            .SetIsOriginAllowed(x => _ = true)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-});
-
 
 var app = builder.Build();
 
