@@ -5,6 +5,11 @@ namespace SecondhandStore.Models
 {
     public partial class ExchangeOrder
     {
+        public ExchangeOrder()
+        {
+            Reviews = new HashSet<Review>();
+        }
+
         public int OrderId { get; set; }
         public int PostId { get; set; }
         public int SellerId { get; set; }
@@ -16,5 +21,6 @@ namespace SecondhandStore.Models
         public virtual PostStatus OrderStatus { get; set; } = null!;
         public virtual Post Post { get; set; } = null!;
         public virtual Account Seller { get; set; } = null!;
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }
