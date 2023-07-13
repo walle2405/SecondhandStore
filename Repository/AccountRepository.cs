@@ -63,4 +63,13 @@ public class AccountRepository : BaseRepository<Account>
         await _dbContext.SaveChangesAsync();
     }
 
+    public new async Task TakingPointAway(Account account)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == account.AccountId);
+        if (existingAccount != null)
+        {
+            existingAccount.PointBalance = account.PointBalance;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
 }

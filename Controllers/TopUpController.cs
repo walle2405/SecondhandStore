@@ -119,34 +119,4 @@ public class TopUpController : ControllerBase
             }  
         }
     }
-    [HttpPut("reject-topup")]
-    [Authorize(Roles = "AD")]
-    public async Task<IActionResult> RejectTopUp(int id)
-    {
-        var topup = await _topupService.GetTopUpById(id);
-        if (topup is null)
-        {
-            return NotFound();
-        }
-        else
-        {
-            if (topup.TopupStatusId == 1)
-            {
-                return NoContent();
-            }
-            else 
-            {
-                if (topup.TopupStatusId == 6) 
-                {
-                    await _topupService.RejectTopup(topup);
-                    var account = await _accountService.GetAccountById(topup.AccountId);
-                    account.PointBalance -= topup.TopUpPoint;
-                    await _accountService.UpdatePointAutomatic(account);
-                    return NoContent();
-                }
-                await _topupService.RejectTopup(topup);
-                return NoContent();
-            }
-        }
-    }
 }
