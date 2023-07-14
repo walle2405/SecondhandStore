@@ -15,9 +15,11 @@ namespace SecondhandStore.Controllers
     {
         private readonly ExchangeOrderService _exchangeOrderService;
         private readonly PostService _postService;
+        private readonly AccountService _accountService;
         private readonly IMapper _mapper;
-        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService, IMapper mapper)
+        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService,AccountService accountService, IMapper mapper)
         {
+            _accountService = accountService;
             _postService = postService; 
             _exchangeOrderService = exchangeOrderService;
             _mapper = mapper;
@@ -91,8 +93,15 @@ namespace SecondhandStore.Controllers
                 return BadRequest("Error!");
             }
             else {
+                var user = await _accountService.GetAccountById(exchange.SellerId);
+                if (user == null)
+                {
+                    return BadRequest("Error!");
+                }
                 exchange.OrderStatusId = 6;
                 await _exchangeOrderService.UpdateExchange(exchange);
+                user.CredibilityPoint += 10;
+                await _accountService.UpdateAccount(user);
                 return Ok("Thank you, Your exchange has been completed !");
             }
         }
