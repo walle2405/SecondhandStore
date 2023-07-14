@@ -91,8 +91,7 @@ public class AutoMapper : Profile
         .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
         .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
         .ForMember(d => d.PostStatusName, map => map.MapFrom(p => p.PostStatus.PostStatusName))
-        .ForMember(d => d.PostTypeName, map => map.MapFrom(p => p.PostType.PostTypeName))        
-        ;
+        .ForMember(d => d.PostTypeName, map => map.MapFrom(p => p.PostType.PostTypeName));
              
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()

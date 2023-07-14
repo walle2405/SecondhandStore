@@ -98,7 +98,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__Exchange__0809335D4896128C");
+                    .HasName("PK__Exchange__0809335D663D69DF");
 
                 entity.ToTable("ExchangeOrder");
 
@@ -177,7 +177,7 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("description");
 
                 entity.Property(e => e.Image)
-                    .HasMaxLength(50)
+                    .HasMaxLength(4000)
                     .HasColumnName("image");
 
                 entity.Property(e => e.PointCost).HasColumnName("pointCost");
@@ -312,7 +312,7 @@ namespace SecondhandStore.Infrastructure
                     .IsUnicode(false)
                     .HasColumnName("feedbackUsername");
 
-                entity.Property(e => e.PostId).HasColumnName("postId");
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
 
                 entity.Property(e => e.StarRating).HasColumnName("starRating");
 
@@ -320,13 +320,13 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.FeedbackUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Review__feedback__4222D4EF");
+                    .HasConstraintName("FK__Review__feedback__4AB81AF0");
 
-                entity.HasOne(d => d.Post)
+                entity.HasOne(d => d.Order)
                     .WithMany(p => p.Reviews)
-                    .HasForeignKey(d => d.PostId)
+                    .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Review__postId__412EB0B6");
+                    .HasConstraintName("FK__Review__orderId__49C3F6B7");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -345,7 +345,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335D8D006431");
+                    .HasName("PK__TopUp__0809335D5BA3A050");
 
                 entity.ToTable("TopUp");
 
@@ -367,13 +367,13 @@ namespace SecondhandStore.Infrastructure
                     .WithMany(p => p.TopUps)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TopUp__accountId__48CFD27E");
+                    .HasConstraintName("FK__TopUp__accountId__37A5467C");
 
                 entity.HasOne(d => d.TopupStatus)
                     .WithMany(p => p.TopUps)
                     .HasForeignKey(d => d.TopupStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TopUp__topupStat__49C3F6B7");
+                    .HasConstraintName("FK__TopUp__topupStat__38996AB5");
             });
 
             OnModelCreatingPartial(modelBuilder);

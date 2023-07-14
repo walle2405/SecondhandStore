@@ -60,7 +60,7 @@ namespace SecondhandStore.Controllers
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
-            var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.postId);
+            var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.PostId);
             if (chosenPost is null)
             {
                 return NotFound();
@@ -74,10 +74,9 @@ namespace SecondhandStore.Controllers
             mappedExchange.OrderDate = DateTime.Now;
             mappedExchange.OrderStatusId = 5;
             mappedExchange.PostId = chosenPost.PostId;
+            chosenPost.PostStatusId = 7;
             await _exchangeOrderService.AddExchangeRequest(mappedExchange);
-            return CreatedAtAction(nameof(GetExchangeRequest),
-                    new { id = mappedExchange.OrderId },
-                    mappedExchange);
+            return Ok("Request Successfully");
 
         }
         [HttpPut("complete-request")]
@@ -93,7 +92,7 @@ namespace SecondhandStore.Controllers
             else {
                 exchange.OrderStatusId = 6;
                 await _exchangeOrderService.UpdateExchange(exchange);
-                return Ok(exchange);
+                return Ok("Thank you, Your exchange has been completed !");
             }
         }
         [HttpPut("cancel-request")]
@@ -109,9 +108,11 @@ namespace SecondhandStore.Controllers
             }
             else
             {
+                var chosenPost = await _postService.GetPostById(exchange.PostId);
                 exchange.OrderStatusId = 4;
+                chosenPost.PostStatusId = 3;
                 await _exchangeOrderService.UpdateExchange(exchange);
-                return Ok(exchange);
+                return Ok("Cancelled Successfully!");
             }
         }
 

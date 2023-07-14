@@ -1,7 +1,9 @@
-﻿namespace SecondhandStore.EntityRequest
+﻿using SecondhandStore.Models;
+
+namespace SecondhandStore.EntityRequest
 {
     public class ExchangeOrderCreateRequest
     {
-        public int postId { get; set; }
+        public int PostId { get; set; }
     }
 }

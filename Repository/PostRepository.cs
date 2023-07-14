@@ -34,10 +34,20 @@ public class PostRepository : BaseRepository<Post>
         if (existingPost != null)
         {
             existingPost.ProductName = updatedPost.ProductName;
-            existingPost.Image = updatedPost.Image;
+            existingPost.Image = updatedPost.Image ?? existingPost.Image;
             existingPost.Description = updatedPost.Description;
             existingPost.Price = updatedPost.Price;
             await _dbContext.SaveChangesAsync();
+        }
+    }
+    public async Task InactivePost(Post updatePost) {
+        var currentDate = DateTime.Now;
+        var existingPost = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == updatePost.PostId);
+        if (existingPost != null)
+        {
+            if (currentDate == existingPost.PostExpiryDate) {
+                existingPost.PostStatusId = 7;
+            }
         }
     }
 }

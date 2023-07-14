@@ -8,13 +8,12 @@ namespace SecondhandStore.Models
         public Post()
         {
             ExchangeOrders = new HashSet<ExchangeOrder>();
-            Reviews = new HashSet<Review>();
         }
 
         public int PostId { get; set; }
         public int AccountId { get; set; }
         public string ProductName { get; set; } = null!;
-        public string? Image { get; set; } = null!;
+        public string Image { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int PostTypeId { get; set; }
         public int CategoryId { get; set; }
@@ -30,6 +29,5 @@ namespace SecondhandStore.Models
         public virtual PostStatus PostStatus { get; set; } = null!;
         public virtual PostType PostType { get; set; } = null!;
         public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
-        public virtual ICollection<Review> Reviews { get; set; }
     }
 }
