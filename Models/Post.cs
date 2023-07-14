@@ -20,7 +20,6 @@ namespace SecondhandStore.Models
         public int PointCost { get; set; }
         public DateTime PostDate { get; set; }
         public int PostPriority { get; set; }
-        public DateTime PostExpiryDate { get; set; }
         public double Price { get; set; }
         public int PostStatusId { get; set; }
 

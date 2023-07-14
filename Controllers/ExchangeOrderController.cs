@@ -61,11 +61,12 @@ namespace SecondhandStore.Controllers
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var chosenPost = await _postService.GetPostById(exchangeOrderCreateRequest.PostId);
+            var order = await _exchangeOrderService.GetExchangeByPostId(parseUserId, chosenPost.PostId);
             if (chosenPost is null)
             {
                 return NotFound();
             }
-            if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 7) {
+            if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 7 || order.Any()) {
                 return BadRequest("You cannot choose this post!");
             }
             var mappedExchange = _mapper.Map<ExchangeOrder>(exchangeOrderCreateRequest);

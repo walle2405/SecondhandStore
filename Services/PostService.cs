@@ -52,16 +52,9 @@ namespace SecondhandStore.Services
             return await _postRepository.GetPostByProductName(productName);
 
         }
-
-
         public async Task UpdatePost(Post post)
         {
             await _postRepository.Update(post);
         }
-        public async Task InActivePost(Post post) {
-            await _postRepository.InactivePost(post);
-        }
-
-
     }
 }

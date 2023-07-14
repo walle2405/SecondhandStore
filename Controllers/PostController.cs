@@ -88,8 +88,7 @@ namespace SecondhandStore.Controllers
                 PostStatusId = postCreateRequest.PostStatusId,
                 CategoryId = postCreateRequest.CategoryId,
                 PostTypeId = postCreateRequest.PostTypeId,
-                Price = postCreateRequest.Price,
-                PostExpiryDate = DateTime.Now.AddDays(5)
+                Price = postCreateRequest.Price
             };
 
             if (postCreateRequest.ImageUploadRequest != null)

@@ -16,7 +16,6 @@ public class AutoMapper : Profile
         MapTopUp();
         MapPost();
         MapReport();
-        MapReview();
         MapExchangeOrder();
         MapExchangeRequest();
     }
@@ -103,14 +102,6 @@ public class AutoMapper : Profile
         CreateMap<Post, PostType>()
             .ReverseMap();
         CreateMap<PostType, Post>()
-            .ReverseMap();
-    }
-
-    public void MapReview()
-    {
-        CreateMap<Review, ReviewCreateRequest>()
-            .ReverseMap();
-        CreateMap<ReviewCreateRequest, Review>()
             .ReverseMap();
     }
     public void MapReport() { 

@@ -22,9 +22,6 @@ public static class ScopedService
         services.AddScoped<ReportRepository>();
         services.AddScoped<ReportService>();
 
-        services.AddScoped<ReviewRepository>();
-        services.AddScoped<ReviewService>();
-
         services.AddScoped<ExchangeOrderRepository>();
         services.AddScoped<ExchangeOrderService>();
 
