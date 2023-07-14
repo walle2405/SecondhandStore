@@ -28,7 +28,7 @@ namespace SecondhandStore.Controllers
         }
 
         [HttpGet("get-post-list")]
-        public async Task<IActionResult> GetPostList()
+        public async Task<IActionResult> GetUserPostsList()
         {
             var postList = await _postService.GetAllPosts();
             postList = postList.Where(p => p.PostStatusId == 3 || p.PostStatusId == 6);
@@ -41,9 +41,21 @@ namespace SecondhandStore.Controllers
 
         [HttpGet("get-user-posts")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> GetPostsByUserId()
+        public async Task<IActionResult> GetAllPosts()
         {
             var postList = await _postService.GetAllPosts();
+            if (!postList.Any())
+                return NotFound();
+
+            var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
+            return Ok(mappedPostList);
+        }
+
+        [HttpGet("get-own-posts")]
+        public async Task<IActionResult> GetPostsByUserId()
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var postList = await _postService.GetPostByAccountId(int.Parse(userId));
             if (!postList.Any())
                 return NotFound();
 
@@ -151,9 +163,11 @@ namespace SecondhandStore.Controllers
                     return Unauthorized();
                 }
                 var mappedPost = _mapper.Map<Post>(postUpdateRequest);
+                Console.WriteLine(mappedPost);
                 mappedPost.PostId = existingPost.PostId;
                 mappedPost.CategoryId = existingPost.CategoryId;
-
+                if(String.IsNullOrEmpty(mappedPost.ProductName)) mappedPost.ProductName = existingPost.ProductName;
+                if(String.IsNullOrEmpty(mappedPost.Description)) mappedPost.Description = existingPost.Description;                
 
                 if (postUpdateRequest.ImageUploadRequest != null)
                     foreach (var image in postUpdateRequest.ImageUploadRequest)
@@ -165,6 +179,9 @@ namespace SecondhandStore.Controllers
 
                         mappedPost.Image = uri;
                     }
+                else{
+                    mappedPost.Image = existingPost.Image;
+                }
                 await _postService.UpdatePost(mappedPost);
                 return NoContent();
             }
