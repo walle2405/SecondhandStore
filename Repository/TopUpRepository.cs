@@ -34,5 +34,8 @@ public class TopUpRepository : BaseRepository<TopUp>
         }
         await _dbContext.SaveChangesAsync();
     }
+    public async Task<IEnumerable<TopUp>> GetTopUpbyEmail(string searchEmail) { 
+        return await _dbContext.TopUps.Where(c=>c.Account.Email.Contains(searchEmail)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
+    }
 
 }

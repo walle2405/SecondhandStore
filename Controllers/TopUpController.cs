@@ -149,4 +149,16 @@ public class TopUpController : ControllerBase
             }
         }
     }
+    [HttpGet("search-topup-by-email")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> GetTopUpByEmail(string searchEmail)
+    {
+        var existingTopup = await _topupService.GetTopUpByEmail(searchEmail);
+        if (existingTopup is null)
+            return NotFound();
+        var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);
+        var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
+        return Ok(userMappedExistTopUp);
+    }
+
 }

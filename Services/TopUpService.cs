@@ -61,4 +61,8 @@ public class TopUpService
     {
         await _topupRepository.RejectTopUp(rejectedTopup);
     }
+    public async Task <IEnumerable<TopUp>> GetTopUpByEmail(string searchEmail)
+    {
+       return await _topupRepository.GetTopUpbyEmail(searchEmail);
+    }
 }
