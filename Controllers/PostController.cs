@@ -75,13 +75,14 @@ namespace SecondhandStore.Controllers
 
 
         [HttpPost("create-new-post")]
+        [Authorize(Roles = "US")]
         public async Task<IActionResult> CreateNewPost([FromForm] PostCreateRequest postCreateRequest)
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
 
             var createdPost = new Post
             {
-                AccountId = int.Parse(userId),
+                AccountId = Int32.Parse(userId),
                 PostDate = DateTime.Now,
                 ProductName = postCreateRequest.ProductName,
                 Description = postCreateRequest.Description,

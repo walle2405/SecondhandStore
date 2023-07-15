@@ -6,6 +6,8 @@ using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
 using SecondhandStore.Services;
 using System.Data;
+using Microsoft.AspNetCore.Mvc.Routing;
+using SecondhandStore.Extension;
 
 namespace SecondhandStore.Controllers
 {
@@ -17,11 +19,13 @@ namespace SecondhandStore.Controllers
         private readonly PostService _postService;
         private readonly AccountService _accountService;
         private readonly IMapper _mapper;
-        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService,AccountService accountService, IMapper mapper)
+        private readonly IEmailService _emailService;
+        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService,AccountService accountService, IServiceProvider serviceProvider, IMapper mapper)
         {
             _accountService = accountService;
             _postService = postService; 
             _exchangeOrderService = exchangeOrderService;
+            _emailService = serviceProvider.GetRequiredService<IEmailService>();
             _mapper = mapper;
         }
 
@@ -78,6 +82,22 @@ namespace SecondhandStore.Controllers
             mappedExchange.OrderStatusId = 5;
             mappedExchange.PostId = chosenPost.PostId;
             chosenPost.PostStatusId = 7;
+
+            var seller = await _accountService.GetAccountById(chosenPost.AccountId);
+            var buyer = await _accountService.GetAccountById(parseUserId);
+            try
+            {
+                SendMailModel request = new SendMailModel();
+                request.ReceiveAddress = seller.Email;
+                request.Subject = "Regarding your item " + chosenPost.ProductName;
+                request.Content = "You have new order from " + buyer.Fullname; 
+                _emailService.SendMail(request);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Cannot send email");
+            }
+            
             await _exchangeOrderService.AddExchangeRequest(mappedExchange);
             return Ok("Request Successfully");
 
