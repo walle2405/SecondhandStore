@@ -97,7 +97,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__Exchange__0809335D692FA2D2");
+                    .HasName("PK__Exchange__0809335DB37FA433");
 
                 entity.ToTable("ExchangeOrder");
 
@@ -256,6 +256,10 @@ namespace SecondhandStore.Infrastructure
 
                 entity.Property(e => e.ReporterId).HasColumnName("reporterId");
 
+                entity.Property(e => e.Status)
+                    .HasMaxLength(255)
+                    .HasColumnName("status");
+
                 entity.HasOne(d => d.ReportedAccount)
                     .WithMany(p => p.ReportReportedAccounts)
                     .HasForeignKey(d => d.ReportedAccountId)
@@ -285,7 +289,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335D19C7F52E");
+                    .HasName("PK__TopUp__0809335D9ED4DDB0");
 
                 entity.ToTable("TopUp");
 

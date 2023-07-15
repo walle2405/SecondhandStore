@@ -8,6 +8,7 @@ using SecondhandStore.Services;
 using System.Data;
 using Microsoft.AspNetCore.Mvc.Routing;
 using SecondhandStore.Extension;
+using System;
 
 namespace SecondhandStore.Controllers
 {
@@ -90,7 +91,10 @@ namespace SecondhandStore.Controllers
                 SendMailModel request = new SendMailModel();
                 request.ReceiveAddress = seller.Email;
                 request.Subject = "Regarding your item " + chosenPost.ProductName;
-                request.Content = "You have new order from " + buyer.Fullname; 
+                EmailContent content = new EmailContent();
+                content.Dear = "Dear " + seller.Fullname + ",";
+                content.BodyContent = "You have new order from " + buyer.Fullname +".\nPlease check your exchange order.\nThank You!";
+                request.Content = content.ToString(); 
                 _emailService.SendMail(request);
             }
             catch (Exception ex)
@@ -142,6 +146,23 @@ namespace SecondhandStore.Controllers
                 exchange.OrderStatusId = 4;
                 chosenPost.PostStatusId = 3;
                 await _exchangeOrderService.UpdateExchange(exchange);
+                var seller = await _accountService.GetAccountById(chosenPost.AccountId);
+                var buyer = await _accountService.GetAccountById(parseUserId);
+                try
+                {
+                    SendMailModel request = new SendMailModel();
+                    request.ReceiveAddress = seller.Email;
+                    request.Subject = "Cancel Order #" + orderId;
+                    EmailContent content = new EmailContent();
+                    content.Dear = "Dear " + seller.Fullname +",";
+                    content.BodyContent = buyer.Fullname + " have cancelled your order with #"+orderId+":" + chosenPost.ProductName+"." + "\nHave a nice day!";
+                    request.Content = content.ToString();
+                    _emailService.SendMail(request);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Cannot send email");
+                }
                 return Ok("Cancelled Successfully!");
             }
         }
