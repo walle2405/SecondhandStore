@@ -21,10 +21,10 @@ namespace SecondhandStore.Infrastructure
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
-        public virtual DbSet<PostStatus> PostStatuses { get; set; } = null!;
         public virtual DbSet<PostType> PostTypes { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<Status> Statuses { get; set; } = null!;
         public virtual DbSet<TopUp> TopUps { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -97,7 +97,7 @@ namespace SecondhandStore.Infrastructure
             modelBuilder.Entity<ExchangeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__Exchange__0809335DB37FA433");
+                    .HasName("PK__Exchange__0809335D9F3AA087");
 
                 entity.ToTable("ExchangeOrder");
 
@@ -201,17 +201,6 @@ namespace SecondhandStore.Infrastructure
                     .HasConstraintName("FK__Post__postTypeId__300424B4");
             });
 
-            modelBuilder.Entity<PostStatus>(entity =>
-            {
-                entity.ToTable("PostStatus");
-
-                entity.Property(e => e.PostStatusId).HasColumnName("postStatusId");
-
-                entity.Property(e => e.PostStatusName)
-                    .HasMaxLength(255)
-                    .HasColumnName("postStatusName");
-            });
-
             modelBuilder.Entity<PostType>(entity =>
             {
                 entity.ToTable("PostType");
@@ -228,21 +217,6 @@ namespace SecondhandStore.Infrastructure
                 entity.ToTable("Report");
 
                 entity.Property(e => e.ReportId).HasColumnName("reportId");
-
-                entity.Property(e => e.Evidence1)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false)
-                    .HasColumnName("evidence1");
-
-                entity.Property(e => e.Evidence2)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false)
-                    .HasColumnName("evidence2");
-
-                entity.Property(e => e.Evidence3)
-                    .HasMaxLength(4000)
-                    .IsUnicode(false)
-                    .HasColumnName("evidence3");
 
                 entity.Property(e => e.Reason)
                     .HasMaxLength(4000)
@@ -286,10 +260,17 @@ namespace SecondhandStore.Infrastructure
                     .HasColumnName("roleName");
             });
 
+            modelBuilder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.StatusName).HasMaxLength(255);
+            });
+
             modelBuilder.Entity<TopUp>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__TopUp__0809335D9ED4DDB0");
+                    .HasName("PK__TopUp__0809335D20816B69");
 
                 entity.ToTable("TopUp");
 

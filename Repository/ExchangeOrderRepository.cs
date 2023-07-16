@@ -20,5 +20,12 @@ namespace SecondhandStore.Repository
         {
             return await _dbContext.ExchangeOrders.Where(c => c.SellerId == userId).Include(p=>p.Buyer).Include(p => p.Post).Include(p=>p.OrderStatus).ToListAsync();
         }
+        public async Task<IEnumerable<ExchangeOrder>> GetAllExchange() { 
+            return await _dbContext.ExchangeOrders.Include(p => p.Seller).Include(p => p.Buyer).Include(p => p.Post).Include(p=>p.OrderStatus).ToListAsync();
+        }
+        public async Task<IEnumerable<ExchangeOrder>> GetAllRelatedProductPost(int postId, int orderId)
+        {
+            return await _dbContext.ExchangeOrders.Where(p => p.OrderId != orderId && p.PostId == postId).ToListAsync();
+        }
     }
 }

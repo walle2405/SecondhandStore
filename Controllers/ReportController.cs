@@ -26,17 +26,21 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetReportList() {
             var reportList = await _reportService.GetAllReport();
-            if (!reportList.Any()) {
+            var mappedReportList = _mapper.Map<List<ReportEntityViewModel>>(reportList);
+            if (!reportList.Any())
                 return NotFound();
-            }
-            var mappedReport = _mapper.Map<List<ReportEntityViewModel>>(reportList);
-            return Ok(mappedReport);
+
+            return Ok(mappedReportList);
         }
         [HttpPost]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> SendRequest(ReportCreateRequest reportCreateRequest) {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
             var mappedReport = _mapper.Map<Report>(reportCreateRequest);
+            mappedReport.ReporterId = parseUserId;
             mappedReport.ReportDate = DateTime.Now;
+            mappedReport.Status = "Processing"; 
             await _reportService.AddReport(mappedReport);
             return CreatedAtAction(nameof(GetReportList), 
                 new { id = mappedReport.ReportId},

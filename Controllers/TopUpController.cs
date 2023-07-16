@@ -55,7 +55,7 @@ public class TopUpController : ControllerBase
                 mappedTopup.AccountId = Int32.Parse(userId);
                 mappedTopup.Price = mappedTopup.TopUpPoint * 1000;
                 mappedTopup.TopUpDate = DateTime.Now;
-                mappedTopup.TopupStatusId = 5;
+                mappedTopup.TopupStatusId = 3;
 
                 await _topupService.AddTopUp(mappedTopup);
 
@@ -105,7 +105,7 @@ public class TopUpController : ControllerBase
             return NotFound();
         }
         else {
-            if (topup.TopupStatusId == 6)
+            if (topup.TopupStatusId == 4)
             {
                 return NoContent();
             }
@@ -130,13 +130,13 @@ public class TopUpController : ControllerBase
         }
         else
         {
-            if (topup.TopupStatusId == 1)
+            if (topup.TopupStatusId == 5)
             {
                 return NoContent();
             }
             else 
             {
-                if (topup.TopupStatusId == 6) 
+                if (topup.TopupStatusId == 4) 
                 {
                     await _topupService.RejectTopup(topup);
                     var account = await _accountService.GetAccountById(topup.AccountId);

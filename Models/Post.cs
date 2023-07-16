@@ -25,7 +25,7 @@ namespace SecondhandStore.Models
 
         public virtual Account Account { get; set; } = null!;
         public virtual Category Category { get; set; } = null!;
-        public virtual PostStatus PostStatus { get; set; } = null!;
+        public virtual Status PostStatus { get; set; } = null!;
         public virtual PostType PostType { get; set; } = null!;
         public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; }
     }

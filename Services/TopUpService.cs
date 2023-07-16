@@ -36,7 +36,7 @@ public class TopUpService
     }
     public async Task<Double> GetTotalRevenue()
     {
-        var topupList = await _topupRepository.GetAll().Where(p=>p.TopupStatusId == 6).ToListAsync();
+        var topupList = await _topupRepository.GetAll().Where(p=>p.TopupStatusId == 4).ToListAsync();
         if (!topupList.Any())
         {
             return 0;
@@ -46,7 +46,7 @@ public class TopUpService
     }
     public async Task<Double> GetTotalValueOfUserTransaction(int userId)
     {
-        var userTopupList = await _topupRepository.GetAll().Where(p => p.AccountId == userId && p.TopupStatusId == 6).ToListAsync();
+        var userTopupList = await _topupRepository.GetAll().Where(p => p.AccountId == userId && p.TopupStatusId == 4).ToListAsync();
         if (!userTopupList.Any())
         {
             return 0;

@@ -11,9 +11,6 @@ namespace SecondhandStore.Models
         public int ReportedAccountId { get; set; }
         public DateTime ReportDate { get; set; }
         public string Status { get; set; } = null!;
-        public string Evidence1 { get; set; } = null!;
-        public string? Evidence2 { get; set; }
-        public string? Evidence3 { get; set; }
 
         public virtual Account ReportedAccount { get; set; } = null!;
         public virtual Account Reporter { get; set; } = null!;

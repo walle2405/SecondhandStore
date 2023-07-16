@@ -21,7 +21,7 @@ public class TopUpRepository : BaseRepository<TopUp>
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == acceptedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 6;
+            topup.TopupStatusId = 4;
         }
         await _dbContext.SaveChangesAsync();
     }
@@ -30,7 +30,7 @@ public class TopUpRepository : BaseRepository<TopUp>
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == rejectedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 1;
+            topup.TopupStatusId = 5;
         }
         await _dbContext.SaveChangesAsync();
     }

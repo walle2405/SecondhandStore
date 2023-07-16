@@ -13,8 +13,9 @@ namespace SecondhandStore.Services
             _reportRepository = reportRepository;
             _configuration = configuration;
         }
-        public async Task<IEnumerable<Report>> GetAllReport() { 
-            return await _reportRepository.GetAll().ToListAsync();
+        public async Task<IEnumerable<Report>> GetAllReport()
+        {
+            return await _reportRepository.GetAllReport();
         }
         public async Task<Report?> GetReportById(int id) { 
             return await _reportRepository.GetByIntId(id);
