@@ -59,7 +59,7 @@ public class AccountController : ControllerBase
     [HttpGet("get-user-account")]
     public async Task<IActionResult> GetAccountByUserId()
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
         var existingAccount = await _accountService.GetAccountById(Int32.Parse(userId));
         if (existingAccount is null)
             return NotFound();
@@ -98,7 +98,7 @@ public class AccountController : ControllerBase
             new { id = mappedAccount.AccountId },
             mappedAccount);
     }
-
+    
     [HttpPut("update-account")]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)

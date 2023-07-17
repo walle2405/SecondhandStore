@@ -24,11 +24,12 @@ namespace SecondhandStore.Services
         }
         public async Task<IEnumerable<Post>?> GetPostByAccountId(int id)
         {
-            return _postRepository.GetAll()
+            return await _postRepository.GetAll()
+            .Where(p => p.AccountId == id)
             .Include(p => p.Account)
             .Include(p => p.Category)
             .Include(p => p.PostStatus)
-            .Where(p => p.AccountId == id);
+            .ToListAsync();
         }
 
         public async Task<Post?> GetPostById(int id)

@@ -160,5 +160,4 @@ public class TopUpController : ControllerBase
         var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
         return Ok(userMappedExistTopUp);
     }
-
 }
