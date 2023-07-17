@@ -127,7 +127,7 @@ namespace SecondhandStore.Controllers
             else {
                 exchange.OrderStatusId = 4;
                 await _exchangeOrderService.UpdateExchange(exchange);
-                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.OrderId, exchange.PostId);
+                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
                 foreach (var exchangeComponent in relatedExchange) {
                     exchangeComponent.OrderStatusId = 7;
@@ -150,8 +150,6 @@ namespace SecondhandStore.Controllers
                         return BadRequest("Cannot send email");
                     }
                 }
-                chosenPost.PostStatusId = 2;
-                await _exchangeOrderService.UpdateExchange(exchange);
                 return Ok("Accepted ! Please, carry out delivery.");
             }
         }
@@ -189,7 +187,7 @@ namespace SecondhandStore.Controllers
                 {
                     return BadRequest("Cannot send email");
                 }
-                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.OrderId, exchange.PostId);
+                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
                 foreach (var exchangeComponent in relatedExchange)
                 {
                     exchangeComponent.OrderStatusId = 6;

@@ -40,8 +40,8 @@ public class ExchangeOrderService
         var order = await _exchangeOrderRepository.GetAll().Where(p=>p.BuyerId == userId && p.PostId == postId).ToListAsync();
         return order;
     }
-    public async Task<IEnumerable<ExchangeOrder>> GetAllRelatedProductPost(int postId, int userId)
+    public async Task<IEnumerable<ExchangeOrder>> GetAllRelatedProductPost(int postId, int orderid)
     {
-        return await _exchangeOrderRepository.GetAllRelatedProductPost(postId, userId);
+        return await _exchangeOrderRepository.GetAllRelatedProductPost(postId, orderid);
     }
 }
