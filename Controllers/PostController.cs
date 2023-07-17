@@ -15,23 +15,21 @@ namespace SecondhandStore.Controllers
     public class PostController : ControllerBase
     {
         private readonly PostService _postService;
-        private readonly AccountService _accountService;
         private readonly IMapper _mapper;
         private readonly AzureService _azureService;
 
-        public PostController(AccountService accountService, PostService postService, IMapper mapper, AzureService azureService)
+        public PostController(PostService postService, IMapper mapper, AzureService azureService)
         {
             _postService = postService;
-            _accountService = accountService;
             _mapper = mapper;
             _azureService = azureService;
         }
 
         [HttpGet("get-post-list")]
-        public async Task<IActionResult> GetUserPostsList()
+        public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
-            postList = postList.Where(p => p.PostStatusId == 3 || p.PostStatusId == 6);
+
             if (!postList.Any())
                 return NotFound();
 
@@ -39,31 +37,33 @@ namespace SecondhandStore.Controllers
             return Ok(mappedPostList);
         }
 
-        [HttpGet("get-user-posts")]
-        [Authorize(Roles = "AD")]
-        public async Task<IActionResult> GetAllPosts()
-        {
-            var postList = await _postService.GetAllPosts();
-            if (!postList.Any())
-                return NotFound();
-
-            var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
-            return Ok(mappedPostList);
-        }
-
-        [HttpGet("get-own-posts")]
+        [HttpGet("get-user-posts/")]
+        [Authorize(Roles = "US")]
         public async Task<IActionResult> GetPostsByUserId()
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-            var postList = await _postService.GetPostByAccountId(int.Parse(userId));
-            if (!postList.Any())
+            var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
+            if (postList is null)
                 return NotFound();
-
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
             return Ok(mappedPostList);
         }
 
+        [HttpGet("get-user-post-by-id")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetPostByUserId(int id)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
+            var post = postList.FirstOrDefault(p => p.PostId == id);
+            if (post is null)
+                return NotFound();
+            var mappedPost = _mapper.Map<PostEntityViewModel>(post);
+            return Ok(mappedPost);
+        }
+
         [HttpGet("get-post-by-id")]
+        [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await _postService.GetPostById(id);
@@ -72,6 +72,7 @@ namespace SecondhandStore.Controllers
             var mappedPost = _mapper.Map<PostEntityViewModel>(post);
             return Ok(mappedPost);
         }
+
 
         [HttpPost("create-new-post")]
         [Authorize(Roles = "US")]
@@ -85,7 +86,6 @@ namespace SecondhandStore.Controllers
                 CreatedDate = DateTime.Now,
                 ProductName = postCreateRequest.ProductName,
                 Description = postCreateRequest.Description,
-                PointCost = postCreateRequest.PointCost,
                 PostStatusId = postCreateRequest.PostStatusId,
                 CategoryId = postCreateRequest.CategoryId,
                 IsDonated = postCreateRequest.isDonated,
@@ -97,19 +97,20 @@ namespace SecondhandStore.Controllers
                 {
                     var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
                     var fileNameCheck = createdPost.Image?.Split('/').LastOrDefault();
+
                     var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
+
                     createdPost.Image = uri;
                 }
 
+            Console.Write(createdPost);
 
             await _postService.AddPost(createdPost);
-            var account = await _accountService.GetAccountById(createdPost.AccountId);
-            account.PointBalance -= createdPost.PointCost;
-            await _accountService.UpdatePointAutomatic(account);
+
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
-            return Ok(createdPost.PostId);
+            return Ok();
 
         }
 
@@ -123,29 +124,46 @@ namespace SecondhandStore.Controllers
             return Ok(mappedExistingPost);
         }
 
-        [HttpPut("toggle-post-status")]
+        [HttpPut("accept-post")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> TogglePostStatus(PostVerifiedRequest pvr)
+        public async Task<IActionResult> AcceptPost(int id) {
+            var existingPost = await _postService.GetPostById(id);
+            if (existingPost is null)
+            {
+                return NotFound();
+            }
+            else {
+                if (existingPost.PostStatusId == 4)
+                {
+                    return NoContent();
+                }
+                else 
+                {
+                    await _postService.AcceptPost(existingPost);
+                    return NoContent();
+                }  
+            }
+        }
+        [HttpPut("reject-post")]
+        [Authorize(Roles = "AD")]
+        public async Task<IActionResult> RejectPost(int id)
         {
-            try
+            var existingPost = await _postService.GetPostById(id);
+            if (existingPost is null)
             {
-                var existingPost = await _postService.GetPostById(pvr.id);
-
-                if (existingPost is null)
-                    return NotFound();
-
-                // existingPost.IsActive = !existingPost.PostStatus;
-                existingPost.PostStatusId = (pvr.choice.Equals("accept") ? 3 : 1);
-                await _postService.UpdatePost(existingPost);
-
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Invalid Request");
+            else {
+                if (existingPost.PostStatusId == 5)
+                {
+                    return NoContent();
+                }
+                else 
+                {
+                    await _postService.RejectPost(existingPost);
+                    return NoContent();
+                }  
             }
-
         }
 
         [HttpPut("update-post")]
@@ -159,16 +177,12 @@ namespace SecondhandStore.Controllers
 
                 if (existingPost is null)
                     return NotFound();
-                if (existingPost.AccountId != Int32.Parse(userId))
-                {
-                    return Unauthorized();
-                }
+
                 var mappedPost = _mapper.Map<Post>(postUpdateRequest);
-                Console.WriteLine(mappedPost);
+                mappedPost.AccountId = Int32.Parse(userId);
                 mappedPost.PostId = existingPost.PostId;
                 mappedPost.CategoryId = existingPost.CategoryId;
-                if(String.IsNullOrEmpty(mappedPost.ProductName)) mappedPost.ProductName = existingPost.ProductName;
-                if(String.IsNullOrEmpty(mappedPost.Description)) mappedPost.Description = existingPost.Description;                
+
 
                 if (postUpdateRequest.ImageUploadRequest != null)
                     foreach (var image in postUpdateRequest.ImageUploadRequest)
@@ -180,9 +194,6 @@ namespace SecondhandStore.Controllers
 
                         mappedPost.Image = uri;
                     }
-                else{
-                    mappedPost.Image = existingPost.Image;
-                }
                 await _postService.UpdatePost(mappedPost);
                 return NoContent();
             }

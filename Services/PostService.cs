@@ -54,5 +54,12 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Update(post);
         }
+        
+        public async Task AcceptPost(Post acceptedPost) { 
+            await _postRepository.AcceptPost(acceptedPost);
+        }
+        public async Task RejectPost(Post rejectedPost) { 
+            await _postRepository.RejectPost(rejectedPost);
+        }
     }
 }

@@ -39,4 +39,22 @@ public class PostRepository : BaseRepository<Post>
             await _dbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task AcceptPost(Post acceptedPost) {
+        var post = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == acceptedPost.PostId);
+        if (post != null)
+        {
+            post.PostStatusId = 4;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task RejectPost(Post rejectedPost)
+    {
+        var post = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == rejectedPost.PostId);
+        if (post != null)
+        {
+            post.PostStatusId = 5;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
 }
