@@ -126,10 +126,11 @@ namespace SecondhandStore.Controllers
                 return BadRequest("Error!");
             }
             if (relatedPostExchangeList.Any()) {
-                return BadRequest("Sorry, you have accepted another request!");
+                return BadRequest("Sorry, you have accepted a request!");
             }
             else
             {
+                
                 exchange.OrderStatusId = 4;
                 await _exchangeOrderService.UpdateExchange(exchange);
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
@@ -196,7 +197,7 @@ namespace SecondhandStore.Controllers
                             return BadRequest("Cannot send email");
                         }
                     }
-                    return Ok("Accepted ! Please, carry out delivery.");
+                    return Ok("Delivered Successfully! Thank you.");
                 }
             }
         }
