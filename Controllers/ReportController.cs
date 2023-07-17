@@ -40,7 +40,7 @@ namespace SecondhandStore.Controllers
             var mappedReport = _mapper.Map<Report>(reportCreateRequest);
             mappedReport.ReporterId = parseUserId;
             mappedReport.ReportDate = DateTime.Now;
-            // mappedReport.Status = "Processing"; 
+            mappedReport.ReportStatusId = 6; 
             await _reportService.AddReport(mappedReport);
             return CreatedAtAction(nameof(GetReportList), 
                 new { id = mappedReport.ReportId},
