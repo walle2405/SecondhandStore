@@ -159,33 +159,40 @@ namespace SecondhandStore.Controllers
                 return BadRequest("Error!");
             }
             else {
-                exchange.OrderStatusId = 8;
-                await _exchangeOrderService.UpdateExchange(exchange);
-                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
-                var chosenPost = await _postService.GetPostById(exchange.PostId);
-                chosenPost.PostStatusId = 2;
-                foreach (var exchangeComponent in relatedExchange) {
-                    exchangeComponent.OrderStatusId = 7;
-                    await _exchangeOrderService.UpdateExchange(exchangeComponent);
-                    var seller = await _accountService.GetAccountById(exchangeComponent.SellerId);
-                    var buyer = await _accountService.GetAccountById(exchangeComponent.BuyerId);
-                    try
-                    {
-                        SendMailModel request = new SendMailModel();
-                        request.ReceiveAddress = buyer.Email;
-                        request.Subject = "Cancel Order Notification";
-                        EmailContent content = new EmailContent();
-                        content.Dear = "Dear " + buyer.Fullname + ",";
-                        content.BodyContent = seller.Fullname + " have cancelled a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another request for this product has been complete." + "\nHave a nice day!";
-                        request.Content = content.ToString();
-                        _emailService.SendMail(request);
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest("Cannot send email");
-                    }
+                if (exchange.OrderStatusId != 4)
+                {
+                    return BadRequest("You can't confirm until seller accept.");
                 }
-                return Ok("Accepted ! Please, carry out delivery.");
+                else {
+                    exchange.OrderStatusId = 8;
+                    await _exchangeOrderService.UpdateExchange(exchange);
+                    var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId, exchange.OrderId);
+                    var chosenPost = await _postService.GetPostById(exchange.PostId);
+                    chosenPost.PostStatusId = 2;
+                    foreach (var exchangeComponent in relatedExchange)
+                    {
+                        exchangeComponent.OrderStatusId = 7;
+                        await _exchangeOrderService.UpdateExchange(exchangeComponent);
+                        var seller = await _accountService.GetAccountById(exchangeComponent.SellerId);
+                        var buyer = await _accountService.GetAccountById(exchangeComponent.BuyerId);
+                        try
+                        {
+                            SendMailModel request = new SendMailModel();
+                            request.ReceiveAddress = buyer.Email;
+                            request.Subject = "Cancel Order Notification";
+                            EmailContent content = new EmailContent();
+                            content.Dear = "Dear " + buyer.Fullname + ",";
+                            content.BodyContent = seller.Fullname + " have cancelled a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another request for this product has been complete." + "\nHave a nice day!";
+                            request.Content = content.ToString();
+                            _emailService.SendMail(request);
+                        }
+                        catch (Exception ex)
+                        {
+                            return BadRequest("Cannot send email");
+                        }
+                    }
+                    return Ok("Accepted ! Please, carry out delivery.");
+                }
             }
         }
         [HttpPut("cancel-exchange")]
