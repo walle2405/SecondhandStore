@@ -120,11 +120,16 @@ namespace SecondhandStore.Controllers
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            var relatedPostExchangeList = await _exchangeOrderService.GetExchangesListByPostId(exchange.PostId);
             if (exchange == null)
             {
                 return BadRequest("Error!");
             }
-            else {
+            if (relatedPostExchangeList.Any()) {
+                return BadRequest("Sorry, you have accepted another request!");
+            }
+            else
+            {
                 exchange.OrderStatusId = 4;
                 await _exchangeOrderService.UpdateExchange(exchange);
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
