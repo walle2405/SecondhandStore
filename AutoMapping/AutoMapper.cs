@@ -16,9 +16,9 @@ public class AutoMapper : Profile
         MapTopUp();
         MapPost();
         MapReport();
-        MapReview();
         MapExchangeOrder();
         MapExchangeRequest();
+        MapExchange();
     }
 
     private void MapRole()
@@ -75,7 +75,7 @@ public class AutoMapper : Profile
         CreateMap<TopUp, TopUpEntityViewModel>()
             .ForMember(d => d.FullName, map => map.MapFrom(p => p.Account.Fullname))
             .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
-            .ForMember(d => d.TopUpStatus, map => map.MapFrom(p => p.TopupStatus.PostStatusName));
+            .ForMember(d => d.TopUpStatus, map => map.MapFrom(p => p.TopupStatus.StatusName));
         CreateMap<TopUpEntityViewModel, TopUp>();
         CreateMap<TopUp, TopUpCreateRequest>()
             .ReverseMap();
@@ -85,14 +85,14 @@ public class AutoMapper : Profile
     private void MapPost()
     {
         CreateMap<Post, PostEntityViewModel>()
-        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
-        .ForMember(d => d.PhoneNo, map => map.MapFrom(p => p.Account.PhoneNo))
-        .ForMember(d => d.Address, map => map.MapFrom(p => p.Account.Address))
-        .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
-        .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
-        .ForMember(d => d.PostStatusName, map => map.MapFrom(p => p.PostStatus.PostStatusName))
-        .ForMember(d => d.PostTypeName, map => map.MapFrom(p => p.PostType.PostTypeName));
-             
+            .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+            .ForMember(d => d.PhoneNo, map => map.MapFrom(p => p.Account.PhoneNo))
+            .ForMember(d => d.Address, map => map.MapFrom(p => p.Account.Address))
+            .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
+            .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
+            .ForMember(d => d.CategoryValue, map => map.MapFrom(p => p.Category.CategoryValue))
+            .ForMember(d => d.StatusName, map => map.MapFrom(p => p.PostStatus.StatusName));
+
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()
             .ReverseMap();
@@ -105,23 +105,17 @@ public class AutoMapper : Profile
         CreateMap<PostType, Post>()
             .ReverseMap();
     }
-
-    public void MapReview()
-    {
-        CreateMap<Review, ReviewCreateRequest>()
-            .ReverseMap();
-        CreateMap<ReviewCreateRequest, Review>()
-            .ReverseMap();
-    }
-    public void MapReport() { 
+    public void MapReport() {
+        CreateMap<Report, ReportEntityViewModel>()
+            .ForMember(d => d.ReporterName, map => map.MapFrom(d => d.Reporter.Fullname))
+            .ForMember(d => d.ReportedUserName, map => map.MapFrom(d => d.ReportedAccount.Fullname))
+            .ForMember(d => d.ReportedUserEmail, map => map.MapFrom(d => d.ReportedAccount.Email));
+        CreateMap<ReportEntityViewModel, Report>();
         CreateMap<Report,ReportCreateRequest>()
             .ReverseMap();
         CreateMap<ReportCreateRequest,Report>()
             .ReverseMap();
-        CreateMap<Report, ReportEntityViewModel>()
-            .ReverseMap();
-        CreateMap<ReportEntityViewModel, Report>()
-            .ReverseMap();
+        
     }
     public void MapExchangeOrder() {
         CreateMap<ExchangeOrder, ExchangeOrderEntityViewModel>()
@@ -129,7 +123,7 @@ public class AutoMapper : Profile
             .ForMember(d => d.BuyerPhoneNumber, map => map.MapFrom(p => p.Buyer.PhoneNo))
             .ForMember(d => d.BuyerEmail, map => map.MapFrom(p => p.Buyer.Email))
             .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName))
-            .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.PostStatusName))
+            .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.StatusName))
             .ForMember(d => d.Price, map => map.MapFrom(p => p.Post.Price));
             
         CreateMap<ExchangeOrderEntityViewModel, ExchangeOrder>();
@@ -145,8 +139,17 @@ public class AutoMapper : Profile
             .ForMember(d => d.SellerPhoneNumber, map => map.MapFrom(p => p.Seller.PhoneNo))
             .ForMember(d => d.SellerEmail, map => map.MapFrom(p => p.Seller.Email))
             .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName))
-            .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.PostStatusName))
+            .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.StatusName))
             .ForMember(d => d.Price, map => map.MapFrom(p => p.Post.Price));
         CreateMap<ExchangeRequestEntityViewModel, ExchangeOrder>();
+    }
+    public void MapExchange() { 
+        CreateMap<ExchangeOrder,ExchangeViewEntityModel>()
+            .ForMember(d=>d.SellerName, map => map.MapFrom(p => p.Seller.Fullname))
+            .ForMember(d=>d.BuyerName, map => map.MapFrom(p =>p.Buyer.Fullname))
+            .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName))
+            .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.StatusName))
+            .ForMember(d => d.Price, map => map.MapFrom(p => p.Post.Price));
+        CreateMap<ExchangeViewEntityModel, ExchangeOrder>();
     }
 }

@@ -40,6 +40,7 @@ public class AccountRepository : BaseRepository<Account>
              existingAccount.Fullname = updatedAccount.Fullname ?? existingAccount.Fullname;
              existingAccount.Address = updatedAccount.Address ?? existingAccount.Address;
              existingAccount.PhoneNo = updatedAccount.PhoneNo ?? existingAccount.PhoneNo;
+             existingAccount.CredibilityPoint = updatedAccount.CredibilityPoint;
              await _dbContext.SaveChangesAsync();
          } 
     }

@@ -14,6 +14,10 @@ public class ExchangeOrderService
         _exchangeOrderRepository = exchangeOrderRepository;
         _configuration = configuration;
     }
+    public async Task<IEnumerable<ExchangeOrder>> GetAllExchange()
+    {
+        return await _exchangeOrderRepository.GetAllExchange();
+    }
     public async Task<IEnumerable<ExchangeOrder>> GetExchangeRequest(int userId) {
         return await _exchangeOrderRepository.GetExchangeRequest(userId);
     }
@@ -30,5 +34,14 @@ public class ExchangeOrderService
     public async Task<ExchangeOrder?> GetExchangeById(int id)
     {
         return await _exchangeOrderRepository.GetByIntId(id);
+    }
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangeByPostId(int userId, int postId)
+    {
+        var order = await _exchangeOrderRepository.GetAll().Where(p=>p.BuyerId == userId && p.PostId == postId).ToListAsync();
+        return order;
+    }
+    public async Task<IEnumerable<ExchangeOrder>> GetAllRelatedProductPost(int postId, int orderid)
+    {
+        return await _exchangeOrderRepository.GetAllRelatedProductPost(postId, orderid);
     }
 }

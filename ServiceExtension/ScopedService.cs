@@ -22,13 +22,14 @@ public static class ScopedService
         services.AddScoped<ReportRepository>();
         services.AddScoped<ReportService>();
 
-        services.AddScoped<ReviewRepository>();
-        services.AddScoped<ReviewService>();
-
         services.AddScoped<ExchangeOrderRepository>();
         services.AddScoped<ExchangeOrderService>();
 
         services.AddScoped<AzureStorageRepository>();
         services.AddScoped<AzureService>();
+
+        // services.AddScoped<IEmailService>();
+        // services.AddScoped<EmailService>();
+        services.AddScoped<IEmailService, EmailService>();
     }
 }

@@ -15,5 +15,8 @@ namespace SecondhandStore.Repository
         {
             return await _dbContext.Reports.Where(c => c.ReporterId.Equals(userId)).ToListAsync();
         }
+        public async Task<IEnumerable<Report>> GetAllReport() { 
+            return await _dbContext.Reports.Include(c => c.Reporter).Include(c=>c.ReportedAccount).ToListAsync();
+        }
     }
 }

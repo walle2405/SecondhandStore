@@ -17,22 +17,25 @@ public class TopUpRepository : BaseRepository<TopUp>
         return await _dbContext.TopUps.Where(c => c.AccountId == userId)
             .Include(p=>p.Account).Include(p=>p.TopupStatus).ToListAsync();
     }
-    public new async Task AcceptTopup(TopUp acceptedTopup) {
+    public async Task AcceptTopup(TopUp acceptedTopup) {
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == acceptedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 6;
+            topup.TopupStatusId = 4;
         }
         await _dbContext.SaveChangesAsync();
     }
-    public new async Task RejectTopUp(TopUp rejectedTopup)
+    public async Task RejectTopUp(TopUp rejectedTopup)
     {
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == rejectedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 1;
+            topup.TopupStatusId = 5;
         }
         await _dbContext.SaveChangesAsync();
+    }
+    public async Task<IEnumerable<TopUp>> GetTopUpbyEmail(string searchEmail) { 
+        return await _dbContext.TopUps.Where(c=>c.Account.Email.Contains(searchEmail)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
     }
 
 }

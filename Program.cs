@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SecondhandStore.Extension;
 using SecondhandStore.Infrastructure;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
@@ -54,6 +55,8 @@ builder.Services.AddResponseCaching(options =>
     options.UseCaseSensitivePaths = true;
 });
 
+// Retrive information from appsettings.json for Email 
+EmailSettingModel.Instance = config.GetSection("EmailSettings").Get<EmailSettingModel>();
 
 var app = builder.Build();
 

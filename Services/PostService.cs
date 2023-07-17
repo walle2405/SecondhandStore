@@ -19,7 +19,6 @@ namespace SecondhandStore.Services
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
                 .Include(p => p.Category)
-                .Include(p => p.PostType)
                 .Include(p => p.PostStatus)
                 .ToListAsync();
         }
@@ -29,7 +28,6 @@ namespace SecondhandStore.Services
             .Where(p => p.AccountId == id)
             .Include(p => p.Account)
             .Include(p => p.Category)
-            .Include(p => p.PostType)
             .Include(p => p.PostStatus)
             .ToListAsync();
         }
@@ -39,7 +37,6 @@ namespace SecondhandStore.Services
             return _postRepository.GetAll()
             .Include(p => p.Account)
             .Include(p => p.Category)
-            .Include(p => p.PostType)
             .Include(p => p.PostStatus)
             .FirstOrDefault(p => p.PostId == id);
         }
@@ -53,16 +50,16 @@ namespace SecondhandStore.Services
             return await _postRepository.GetPostByProductName(productName);
 
         }
-
-
         public async Task UpdatePost(Post post)
         {
             await _postRepository.Update(post);
         }
-        public async Task InActivePost(Post post) {
-            await _postRepository.InactivePost(post);
+        
+        public async Task AcceptPost(Post acceptedPost) { 
+            await _postRepository.AcceptPost(acceptedPost);
         }
-
-
+        public async Task RejectPost(Post rejectedPost) { 
+            await _postRepository.RejectPost(rejectedPost);
+        }
     }
 }

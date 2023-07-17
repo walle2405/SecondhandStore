@@ -20,7 +20,6 @@ public class PostRepository : BaseRepository<Post>
                 .Contains(ProductName.ToLower()))
                 .Include(p => p.Account)
                 .Include(p => p.Category)
-                .Include(p => p.PostType)
                 .Include(p => p.PostStatus)
                 .ToListAsync();
             
@@ -40,14 +39,22 @@ public class PostRepository : BaseRepository<Post>
             await _dbContext.SaveChangesAsync();
         }
     }
-    public async Task InactivePost(Post updatePost) {
-        var currentDate = DateTime.Now;
-        var existingPost = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == updatePost.PostId);
-        if (existingPost != null)
+    
+    public async Task AcceptPost(Post acceptedPost) {
+        var post = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == acceptedPost.PostId);
+        if (post != null)
         {
-            if (currentDate == existingPost.PostExpiryDate) {
-                existingPost.PostStatusId = 7;
-            }
+            post.PostStatusId = 4;
         }
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task RejectPost(Post rejectedPost)
+    {
+        var post = await _dbContext.Posts.FirstOrDefaultAsync(a => a.PostId == rejectedPost.PostId);
+        if (post != null)
+        {
+            post.PostStatusId = 5;
+        }
+        await _dbContext.SaveChangesAsync();
     }
 }

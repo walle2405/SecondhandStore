@@ -55,7 +55,7 @@ public class TopUpController : ControllerBase
                 mappedTopup.AccountId = Int32.Parse(userId);
                 mappedTopup.Price = mappedTopup.TopUpPoint * 1000;
                 mappedTopup.TopUpDate = DateTime.Now;
-                mappedTopup.TopupStatusId = 5;
+                mappedTopup.TopupStatusId = 3;
 
                 await _topupService.AddTopUp(mappedTopup);
 
@@ -105,7 +105,7 @@ public class TopUpController : ControllerBase
             return NotFound();
         }
         else {
-            if (topup.TopupStatusId == 6)
+            if (topup.TopupStatusId == 4)
             {
                 return NoContent();
             }
@@ -118,5 +118,46 @@ public class TopUpController : ControllerBase
                 return NoContent();
             }  
         }
+    }
+    [HttpPut("reject-topup")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> RejectTopUp(int id)
+    {
+        var topup = await _topupService.GetTopUpById(id);
+        if (topup is null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            if (topup.TopupStatusId == 5)
+            {
+                return NoContent();
+            }
+            else 
+            {
+                if (topup.TopupStatusId == 4) 
+                {
+                    await _topupService.RejectTopup(topup);
+                    var account = await _accountService.GetAccountById(topup.AccountId);
+                    account.PointBalance -= topup.TopUpPoint;
+                    await _accountService.UpdatePointAutomatic(account);
+                    return NoContent();
+                }
+                await _topupService.RejectTopup(topup);
+                return NoContent();
+            }
+        }
+    }
+    [HttpGet("search-topup-by-email")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> GetTopUpByEmail(string searchEmail)
+    {
+        var existingTopup = await _topupService.GetTopUpByEmail(searchEmail);
+        if (existingTopup is null)
+            return NotFound();
+        var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);
+        var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
+        return Ok(userMappedExistTopUp);
     }
 }
