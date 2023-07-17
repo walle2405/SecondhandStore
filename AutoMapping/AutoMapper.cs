@@ -85,14 +85,14 @@ public class AutoMapper : Profile
     private void MapPost()
     {
         CreateMap<Post, PostEntityViewModel>()
-        .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
-        .ForMember(d => d.PhoneNo, map => map.MapFrom(p => p.Account.PhoneNo))
-        .ForMember(d => d.Address, map => map.MapFrom(p => p.Account.Address))
-        .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
-        .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
-        .ForMember(d => d.PostStatusName, map => map.MapFrom(p => p.PostStatus.StatusName))
-        .ForMember(d => d.PostTypeName, map => map.MapFrom(p => p.PostType.PostTypeName));
-             
+            .ForMember(d => d.Fullname, map => map.MapFrom(p => p.Account.Fullname))
+            .ForMember(d => d.PhoneNo, map => map.MapFrom(p => p.Account.PhoneNo))
+            .ForMember(d => d.Address, map => map.MapFrom(p => p.Account.Address))
+            .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
+            .ForMember(d => d.CategoryName, map => map.MapFrom(p => p.Category.CategoryName))
+            .ForMember(d => d.CategoryValue, map => map.MapFrom(p => p.Category.CategoryValue))
+            .ForMember(d => d.StatusName, map => map.MapFrom(p => p.PostStatus.StatusName));
+
         CreateMap<PostEntityViewModel, Post>();
         CreateMap<PostCreateRequest, Post>()
             .ReverseMap();

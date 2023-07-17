@@ -20,7 +20,6 @@ public class PostRepository : BaseRepository<Post>
                 .Contains(ProductName.ToLower()))
                 .Include(p => p.Account)
                 .Include(p => p.Category)
-                .Include(p => p.PostType)
                 .Include(p => p.PostStatus)
                 .ToListAsync();
             

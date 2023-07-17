@@ -13,15 +13,13 @@ public class PostEntityViewModel
     public string Image { get; set; }
     public string Description { get; set; }
     public string PostStatusId { get; set; }
-    public string PostStatusName { get; set; }
-    public string PostTypeName { get; set; } = null!;
+    public string StatusName { get; set; }
+    public bool IsDonated { get; set; }
     public int CategoryId { get; set; }
+    public int CategoryValue { get; set; }
     public string CategoryName { get; set; }
-    public int PointCost { get; set; }
-    public DateTime PostDate { get; set; }
-    public int PostPriority { get; set; }
-    public DateTime PostExpiryDate { get; set; }
     public double Price { get; set; }
+    public DateTime CreatedDate { get; set; }
     
 
 }

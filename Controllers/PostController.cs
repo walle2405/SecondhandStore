@@ -83,12 +83,12 @@ namespace SecondhandStore.Controllers
             var createdPost = new Post
             {
                 AccountId = Int32.Parse(userId),
-                PostDate = DateTime.Now,
+                CreatedDate = DateTime.Now,
                 ProductName = postCreateRequest.ProductName,
                 Description = postCreateRequest.Description,
                 PostStatusId = postCreateRequest.PostStatusId,
                 CategoryId = postCreateRequest.CategoryId,
-                PostTypeId = postCreateRequest.PostTypeId,
+                IsDonated = postCreateRequest.isDonated,
                 Price = postCreateRequest.Price
             };
 

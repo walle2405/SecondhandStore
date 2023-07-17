@@ -18,6 +18,7 @@ namespace SecondhandStore.Models
         public int AccountId { get; set; }
         public string Password { get; set; } = null!;
         public string Fullname { get; set; } = null!;
+        public DateTime Dob { get; set; }
         public string Email { get; set; } = null!;
         public string RoleId { get; set; } = null!;
         public string Address { get; set; } = null!;
@@ -25,6 +26,7 @@ namespace SecondhandStore.Models
         public bool IsActive { get; set; }
         public int CredibilityPoint { get; set; }
         public int PointBalance { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<ExchangeOrder> ExchangeOrderBuyers { get; set; }

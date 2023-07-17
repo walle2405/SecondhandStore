@@ -10,8 +10,9 @@ namespace SecondhandStore.Models
         public int ReporterId { get; set; }
         public int ReportedAccountId { get; set; }
         public DateTime ReportDate { get; set; }
-        public string Status { get; set; } = null!;
+        public int ReportStatusId { get; set; }
 
+        public virtual Status ReportStatus { get; set; } = null!;
         public virtual Account ReportedAccount { get; set; } = null!;
         public virtual Account Reporter { get; set; } = null!;
     }
