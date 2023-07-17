@@ -27,5 +27,6 @@ namespace SecondhandStore.Repository
         {
             return await _dbContext.ExchangeOrders.Where(p => p.OrderId != orderId && p.PostId == postId).ToListAsync();
         }
+        
     }
 }

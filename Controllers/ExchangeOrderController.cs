@@ -114,9 +114,9 @@ namespace SecondhandStore.Controllers
             return Ok("Request Successfully");
 
         }
-        [HttpPut("accept-request-for-an-order")]
+        [HttpPut("seller-accept-request")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> AcceptExchangeRequest(int orderId) {
+        public async Task<IActionResult> AcceptFromSeller(int orderId) {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
@@ -127,8 +127,43 @@ namespace SecondhandStore.Controllers
             else {
                 exchange.OrderStatusId = 4;
                 await _exchangeOrderService.UpdateExchange(exchange);
+                var chosenPost = await _postService.GetPostById(exchange.PostId);
+                var seller = await _accountService.GetAccountById(exchange.SellerId);
+                var buyer = await _accountService.GetAccountById(exchange.BuyerId);
+                try
+                {
+                    SendMailModel request = new SendMailModel();
+                    request.ReceiveAddress = buyer.Email;
+                    request.Subject = "Accepted Order";
+                    EmailContent content = new EmailContent();
+                    content.Dear = "Dear " + buyer.Fullname + ",";
+                    content.BodyContent = seller.Fullname + " have accepted a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nPlease, check your exchange request for tracking progress." + "\nHave a nice day!";
+                    request.Content = content.ToString();
+                    _emailService.SendMail(request);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Cannot send email");
+                }
+                return Ok("Successful Confirmation.");
+            }
+        }
+        [HttpPut("confirm-receive-from-buyer")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> ConfirmReceive(int orderId) {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else {
+                exchange.OrderStatusId = 8;
+                await _exchangeOrderService.UpdateExchange(exchange);
                 var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
+                chosenPost.PostStatusId = 2;
                 foreach (var exchangeComponent in relatedExchange) {
                     exchangeComponent.OrderStatusId = 7;
                     await _exchangeOrderService.UpdateExchange(exchangeComponent);
@@ -141,7 +176,7 @@ namespace SecondhandStore.Controllers
                         request.Subject = "Cancel Order Notification";
                         EmailContent content = new EmailContent();
                         content.Dear = "Dear " + buyer.Fullname + ",";
-                        content.BodyContent = seller.Fullname + " have cancelled a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another request for this product has been accepted" + "\nHave a nice day!";
+                        content.BodyContent = seller.Fullname + " have cancelled a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another request for this product has been complete." + "\nHave a nice day!";
                         request.Content = content.ToString();
                         _emailService.SendMail(request);
                     }
@@ -153,9 +188,9 @@ namespace SecondhandStore.Controllers
                 return Ok("Accepted ! Please, carry out delivery.");
             }
         }
-        [HttpPut("cancel-request")]
+        [HttpPut("cancel-exchange")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> RejectExchangeRequest(int orderId)
+        public async Task<IActionResult> RejectReceive(int orderId)
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
@@ -168,18 +203,17 @@ namespace SecondhandStore.Controllers
             {
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
                 exchange.OrderStatusId = 7;
-                chosenPost.PostStatusId = 1;
                 await _exchangeOrderService.UpdateExchange(exchange);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
                 try
                 {
                     SendMailModel request = new SendMailModel();
-                    request.ReceiveAddress = seller.Email;
+                    request.ReceiveAddress = buyer.Email;
                     request.Subject = "Cancel Order Notification";
                     EmailContent content = new EmailContent();
-                    content.Dear = "Dear " + seller.Fullname +",";
-                    content.BodyContent = buyer.Fullname + " have cancelled an order with order Id #"+orderId+":" + chosenPost.ProductName +"." + "\nHave a nice day!";
+                    content.Dear = "Dear " + seller.Fullname + ",";
+                    content.BodyContent = buyer.Fullname + " have cancel a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nPlease, check your exchange request for tracking progress." + "\nHave a nice day!";
                     request.Content = content.ToString();
                     _emailService.SendMail(request);
                 }
@@ -187,29 +221,6 @@ namespace SecondhandStore.Controllers
                 {
                     return BadRequest("Cannot send email");
                 }
-                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
-                foreach (var exchangeComponent in relatedExchange)
-                {
-                    exchangeComponent.OrderStatusId = 6;
-                    await _exchangeOrderService.UpdateExchange(exchangeComponent);
-                    var reorderbuyer = await _accountService.GetAccountById(exchangeComponent.BuyerId);
-                    try
-                    {
-                        SendMailModel request = new SendMailModel();
-                        request.ReceiveAddress = reorderbuyer.Email;
-                        request.Subject = "Re-Order Notification";
-                        EmailContent content = new EmailContent();
-                        content.Dear = "Dear " + reorderbuyer.Fullname + ",";
-                        content.BodyContent = "You have an opportunity for re-order exchange with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nHave a nice day!";
-                        request.Content = content.ToString();
-                        _emailService.SendMail(request);
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest("Cannot send email");
-                    }
-                }
-
                 return Ok("Cancelled Successfully!");
             }
         }
