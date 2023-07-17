@@ -27,5 +27,11 @@ namespace SecondhandStore.Services
         {
             await _reportRepository.Add(report);
         }
+        public async Task AcceptReport(Report acceptReport) { 
+            await _reportRepository.AcceptReport(acceptReport);
+        }
+        public async Task RejectReport(Report rejectReport) { 
+            await _reportRepository.RejectReport(rejectReport);
+        }
     }
 }

@@ -16,7 +16,27 @@ namespace SecondhandStore.Repository
             return await _dbContext.Reports.Where(c => c.ReporterId.Equals(userId)).ToListAsync();
         }
         public async Task<IEnumerable<Report>> GetAllReport() { 
-            return await _dbContext.Reports.Include(c => c.Reporter).Include(c=>c.ReportedAccount).ToListAsync();
+            return await _dbContext.Reports.Include(c => c.Reporter).Include(c=>c.ReportedAccount).Include(c=>c.ReportStatus).ToListAsync();
         }
+        public async Task AcceptReport(Report acceptReport) {
+            var report = await _dbContext.Reports.FirstOrDefaultAsync(c => c.ReportId == acceptReport.ReportId);
+            if (report != null)
+            {
+                report.ReportStatusId = 4;
+            }
+            await _dbContext.SaveChangesAsync();
+
+        }
+        public async Task RejectReport(Report rejectReport)
+        {
+            var report = await _dbContext.Reports.FirstOrDefaultAsync(c => c.ReportId == rejectReport.ReportId);
+            if (report != null)
+            {
+                report.ReportStatusId = 5;
+            }
+            await _dbContext.SaveChangesAsync();
+
+        }
+
     }
 }
