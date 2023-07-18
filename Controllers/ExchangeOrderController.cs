@@ -222,7 +222,7 @@ namespace SecondhandStore.Controllers
                 try
                 {
                     SendMailModel request = new SendMailModel();
-                    request.ReceiveAddress = buyer.Email;
+                    request.ReceiveAddress = seller.Email;
                     request.Subject = "Cancel Order Notification";
                     EmailContent content = new EmailContent();
                     content.Dear = "Dear " + seller.Fullname + ",";
