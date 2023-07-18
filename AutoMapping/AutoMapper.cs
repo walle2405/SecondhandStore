@@ -151,7 +151,9 @@ public class AutoMapper : Profile
             .ForMember(d=>d.BuyerName, map => map.MapFrom(p =>p.Buyer.Fullname))
             .ForMember(d => d.ProductName, map => map.MapFrom(p => p.Post.ProductName))
             .ForMember(d => d.OrderStatusName, map => map.MapFrom(p => p.OrderStatus.StatusName))
-            .ForMember(d => d.Price, map => map.MapFrom(p => p.Post.Price));
+            .ForMember(d => d.Price, map => map.MapFrom(p => p.Post.Price))
+            .ForMember(d => d.BuyerEmail,map =>map.MapFrom(p=>p.Buyer.Email))
+            .ForMember(d => d.SellerEmail, map => map.MapFrom(p => p.Seller.Email));
         CreateMap<ExchangeViewEntityModel, ExchangeOrder>();
     }
 }
