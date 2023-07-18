@@ -29,7 +29,7 @@ namespace SecondhandStore.Repository
         }
         public async Task<IEnumerable<ExchangeOrder>> GetExchangeListByPostId(int postId) 
         {
-            return await _dbContext.ExchangeOrders.Where(p=>p.PostId == postId && p.OrderStatusId == 4).ToListAsync();
+            return await _dbContext.ExchangeOrders.Where(p=>p.PostId == postId && p.OrderStatusId == 6).ToListAsync();
         }
     }
 }
