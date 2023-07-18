@@ -22,7 +22,7 @@ namespace SecondhandStore.Controllers
             _mapper = mapper;
             _reportService = reportService;
         }
-        [HttpGet]
+        [HttpGet("get-report-list-in-admin-dashboard")]
         [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetReportList() {
             var reportList = await _reportService.GetAllReport();
@@ -32,7 +32,7 @@ namespace SecondhandStore.Controllers
 
             return Ok(mappedReportList);
         }
-        [HttpPost]
+        [HttpPost("sending-report-form")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> SendRequest(ReportCreateRequest reportCreateRequest) {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
@@ -45,6 +45,50 @@ namespace SecondhandStore.Controllers
             return CreatedAtAction(nameof(GetReportList), 
                 new { id = mappedReport.ReportId},
                 mappedReport);
+        }
+        [HttpPut("accept-report")]
+        [Authorize(Roles = "AD")]
+        public async Task<IActionResult> AcceptedReport(int reportId)
+        {
+            var report = await _reportService.GetReportById(reportId);
+            if (report is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                if (report.ReportStatusId == 4)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    await _reportService.AcceptReport(report);
+                    return NoContent();
+                }
+            }
+        }
+        [HttpPut("reject-report")]
+        [Authorize(Roles = "AD")]
+        public async Task<IActionResult> RejectReport(int reportId)
+        {
+            var report = await _reportService.GetReportById(reportId);
+            if (report is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                if (report.ReportStatusId == 5)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    await _reportService.RejectReport(report);
+                    return NoContent();
+                }
+            }
         }
 
     }

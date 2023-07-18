@@ -44,4 +44,7 @@ public class ExchangeOrderService
     {
         return await _exchangeOrderRepository.GetAllRelatedProductPost(postId, orderid);
     }
+    public async Task<IEnumerable<ExchangeOrder>> GetExchangesListByPostId(int postId) { 
+        return await _exchangeOrderRepository.GetExchangeListByPostId(postId);
+    }
 }

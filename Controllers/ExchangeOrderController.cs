@@ -71,7 +71,7 @@ namespace SecondhandStore.Controllers
             return Ok(mappedExchangeOrder);
 
         }
-        [HttpPost("send-exchange-request")]
+        [HttpPost("buyer-send-exchange-request")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> SendExchangeRequest(ExchangeOrderCreateRequest exchangeOrderCreateRequest) 
         {
@@ -90,7 +90,7 @@ namespace SecondhandStore.Controllers
             mappedExchange.BuyerId = parseUserId;
             mappedExchange.SellerId = chosenPost.AccountId;
             mappedExchange.OrderDate = DateTime.Now;
-            mappedExchange.OrderStatusId = 6;
+            mappedExchange.OrderStatusId = 3;
             mappedExchange.PostId = chosenPost.PostId;
             var seller = await _accountService.GetAccountById(chosenPost.AccountId);
             var buyer = await _accountService.GetAccountById(parseUserId);
@@ -120,16 +120,26 @@ namespace SecondhandStore.Controllers
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            var relatedPostExchangeList = await _exchangeOrderService.GetExchangesListByPostId(exchange.PostId);
             if (exchange == null)
             {
                 return BadRequest("Error!");
             }
-            else {
-                exchange.OrderStatusId = 4;
+            if (relatedPostExchangeList.Any()) {
+                return BadRequest("Sorry, you have accepted a request!");
+            }
+            else
+            {
+                //order is processing
+                exchange.OrderStatusId = 6;
                 await _exchangeOrderService.UpdateExchange(exchange);
+                //identify post in order by postid
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
+                //switch post status to inactive
+                chosenPost.PostStatusId = 2;
+                await _postService.UpdatePost(chosenPost);
                 try
                 {
                     SendMailModel request = new SendMailModel();
@@ -145,12 +155,13 @@ namespace SecondhandStore.Controllers
                 {
                     return BadRequest("Cannot send email");
                 }
-                return Ok("Successful Confirmation.");
+                //confirmation successfull
+                return Ok("Successful Confirmation, deliver to buyer please.");
             }
         }
-        [HttpPut("confirm-receive-from-buyer")]
+        [HttpPut("seller-confirm-delivery-done")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> ConfirmReceive(int orderId) {
+        public async Task<IActionResult> ConfirmDelivery(int orderId) {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
@@ -159,36 +170,29 @@ namespace SecondhandStore.Controllers
                 return BadRequest("Error!");
             }
             else {
-                exchange.OrderStatusId = 8;
-                await _exchangeOrderService.UpdateExchange(exchange);
-                var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId,exchange.OrderId);
-                var chosenPost = await _postService.GetPostById(exchange.PostId);
-                chosenPost.PostStatusId = 2;
-                foreach (var exchangeComponent in relatedExchange) {
-                    exchangeComponent.OrderStatusId = 7;
-                    await _exchangeOrderService.UpdateExchange(exchangeComponent);
-                    var seller = await _accountService.GetAccountById(exchangeComponent.SellerId);
-                    var buyer = await _accountService.GetAccountById(exchangeComponent.BuyerId);
-                    try
-                    {
-                        SendMailModel request = new SendMailModel();
-                        request.ReceiveAddress = buyer.Email;
-                        request.Subject = "Cancel Order Notification";
-                        EmailContent content = new EmailContent();
-                        content.Dear = "Dear " + buyer.Fullname + ",";
-                        content.BodyContent = seller.Fullname + " have cancelled a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another request for this product has been complete." + "\nHave a nice day!";
-                        request.Content = content.ToString();
-                        _emailService.SendMail(request);
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest("Cannot send email");
-                    }
+                //check if order is processing, if not, cannot hit delivered button.
+                if (exchange.OrderStatusId != 6)
+                {
+                    return BadRequest("You can't confirm, your order hasn't been processed yet.");
                 }
-                return Ok("Accepted ! Please, carry out delivery.");
+                else {
+                    //switch order status to delivered
+                    exchange.OrderStatusId = 9;
+                    await _exchangeOrderService.UpdateExchange(exchange);
+                    //choosing other orders with same post but different input orderId
+                    var relatedExchange = await _exchangeOrderService.GetAllRelatedProductPost(exchange.PostId, exchange.OrderId);
+                    if (relatedExchange == null) {
+                        return BadRequest("Invalid");
+                    }
+                    foreach (var exchangeComponent in relatedExchange) {
+                        exchangeComponent.OrderStatusId = 7;
+                        await _exchangeOrderService.UpdateExchange(exchangeComponent);
+                    }
+                    return Ok("Delivered Successfully! Thank you.");
+                }
             }
         }
-        [HttpPut("cancel-exchange")]
+        [HttpPut("buyer-cancel-exchange")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> RejectReceive(int orderId)
         {
@@ -201,15 +205,20 @@ namespace SecondhandStore.Controllers
             }
             else
             {
+                //Identify post in order by postId
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
+                //switch order status to cancel
                 exchange.OrderStatusId = 7;
                 await _exchangeOrderService.UpdateExchange(exchange);
+                //switch post status to active again
+                chosenPost.PostStatusId = 1;
+                await _postService.UpdatePost(chosenPost);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
                 try
                 {
                     SendMailModel request = new SendMailModel();
-                    request.ReceiveAddress = buyer.Email;
+                    request.ReceiveAddress = seller.Email;
                     request.Subject = "Cancel Order Notification";
                     EmailContent content = new EmailContent();
                     content.Dear = "Dear " + seller.Fullname + ",";
@@ -224,6 +233,34 @@ namespace SecondhandStore.Controllers
                 return Ok("Cancelled Successfully!");
             }
         }
+        [HttpPut("buyer-confirm-received")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> ConfirmReceive(int orderId)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
+            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            if (exchange == null)
+            {
+                return BadRequest("Error!");
+            }
+            else
+            {
+                //check if order is delivered or not, if not, cannot hit received button.
+                if (exchange.OrderStatusId != 9)
+                {
+                    return BadRequest("You can't confirm your delivery, your order hasn't been delivered yet.");
+                }
+                else
+                {
+                    //switch order status to delivered
+                    exchange.OrderStatusId = 10;
+                    await _exchangeOrderService.UpdateExchange(exchange);
+                    return Ok("Received Successfully ! Thank you.");
+                }
+            }
+        }
+
 
     }
 }

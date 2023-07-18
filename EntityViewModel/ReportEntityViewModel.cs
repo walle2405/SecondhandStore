@@ -6,6 +6,7 @@ namespace SecondhandStore.EntityViewModel
     {
         public int ReportId { get; set; }
         public string ReporterName { get; set; }
+        public string ReporterEmail { get; set; }
         public string ReportedUserEmail { get; set; }
         public string ReportedUserName { get; set; }
         public string Reason { get; set; }
