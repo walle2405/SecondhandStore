@@ -25,7 +25,8 @@ namespace SecondhandStore.Controllers
             _azureService = azureService;
         }
 
-        [HttpGet("get-post-list")]
+        [HttpGet("get-all-post-list")]
+        [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
@@ -36,8 +37,20 @@ namespace SecondhandStore.Controllers
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
             return Ok(mappedPostList);
         }
+        
+        [HttpGet("get-all-active-post-list")]
+        public async Task<IActionResult> GetActivePostList()
+        {
+            var postList = await _postService.GetAllActivePosts();
 
-        [HttpGet("get-user-posts/")]
+            if (!postList.Any())
+                return NotFound();
+
+            var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
+            return Ok(mappedPostList);
+        }
+
+        [HttpGet("get-user-posts")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> GetPostsByUserId()
         {
