@@ -67,7 +67,6 @@ public class AccountController : ControllerBase
     }
     // GET by Id action
     [HttpGet("get-account-by-id")]
-    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountById(int id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
