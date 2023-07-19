@@ -140,6 +140,9 @@ namespace SecondhandStore.Controllers
             if (exchange.OrderStatusId == 7) {
                 return BadRequest("This order has been cancelled. Can't be accept");
             }
+            if (exchange.OrderStatusId == 8) {
+                return BadRequest("This order has been complete. Can't be accept");
+            }
             else
             {
                 //order is processing
