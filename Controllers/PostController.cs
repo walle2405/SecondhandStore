@@ -63,7 +63,6 @@ namespace SecondhandStore.Controllers
         }
 
         [HttpGet("get-post-by-id")]
-        [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await _postService.GetPostById(id);

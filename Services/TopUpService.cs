@@ -54,6 +54,9 @@ public class TopUpService
         double total = userTopupList.Sum(p => p.Price);
         return total;
     }
+    public async Task CancelTopup(TopUp cancelTopUp) { 
+        await _topupRepository.AcceptTopup(cancelTopUp);
+    }
     public async Task AcceptTopup(TopUp acceptedTopup) { 
         await _topupRepository.AcceptTopup(acceptedTopup);
     }

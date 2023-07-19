@@ -34,7 +34,7 @@ public class TopUpController : ControllerBase
             return NotFound();
         var mappedExistTopup = topupList.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
         return Ok(mappedExistTopup);
-        
+
     }
     [HttpPost("send-topup-order")]
     [Authorize(Roles = "US")]
@@ -45,12 +45,14 @@ public class TopUpController : ControllerBase
         {
             return NoContent();
         }
-        else {
+        else
+        {
             if (topUpCreateRequest.TopUpPoint <= 0)
             {
                 return BadRequest("Top Up Point must be > 0");
             }
-            else {
+            else
+            {
                 var mappedTopup = _mapper.Map<TopUp>(topUpCreateRequest);
                 mappedTopup.AccountId = Int32.Parse(userId);
                 mappedTopup.Price = mappedTopup.TopUpPoint * 1000;
@@ -65,19 +67,19 @@ public class TopUpController : ControllerBase
             }
         }
     }
-    
+
     // function de user tu xem top-up cua minh
     [HttpGet("user-history-transaction")]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> GetTopUpByUserId()
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
         var id = Int32.Parse(userId);
         var existingTopup = await _topupService.GetTopUpByUserId(id);
-      
+
         if (existingTopup is null)
             return NotFound();
-        
+
         var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);
         var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
         return Ok(userMappedExistTopUp);
@@ -93,30 +95,64 @@ public class TopUpController : ControllerBase
 
     [HttpGet("get-total-revenue")]
     [Authorize(Roles = "AD")]
-    public async Task<IActionResult> ReturnRevenue() {
+    public async Task<IActionResult> ReturnRevenue()
+    {
         return Ok(await _topupService.GetTotalRevenue());
     }
-    [HttpPut("accept-topup")]
-    [Authorize(Roles = "AD")]
-    public async Task<IActionResult> acceptedTopUp(int id) {
+    [HttpPut("cancel-topup")]
+    [Authorize(Roles = "US")]
+    public async Task<IActionResult> cancelTopUp(int id)
+    {
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
         var topup = await _topupService.GetTopUpById(id);
         if (topup is null)
         {
             return NotFound();
         }
-        else {
+        else if (topup.AccountId != Int32.Parse(userId))
+        {
+            return Unauthorized();
+        }
+        else if (topup.TopupStatusId != 3)
+        {
+            return BadRequest();
+        }
+        else
+        {
+            if (topup.TopupStatusId == 7)
+            {
+                return NoContent();
+            }
+            else
+            {
+                await _topupService.CancelTopup(topup);
+                return NoContent();
+            }
+        }
+    }
+    [HttpPut("accept-topup")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> acceptedTopUp(int id)
+    {
+        var topup = await _topupService.GetTopUpById(id);
+        if (topup is null)
+        {
+            return NotFound();
+        }
+        else
+        {
             if (topup.TopupStatusId == 4)
             {
                 return NoContent();
             }
-            else 
+            else
             {
                 await _topupService.AcceptTopup(topup);
                 var account = await _accountService.GetAccountById(topup.AccountId);
                 account.PointBalance += topup.TopUpPoint;
                 await _accountService.UpdatePointAutomatic(account);
                 return NoContent();
-            }  
+            }
         }
     }
     [HttpPut("reject-topup")]
@@ -134,9 +170,9 @@ public class TopUpController : ControllerBase
             {
                 return NoContent();
             }
-            else 
+            else
             {
-                if (topup.TopupStatusId == 4) 
+                if (topup.TopupStatusId == 4)
                 {
                     await _topupService.RejectTopup(topup);
                     var account = await _accountService.GetAccountById(topup.AccountId);
