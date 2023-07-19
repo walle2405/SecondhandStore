@@ -109,7 +109,7 @@ namespace SecondhandStore.Controllers
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
-            return Ok();
+            return Ok(createdPost.PostId);
 
         }
 
