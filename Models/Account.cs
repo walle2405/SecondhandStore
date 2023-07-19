@@ -12,6 +12,8 @@ namespace SecondhandStore.Models
             Posts = new HashSet<Post>();
             ReportReportedAccounts = new HashSet<Report>();
             ReportReporters = new HashSet<Report>();
+            ReviewRevieweds = new HashSet<Review>();
+            ReviewReviewers = new HashSet<Review>();
             TopUps = new HashSet<TopUp>();
         }
 
@@ -34,6 +36,8 @@ namespace SecondhandStore.Models
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<Report> ReportReportedAccounts { get; set; }
         public virtual ICollection<Report> ReportReporters { get; set; }
+        public virtual ICollection<Review> ReviewRevieweds { get; set; }
+        public virtual ICollection<Review> ReviewReviewers { get; set; }
         public virtual ICollection<TopUp> TopUps { get; set; }
     }
 }

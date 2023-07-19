@@ -28,6 +28,9 @@ public static class ScopedService
         services.AddScoped<AzureStorageRepository>();
         services.AddScoped<AzureService>();
 
+        services.AddScoped<ReviewRepository>();
+        services.AddScoped<ReviewService>();
+
         // services.AddScoped<IEmailService>();
         // services.AddScoped<EmailService>();
         services.AddScoped<IEmailService, EmailService>();
