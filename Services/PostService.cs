@@ -22,6 +22,16 @@ namespace SecondhandStore.Services
                 .Include(p => p.PostStatus)
                 .ToListAsync();
         }
+        
+        public async Task<IEnumerable<Post>> GetAllActivePosts()
+        {
+            return await _postRepository.GetAll()
+                .Include(p => p.Account)
+                .Include(p => p.Category)
+                .Include(p => p.PostStatus)
+                .Where(p => p.PostStatusId == 1)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Post>?> GetPostByAccountId(int id)
         {
             return await _postRepository.GetAll()
