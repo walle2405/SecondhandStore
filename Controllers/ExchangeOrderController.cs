@@ -88,11 +88,10 @@ namespace SecondhandStore.Controllers
                 return NotFound();
             }
 
-            // seller cannot order their own post || post status is inactive       || order already existed, cannot reorder once cancelled
+            // seller cannot order their own post || post status is inactive       || order for a product already existed, cannot reorder once cancelled
             if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 2 || order.Any()) {
                 return BadRequest("You cannot choose this post!");
             }
-
             var mappedExchange = _mapper.Map<ExchangeOrder>(exchangeOrderCreateRequest);
             mappedExchange.BuyerId = parseUserId;
             mappedExchange.SellerId = chosenPost.AccountId;
@@ -108,7 +107,7 @@ namespace SecondhandStore.Controllers
                 request.Subject = "New Order Notification";
                 EmailContent content = new EmailContent();
                 content.Dear = "Dear " + seller.Fullname + ",";
-                content.BodyContent = "You have new order from " + buyer.Fullname + " for a product: " + chosenPost.ProductName + ".\nPlease check your exchange order.\nThank You!";
+                content.BodyContent = "You have new order from " + buyer.Fullname + " for a product: " + chosenPost.ProductName + ".\nPlease check your exchange order.\nThank you!";
                 request.Content = content.ToString(); 
                 _emailService.SendMail(request);
             }
@@ -136,7 +135,10 @@ namespace SecondhandStore.Controllers
             }
             //if a processing order existed in exchange order, cannot accept other order with the same post
             if (samePostExchangeList.Any()) {
-                return BadRequest("Sorry, you have accepted a request!");
+                return BadRequest("Sorry, you have accepted another request!");
+            }
+            if (exchange.OrderStatusId == 7) {
+                return BadRequest("This order has been cancelled. Can't be accept");
             }
             else
             {
@@ -169,31 +171,6 @@ namespace SecondhandStore.Controllers
                 return Ok("Successful Confirmation, deliver to buyer please.");
             }
         }
-        //seller confirm order delivery
-        [HttpPut("seller-confirm-delivery-done")]
-        [Authorize(Roles = "US")]
-        public async Task<IActionResult> ConfirmDelivery(int orderId) {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-            int parseUserId = Int32.Parse(userId);
-            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
-            if (exchange == null)
-            {
-                return BadRequest("Error!");
-            }
-            else {
-                //check if order is processing, if not, cannot hit delivered button.
-                if (exchange.OrderStatusId != 6)
-                {
-                    return BadRequest("You can't confirm, your order hasn't been delivered yet.");
-                }
-                else {
-                    //switch order status to delivered
-                    exchange.OrderStatusId = 9;
-                    await _exchangeOrderService.UpdateExchange(exchange);
-                    return Ok("Delivered Successfully! Thank you.");
-                }
-            }
-        }
         //seller cancel exchange
         [HttpPut("seller-cancel-exchange")]
         [Authorize(Roles = "US")]
@@ -205,6 +182,10 @@ namespace SecondhandStore.Controllers
             if (exchange == null)
             {
                 return BadRequest("Error! Exchange not found");
+            }
+            if (exchange.OrderStatusId == 8)
+            {
+                return BadRequest("This exchange has been completed, you can't cancel.");
             }
             else
             {
@@ -248,6 +229,10 @@ namespace SecondhandStore.Controllers
             {
                 return BadRequest("Error! Exchange not found");
             }
+            // if exchange is completed, cannot cancel
+            if (exchange.OrderStatusId == 8) {
+                return BadRequest("This exchange has been completed, you can't cancel.");
+            }
             else
             {
                 //Identify post in order by postId
@@ -279,24 +264,29 @@ namespace SecondhandStore.Controllers
             }
         }
 
-        //admin or buyer confirm that an exchange is completed
+        //seller or buyer confirm that an exchange is completed
         [HttpPut("confirm-finished")]
-        [Authorize(Roles = "AD,US")]
+        [Authorize(Roles = "US")]
         public async Task<IActionResult> ConfirmReceive(int orderId)
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
+            var chosenPost = await _postService.GetPostById(exchange.PostId);
             if (exchange == null)
             {
                 return BadRequest("Error!");
             }
             else
             {
-                //check if order is delivered or not, if not, cannot hit received button.
-                if (exchange.OrderStatusId != 9)
+                //check if order is being processed or not, if not, cannot hit complete button.
+                if (exchange.OrderStatusId == 3)
                 {
-                    return BadRequest("You can't confirm your delivery, your order hasn't been delivered yet.");
+                    return BadRequest("You order hasn't been delivered yet.");
+                }
+                //check if order is cancell or not, if yes, cannot hit complete button.
+                if (exchange.OrderStatusId == 7) {
+                    return BadRequest("This order has been cancelled. You can't complete.");
                 }
                 else
                 {
@@ -309,68 +299,49 @@ namespace SecondhandStore.Controllers
                     {
                         return BadRequest("Invalid");
                     }
+                    var seller = await _accountService.GetAccountById(exchange.SellerId);
+                    var buyer = await _accountService.GetAccountById(exchange.BuyerId);
                     //cancel remaining orders with the same post
                     foreach (var exchangeComponent in relatedExchange)
                     {
                         exchangeComponent.OrderStatusId = 7;
                         await _exchangeOrderService.UpdateExchange(exchangeComponent);
+
+                        //send email with the reason of cancellation
+                        try
+                        {
+                            SendMailModel request = new SendMailModel();
+                            request.ReceiveAddress = seller.Email;
+                            request.Subject = "Cancel Order Notification";
+                            EmailContent content = new EmailContent();
+                            content.Dear = "Dear " + buyer.Fullname + ",";
+                            content.BodyContent = seller.Fullname + " have cancel a request with order Id #" + orderId + ":" + chosenPost.ProductName + ".\nReason: Another order related to this product has been completed.\nSorry for this inconvienience.\nPlease, check your exchange request for tracking progress." + "\nHave a nice day!";
+                            request.Content = content.ToString();
+                            _emailService.SendMail(request);
+                        }
+                        catch (Exception ex)
+                        {
+                            return BadRequest("Cannot send email");
+                        }
                     }
-                    return Ok("Received Successfully ! Thank you.");
+                    //send email to seller that the exchange is complete
+                    try
+                    {
+                        SendMailModel request = new SendMailModel();
+                        request.ReceiveAddress = seller.Email;
+                        request.Subject = "Completed Exchange Notification";
+                        EmailContent content = new EmailContent();
+                        content.Dear = "Dear " + seller.Fullname + ",";
+                        content.BodyContent = "Your order from " + buyer.Fullname + " for a product: " + chosenPost.ProductName + " has been completed.\nPlease check your exchange order.\nThank you!";
+                        request.Content = content.ToString();
+                        _emailService.SendMail(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest("Cannot send email");
+                    }
+                    return Ok("Successfull ! Thank you for join us.");
                 }
-            }
-        }
-        //admin cancel exchange
-        [HttpPut("admin-cancel-exchange")]
-        [Authorize(Roles = "AD")]
-        public async Task<IActionResult> AdminCancelExchange(int orderId)
-        {
-            var exchange = await _exchangeOrderService.GetExchangeById(orderId);
-            if (exchange == null)
-            {
-                return BadRequest("Error! Exchange not found");
-            }
-            else
-            {
-                //Identify post in order by postId
-                var chosenPost = await _postService.GetPostById(exchange.PostId);
-                //switch order status to cancel
-                exchange.OrderStatusId = 7;
-                await _exchangeOrderService.UpdateExchange(exchange);
-                //switch post status to active again
-                chosenPost.PostStatusId = 1;
-                await _postService.UpdatePost(chosenPost);
-                var seller = await _accountService.GetAccountById(exchange.SellerId);
-                var buyer = await _accountService.GetAccountById(exchange.BuyerId);
-                try
-                {
-                    SendMailModel request = new SendMailModel();
-                    request.ReceiveAddress = seller.Email;
-                    request.Subject = "Cancel Order Notification";
-                    EmailContent content = new EmailContent();
-                    content.Dear = "Dear " + seller.Fullname + ",";
-                    content.BodyContent = "Your exchange with order Id #" + orderId + ":" + chosenPost.ProductName + " has been cancelled by Administrator.\nPlease, check your exchange request for tracking progress." + "\nHave a nice day!";
-                    request.Content = content.ToString();
-                    _emailService.SendMail(request);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest("Cannot send email");
-                }
-                try {
-                    SendMailModel request = new SendMailModel();
-                    request.ReceiveAddress = buyer.Email;
-                    request.Subject = "Cancel Order Notification";
-                    EmailContent content = new EmailContent();
-                    content.Dear = "Dear " + buyer.Fullname + ",";
-                    content.BodyContent = "Your exchange with order Id #" + orderId + ":" + chosenPost.ProductName + " has been cancelled by Administrator.\nPlease, check your exchange request for tracking progress." + "\nHave a nice day!";
-                    request.Content = content.ToString();
-                    _emailService.SendMail(request);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest("Cannot send email");
-                }
-                return Ok("Cancelled Successfully!");
             }
         }
     }

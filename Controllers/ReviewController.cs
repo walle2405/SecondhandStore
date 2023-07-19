@@ -20,13 +20,11 @@ namespace SecondhandStore.Controllers
         }
         [HttpGet("get-all-review-for-a-particular-user")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> GetAllReviewForUser()
+        public async Task<IActionResult> GetAllReviewForUser(int reviewedId)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-            var id = Int32.Parse(userId);
-            var reviewsList = await _reviewService.GetAllReviewsByReviewedId(id);
+            var reviewsList = await _reviewService.GetAllReviewsByReviewedId(reviewedId);
             if (reviewsList is null) { 
-                return NotFound();
+                return NotFound(); 
             }
             var mappedReviewList = reviewsList.Select(p => _mapper.Map<ReviewEntityViewModel>(p));
             return Ok(mappedReviewList);
