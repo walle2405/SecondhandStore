@@ -19,6 +19,7 @@ public class AutoMapper : Profile
         MapExchangeOrder();
         MapExchangeRequest();
         MapExchange();
+        MapReview();
     }
 
     private void MapRole()
@@ -155,5 +156,16 @@ public class AutoMapper : Profile
             .ForMember(d => d.BuyerEmail,map =>map.MapFrom(p=>p.Buyer.Email))
             .ForMember(d => d.SellerEmail, map => map.MapFrom(p => p.Seller.Email));
         CreateMap<ExchangeViewEntityModel, ExchangeOrder>();
+    }
+    public void MapReview() {
+        CreateMap<Review, ReviewEntityViewModel>()
+            .ForMember(d => d.ReviewerName, map => map.MapFrom(d => d.Reviewer.Fullname))
+            .ForMember(d => d.ReviewerEmail, map => map.MapFrom(d => d.Reviewer.Email))
+            .ForMember(d => d.ReviewedName, map => map.MapFrom(d => d.Reviewed.Fullname))
+            .ForMember(d => d.ReviewedEmail, map => map.MapFrom(d => d.Reviewed.Email));
+        CreateMap<Review,ReviewCreateRequest>()
+            .ReverseMap();
+        CreateMap<ReviewCreateRequest,Review>()
+            .ReverseMap();
     }
 }
