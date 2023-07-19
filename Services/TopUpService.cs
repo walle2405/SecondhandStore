@@ -55,7 +55,7 @@ public class TopUpService
         return total;
     }
     public async Task CancelTopup(TopUp cancelTopUp) { 
-        await _topupRepository.AcceptTopup(cancelTopUp);
+        await _topupRepository.CancelTopUp(cancelTopUp);
     }
     public async Task AcceptTopup(TopUp acceptedTopup) { 
         await _topupRepository.AcceptTopup(acceptedTopup);
