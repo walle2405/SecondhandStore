@@ -25,8 +25,7 @@ namespace SecondhandStore.Controllers
             _azureService = azureService;
         }
 
-        [HttpGet("get-all-post-list")]
-        [Authorize(Roles = "AD")]
+        [HttpGet("get-post-list")]
         public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
