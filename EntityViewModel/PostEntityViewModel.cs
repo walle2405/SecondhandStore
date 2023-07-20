@@ -4,7 +4,7 @@ public class PostEntityViewModel
 {
 
     public int PostId { get; set; }
-    public string AccountId { get; set; }
+    public int AccountId { get; set; }
     public string Fullname { get; set; }
     public string PhoneNo { get; set; }
     public string Address { get; set; }
