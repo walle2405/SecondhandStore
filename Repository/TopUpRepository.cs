@@ -15,13 +15,23 @@ public class TopUpRepository : BaseRepository<TopUp>
     public async Task<IEnumerable<TopUp>> GetUserId(int userId)
     {
         return await _dbContext.TopUps.Where(c => c.AccountId == userId)
-            .Include(p=>p.Account).Include(p=>p.TopupStatus).ToListAsync();
+            .Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
     }
-    public async Task AcceptTopup(TopUp acceptedTopup) {
+    public async Task CancelTopUp(TopUp cancelTopUp)
+    {
+        var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == cancelTopUp.OrderId);
+        if (topup != null)
+        {
+            topup.TopupStatusId = 7;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task AcceptTopup(TopUp acceptedTopup)
+    {
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == acceptedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 4;
+            topup.TopupStatusId = 8;
         }
         await _dbContext.SaveChangesAsync();
     }
@@ -34,8 +44,9 @@ public class TopUpRepository : BaseRepository<TopUp>
         }
         await _dbContext.SaveChangesAsync();
     }
-    public async Task<IEnumerable<TopUp>> GetTopUpbyEmail(string searchEmail) { 
-        return await _dbContext.TopUps.Where(c=>c.Account.Email.Contains(searchEmail)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
+    public async Task<IEnumerable<TopUp>> GetTopUpbyEmail(string searchEmail)
+    {
+        return await _dbContext.TopUps.Where(c => c.Account.Email.Contains(searchEmail)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
     }
 
 }
