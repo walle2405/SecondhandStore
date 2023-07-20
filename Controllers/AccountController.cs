@@ -57,6 +57,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("get-user-account")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> GetAccountByUserId()
     {
         var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;

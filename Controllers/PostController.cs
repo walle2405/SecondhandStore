@@ -17,12 +17,14 @@ namespace SecondhandStore.Controllers
         private readonly PostService _postService;
         private readonly IMapper _mapper;
         private readonly AzureService _azureService;
+        private readonly AccountService _accountService;
 
-        public PostController(PostService postService, IMapper mapper, AzureService azureService)
+        public PostController(PostService postService, IMapper mapper, AzureService azureService, AccountService accountService)
         {
             _postService = postService;
             _mapper = mapper;
             _azureService = azureService;
+            _accountService = accountService;
         }
 
         [HttpGet("get-post-list")]
@@ -121,6 +123,7 @@ namespace SecondhandStore.Controllers
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
+
             return Ok(createdPost.PostId);
 
         }
