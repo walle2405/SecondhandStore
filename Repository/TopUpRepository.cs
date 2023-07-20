@@ -31,7 +31,7 @@ public class TopUpRepository : BaseRepository<TopUp>
         var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == acceptedTopup.OrderId);
         if (topup != null)
         {
-            topup.TopupStatusId = 4;
+            topup.TopupStatusId = 8;
         }
         await _dbContext.SaveChangesAsync();
     }
