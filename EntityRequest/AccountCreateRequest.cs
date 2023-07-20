@@ -9,6 +9,8 @@ public class AccountCreateRequest
     public string Fullname { get; set; }
     public string Address { get; set; }
     public string PhoneNo { get; set; }
+    public int credibilityPoint = 50;
+    public DateTime createdDate = DateTime.Now;
     public string RoleId = "US";
     public bool IsActive = true;
 }

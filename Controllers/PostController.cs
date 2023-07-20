@@ -36,7 +36,7 @@ namespace SecondhandStore.Controllers
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
             return Ok(mappedPostList);
         }
-        
+
         [HttpGet("get-all-active-post-list")]
         public async Task<IActionResult> GetActivePostList()
         {
@@ -137,22 +137,24 @@ namespace SecondhandStore.Controllers
 
         [HttpPut("accept-post")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> AcceptPost(int id) {
+        public async Task<IActionResult> AcceptPost(int id)
+        {
             var existingPost = await _postService.GetPostById(id);
             if (existingPost is null)
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 if (existingPost.PostStatusId == 4)
                 {
                     return NoContent();
                 }
-                else 
+                else
                 {
                     await _postService.AcceptPost(existingPost);
                     return NoContent();
-                }  
+                }
             }
         }
         [HttpPut("reject-post")]
@@ -164,16 +166,17 @@ namespace SecondhandStore.Controllers
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 if (existingPost.PostStatusId == 5)
                 {
                     return NoContent();
                 }
-                else 
+                else
                 {
                     await _postService.RejectPost(existingPost);
                     return NoContent();
-                }  
+                }
             }
         }
 

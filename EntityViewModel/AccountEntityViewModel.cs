@@ -11,5 +11,6 @@ public class AccountEntityViewModel
     public string Address { get; set; }
     public string PhoneNo { get; set; }
     public int pointBalance { get; set; }
+    public int credibilityPoint { get; set; }
     public bool IsActive { get; set; }
 }
