@@ -27,8 +27,7 @@ namespace SecondhandStore.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("get-all-post-list")]
-        [Authorize(Roles = "AD")]
+        [HttpGet("get-post-list")]
         public async Task<IActionResult> GetPostList()
         {
             var postList = await _postService.GetAllPosts();
@@ -78,7 +77,6 @@ namespace SecondhandStore.Controllers
         }
 
         [HttpGet("get-post-by-id")]
-        [Authorize(Roles = "AD")]
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await _postService.GetPostById(id);
@@ -126,7 +124,7 @@ namespace SecondhandStore.Controllers
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
-            return Ok();
+            return Ok(createdPost.PostId);
 
         }
 

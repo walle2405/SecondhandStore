@@ -21,10 +21,10 @@ namespace SecondhandStore.Controllers
         private readonly AccountService _accountService;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        public ExchangeOrderController(ExchangeOrderService exchangeOrderService,PostService postService,AccountService accountService, IServiceProvider serviceProvider, IMapper mapper)
+        public ExchangeOrderController(ExchangeOrderService exchangeOrderService, PostService postService, AccountService accountService, IServiceProvider serviceProvider, IMapper mapper)
         {
             _accountService = accountService;
-            _postService = postService; 
+            _postService = postService;
             _exchangeOrderService = exchangeOrderService;
             _emailService = serviceProvider.GetRequiredService<IEmailService>();
             _mapper = mapper;
@@ -32,13 +32,30 @@ namespace SecondhandStore.Controllers
 
         [HttpGet("get-all-exchange-for-admin")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> GetAllExchangement() {
+        public async Task<IActionResult> GetAllExchangement()
+        {
             var exchangeList = await _exchangeOrderService.GetAllExchange();
-            if (exchangeList == null) {
+            if (exchangeList == null)
+            {
                 return NotFound("No exchange found");
             }
             var mappedExchange = exchangeList.Select(p => _mapper.Map<ExchangeViewEntityModel>(p));
             return Ok(mappedExchange);
+        }
+        // GET all buyer purchased post
+        [HttpGet("get-purchased-post")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> GetPurchasedPost()
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var id = Int32.Parse(userId);
+            var requestList = await _exchangeOrderService.GetPurchasedPost(id);
+            if (requestList is null)
+            {
+                return NotFound();
+            }
+            var mappedPostList = requestList.Select(p => _mapper.Map<PostEntityViewModel>(p));
+            return Ok(mappedPostList);
         }
 
         // GET all requests list of buyer
@@ -55,7 +72,6 @@ namespace SecondhandStore.Controllers
             }
             var mappedExchangeRequest = requestList.Select(p => _mapper.Map<ExchangeRequestEntityViewModel>(p));
             return Ok(mappedExchangeRequest);
-
         }
         //get all orders list of seller
         [HttpGet("get-all-order-list")]
@@ -71,13 +87,12 @@ namespace SecondhandStore.Controllers
             }
             var mappedExchangeOrder = orderList.Select(p => _mapper.Map<ExchangeOrderEntityViewModel>(p));
             return Ok(mappedExchangeOrder);
-
         }
 
         //buyer send request for seller for exchange
         [HttpPost("buyer-send-exchange-request")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> SendExchangeRequest(ExchangeOrderCreateRequest exchangeOrderCreateRequest) 
+        public async Task<IActionResult> SendExchangeRequest(ExchangeOrderCreateRequest exchangeOrderCreateRequest)
         {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
@@ -87,7 +102,6 @@ namespace SecondhandStore.Controllers
             {
                 return NotFound();
             }
-
             // seller cannot order their own post || post status is inactive       || order for a product already existed, cannot reorder once cancelled
             if (chosenPost.AccountId == parseUserId || chosenPost.PostStatusId == 2 || order.Any()) {
                 return BadRequest("You cannot choose this post!");
@@ -115,7 +129,7 @@ namespace SecondhandStore.Controllers
             {
                 return BadRequest("Cannot send email");
             }
-            
+
             await _exchangeOrderService.AddExchangeRequest(mappedExchange);
             return Ok("Request Successfully");
 
@@ -123,7 +137,8 @@ namespace SecondhandStore.Controllers
         //seller accept a request and switch to processing status
         [HttpPut("seller-accept-request")]
         [Authorize(Roles = "US")]
-        public async Task<IActionResult> AcceptFromSeller(int orderId) {
+        public async Task<IActionResult> AcceptFromSeller(int orderId)
+        {
             var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
             int parseUserId = Int32.Parse(userId);
             var exchange = await _exchangeOrderService.GetExchangeById(orderId);
