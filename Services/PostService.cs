@@ -29,7 +29,7 @@ namespace SecondhandStore.Services
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
-                .Where(p => p.PostStatusId == 1)
+                .Where(p => p.PostStatusId == 4)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Post>?> GetPostByAccountId(int id)
@@ -51,9 +51,10 @@ namespace SecondhandStore.Services
             .FirstOrDefault(p => p.PostId == id);
         }
 
-        public async Task AddPost(Post p)
+        public async Task AddPost(Post post, int accountId)
         {
-            await _postRepository.Add(p);
+            
+            await _postRepository.AddNewPost(post, accountId);
         }
         public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
         {

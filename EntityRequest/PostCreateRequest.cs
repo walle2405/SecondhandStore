@@ -4,7 +4,6 @@ public class PostCreateRequest
 {
     public string ProductName { get; set; }
     public string Description { get; set; }
-    public int PointCost { get; set; }
     public int PostStatusId = 3;
     public int CategoryId { get; set; }
     public bool isDonated { get; set; }

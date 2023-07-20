@@ -57,14 +57,17 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("get-user-account")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> GetAccountByUserId()
     {
         var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-        var existingAccount = await _accountService.GetAccountById(Int32.Parse(userId));
+        var existingAccount = await _accountService.GetAccountById(int.Parse(userId));
         if (existingAccount is null)
             return NotFound();
-        return Ok(existingAccount);
+        var mappedExistingAccount = _mapper.Map<AccountEntityViewModel>(existingAccount);
+        return Ok(mappedExistingAccount);
     }
+    
     // GET by Id action
     [HttpGet("get-account-by-id")]
     public async Task<IActionResult> GetAccountById(int id)
