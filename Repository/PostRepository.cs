@@ -57,4 +57,13 @@ public class PostRepository : BaseRepository<Post>
         }
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task AddNewPost(Post post, int accountId)
+    {
+        var category = await _dbContext.Categories.FindAsync(post.CategoryId);
+        var account = await _dbContext.Accounts.FindAsync(accountId);
+        account.PointBalance -= category.CategoryValue;
+        _dbContext.Posts.Add(post);
+        await _dbContext.SaveChangesAsync();
+    }
 }

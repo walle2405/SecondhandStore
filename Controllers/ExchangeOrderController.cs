@@ -166,7 +166,7 @@ namespace SecondhandStore.Controllers
                 //identify post in order by postid
                 var chosenPost = await _postService.GetPostById(exchange.PostId);
                 //switch post status to inactive
-                chosenPost.PostStatusId = 2;
+                chosenPost.PostStatusId = 5;
                 await _postService.UpdatePost(chosenPost);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
@@ -213,7 +213,7 @@ namespace SecondhandStore.Controllers
                 exchange.OrderStatusId = 7;
                 await _exchangeOrderService.UpdateExchange(exchange);
                 //switch post status to active again
-                chosenPost.PostStatusId = 1;
+                chosenPost.PostStatusId = 4;
                 await _postService.UpdatePost(chosenPost);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
@@ -259,7 +259,7 @@ namespace SecondhandStore.Controllers
                 exchange.OrderStatusId = 7;
                 await _exchangeOrderService.UpdateExchange(exchange);
                 //switch post status to active again
-                chosenPost.PostStatusId = 1;
+                chosenPost.PostStatusId = 4;
                 await _postService.UpdatePost(chosenPost);
                 var seller = await _accountService.GetAccountById(exchange.SellerId);
                 var buyer = await _accountService.GetAccountById(exchange.BuyerId);
@@ -300,7 +300,7 @@ namespace SecondhandStore.Controllers
                 //check if order is being processed or not, if not, cannot hit complete button.
                 if (exchange.OrderStatusId == 3)
                 {
-                    return BadRequest("You order hasn't been delivered yet.");
+                    return BadRequest("Your order hasn't been delivered yet.");
                 }
                 //check if order is cancell or not, if yes, cannot hit complete button.
                 if (exchange.OrderStatusId == 7) {
@@ -319,6 +319,8 @@ namespace SecondhandStore.Controllers
                     }
                     var seller = await _accountService.GetAccountById(exchange.SellerId);
                     var buyer = await _accountService.GetAccountById(exchange.BuyerId);
+                    chosenPost.PostStatusId = 8;
+                    await _postService.UpdatePost(chosenPost);
                     //cancel remaining orders with the same post
                     foreach (var exchangeComponent in relatedExchange)
                     {
@@ -359,6 +361,7 @@ namespace SecondhandStore.Controllers
                         return BadRequest("Cannot send email");
                     }
                     return Ok("Successfull ! Thank you for join us.");
+                    
                 }
             }
         }
