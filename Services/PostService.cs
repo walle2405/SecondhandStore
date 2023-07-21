@@ -22,14 +22,14 @@ namespace SecondhandStore.Services
                 .Include(p => p.PostStatus)
                 .ToListAsync();
         }
-        
+
         public async Task<IEnumerable<Post>> GetAllActivePosts()
         {
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
-                .Where(p => p.PostStatusId == 1)
+                .Where(p => p.PostStatusId == 4)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Post>?> GetPostByAccountId(int id)
@@ -64,11 +64,13 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Update(post);
         }
-        
-        public async Task AcceptPost(Post acceptedPost) { 
+
+        public async Task AcceptPost(Post acceptedPost)
+        {
             await _postRepository.AcceptPost(acceptedPost);
         }
-        public async Task RejectPost(Post rejectedPost) { 
+        public async Task RejectPost(Post rejectedPost)
+        {
             await _postRepository.RejectPost(rejectedPost);
         }
     }
