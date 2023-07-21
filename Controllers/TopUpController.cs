@@ -141,7 +141,7 @@ public class TopUpController : ControllerBase
         }
         else
         {
-            if (topup.TopupStatusId == 4)
+            if (topup.TopupStatusId == 8)
             {
                 return NoContent();
             }
@@ -158,9 +158,9 @@ public class TopUpController : ControllerBase
     
     [HttpGet("search-topup-by-email")]
     [Authorize(Roles = "AD")]
-    public async Task<IActionResult> GetTopUpByEmail(string searchEmail)
+    public async Task<IActionResult> GetTopUpByEmail(string searchString)
     {
-        var existingTopup = await _topupService.GetTopUpByEmail(searchEmail);
+        var existingTopup = await _topupService.GetTopUpByEmailorPhone(searchString);
         if (existingTopup is null)
             return NotFound();
         var mappedExistTopup = _mapper.Map<List<TopUpEntityViewModel>>(existingTopup);

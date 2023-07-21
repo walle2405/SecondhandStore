@@ -51,9 +51,10 @@ namespace SecondhandStore.Services
             .FirstOrDefault(p => p.PostId == id);
         }
 
-        public async Task AddPost(Post p)
+        public async Task AddPost(Post post, int accountId)
         {
-            await _postRepository.Add(p);
+            
+            await _postRepository.AddNewPost(post, accountId);
         }
         public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
         {

@@ -17,9 +17,11 @@ public class AccountController : ControllerBase
 {
     private readonly AccountService _accountService;
     private readonly IMapper _mapper;
+    private readonly ReviewService _reviewService;
 
-    public AccountController(AccountService accountService, IMapper mapper)
+    public AccountController(AccountService accountService,ReviewService reviewService, IMapper mapper)
     {
+        _reviewService = reviewService;
         _accountService = accountService;
         _mapper = mapper;
     }
@@ -57,14 +59,17 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("get-user-account")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> GetAccountByUserId()
     {
         var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-        var existingAccount = await _accountService.GetAccountById(Int32.Parse(userId));
+        var existingAccount = await _accountService.GetAccountById(int.Parse(userId));
         if (existingAccount is null)
             return NotFound();
-        return Ok(existingAccount);
+        var mappedExistingAccount = _mapper.Map<AccountEntityViewModel>(existingAccount);
+        return Ok(mappedExistingAccount);
     }
+    
     // GET by Id action
     [HttpGet("get-account-by-id")]
     public async Task<IActionResult> GetAccountById(int id)
@@ -133,6 +138,17 @@ public class AccountController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Invalid Request");
         }
+    }
+    [HttpGet("get-all-review-for-a-particular-user")]
+    public async Task<IActionResult> GetAllReviewForUser(int userId)
+    {
+        var reviewsList = await _reviewService.GetAllReviewsByReviewedId(userId);
+        if (reviewsList is null)
+        {
+            return NotFound();
+        }
+        var mappedReviewList = reviewsList.Select(p => _mapper.Map<ReviewEntityViewModel>(p));
+        return Ok(mappedReviewList);
     }
 
 

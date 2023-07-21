@@ -141,21 +141,21 @@ INSERT [dbo].[Status] ([statusName]) VALUES
 
 insert into Post (accountId, productName, image, price, description, categoryId, isDonated, createdDate, postStatusId)
 Values
-(2, N'Manchester United Jersey', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 1),
-(4, N'Do Vo Vovinam', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 1),
-(5, N'CASIO FX-580', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 1),
-(3, N'Dan tranh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 300000, N'Like new', 5, 0, '2023-03-27', 1),
-(2, N'Sach tieng Nhat Dekiru', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg',  200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 1),
-(7, 'Mat kinh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'can pass lai', 2, 0, '2023-04-28', 1),
-(7, 'Dac Nhan Tam', 'https://imagesswp391.blob.core.windows.net/post/ff1d181c-e85c-42fa-9a5e-1757d08746334b8ca7d8687072ed6dc73e6c4dd8813b.jpg', 200000, 'dacnhantam', 4, 0, '2023-06-21', 1),
-(9, 'LOGITECH GPRO', 'https://imagesswp391.blob.core.windows.net/post/1c097365-02ce-47da-9fd7-b086fca8913215900362337536.jpg', 800000,  'mouse gpro', 3, 0, '2023-07-10', 1),
-(9, 'DareUEk87',  'https://imagesswp391.blob.core.windows.net/post/fdd7f1ab-de82-4597-b66d-06deff041178keyboard-co-dareu-ek87-blue-sw-usb-chinh-hang-9776.jpg', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 1),
-(11, 'Pencilcase',  'https://imagesswp391.blob.core.windows.net/post/2251cf86-5da7-4ad2-8844-e244eddc9388pencil-case-smiggle-fresh-combo.jpg', 170000, 'hop but', 3, 0, '2023-07-12', 1),
-(11, 'Notebook', 'https://imagesswp391.blob.core.windows.net/post/11e71335-5dba-480f-977b-96488aaee68fa4-spiral-notebook-300-pages-large-grid-wire-bound-good-quality-299.jpg', 170000 , 'so tay', 4, 0, '2023-07-12', 2),
-(13, 'Sao truc', 'https://imagesswp391.blob.core.windows.net/post/7bdbbc65-b394-45b7-8155-1422fe6ef066download%20%283%29.jpg', 200000, 'sao truc', 5, 0, '2023-07-12', 2),
-(10, 'Dan ty ba', 'https://imagesswp391.blob.core.windows.net/post/b76231d5-9ce7-4dbd-9c3b-3ae17cb2dde4Dan%20ty%20ba.jpg', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 2),
-(15, 'Kaki pants',  'https://imagesswp391.blob.core.windows.net/post/a8a82663-96fc-4393-a91b-d5e67ce729d1Kaki%20pants.jpg', 350000,  'quan kaki',  1, 0, '2023-07-13', 2),
-(5, 'Jordan 1',  'https://imagesswp391.blob.core.windows.net/post/2ab43cb0-9f95-4c72-bcc9-dd67b8d9c47bJordan%201.jpg', 300000,  'quan kaki',  1, 0, '2023-07-14', 2);
+(2, N'Manchester United Jersey', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 4),
+(4, N'Do Vo Vovinam', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 4),
+(5, N'CASIO FX-580', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 4),
+(3, N'Dan tranh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 300000, N'Like new', 5, 0, '2023-03-27', 4),
+(2, N'Sach tieng Nhat Dekiru', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg',  200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 4),
+(7, 'Mat kinh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'can pass lai', 2, 0, '2023-04-28', 4),
+(7, 'Dac Nhan Tam', 'https://imagesswp391.blob.core.windows.net/post/ff1d181c-e85c-42fa-9a5e-1757d08746334b8ca7d8687072ed6dc73e6c4dd8813b.jpg', 200000, 'dacnhantam', 4, 0, '2023-06-21', 4),
+(9, 'LOGITECH GPRO', 'https://imagesswp391.blob.core.windows.net/post/1c097365-02ce-47da-9fd7-b086fca8913215900362337536.jpg', 800000,  'mouse gpro', 3, 0, '2023-07-10', 4),
+(9, 'DareUEk87',  'https://imagesswp391.blob.core.windows.net/post/fdd7f1ab-de82-4597-b66d-06deff041178keyboard-co-dareu-ek87-blue-sw-usb-chinh-hang-9776.jpg', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 4),
+(11, 'Pencilcase',  'https://imagesswp391.blob.core.windows.net/post/2251cf86-5da7-4ad2-8844-e244eddc9388pencil-case-smiggle-fresh-combo.jpg', 170000, 'hop but', 3, 0, '2023-07-12', 4),
+(11, 'Notebook', 'https://imagesswp391.blob.core.windows.net/post/11e71335-5dba-480f-977b-96488aaee68fa4-spiral-notebook-300-pages-large-grid-wire-bound-good-quality-299.jpg', 170000 , 'so tay', 4, 0, '2023-07-12', 4),
+(13, 'Sao truc', 'https://imagesswp391.blob.core.windows.net/post/7bdbbc65-b394-45b7-8155-1422fe6ef066download%20%283%29.jpg', 200000, 'sao truc', 5, 0, '2023-07-12', 4),
+(10, 'Dan ty ba', 'https://imagesswp391.blob.core.windows.net/post/b76231d5-9ce7-4dbd-9c3b-3ae17cb2dde4Dan%20ty%20ba.jpg', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 3),
+(15, 'Kaki pants',  'https://imagesswp391.blob.core.windows.net/post/a8a82663-96fc-4393-a91b-d5e67ce729d1Kaki%20pants.jpg', 350000,  'quan kaki',  1, 0, '2023-07-13', 3),
+(5, 'Jordan 1',  'https://imagesswp391.blob.core.windows.net/post/2ab43cb0-9f95-4c72-bcc9-dd67b8d9c47bJordan%201.jpg', 300000,  'quan kaki',  1, 0, '2023-07-14', 3);
 
 insert into TopUp ( accountId, topUpPoint, price, topUpDate, topUpStatusId)
 values

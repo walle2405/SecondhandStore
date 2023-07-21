@@ -17,12 +17,14 @@ namespace SecondhandStore.Controllers
         private readonly PostService _postService;
         private readonly IMapper _mapper;
         private readonly AzureService _azureService;
+        private readonly AccountService _accountService;
 
-        public PostController(PostService postService, IMapper mapper, AzureService azureService)
+        public PostController(PostService postService, IMapper mapper, AzureService azureService, AccountService accountService)
         {
             _postService = postService;
             _mapper = mapper;
             _azureService = azureService;
+            _accountService = accountService;
         }
 
         [HttpGet("get-post-list")]
@@ -117,11 +119,13 @@ namespace SecondhandStore.Controllers
 
             Console.Write(createdPost);
 
-            await _postService.AddPost(createdPost);
+            await _postService.AddPost(createdPost, int.Parse(userId));
+            
 
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
             //     CreatedPost;
+
             return Ok(createdPost.PostId);
 
         }
@@ -216,6 +220,29 @@ namespace SecondhandStore.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Invalid Request");
+            }
+        }
+
+        [HttpPut("deactivate-own-post")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> DeactivatePost(int postId)
+        {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            try
+            {
+                var existingPost = await _postService.GetPostById(postId);
+
+                if (existingPost is null)
+                    return NotFound();
+
+                existingPost.AccountId = Int32.Parse(userId);
+                existingPost.PostStatusId = 8;
+                await _postService.UpdatePost(existingPost);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Post cannot be deactivated");
             }
         }
 
