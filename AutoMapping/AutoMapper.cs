@@ -77,6 +77,7 @@ public class AutoMapper : Profile
         CreateMap<TopUp, TopUpEntityViewModel>()
             .ForMember(d => d.FullName, map => map.MapFrom(p => p.Account.Fullname))
             .ForMember(d => d.Email, map => map.MapFrom(p => p.Account.Email))
+            .ForMember(d => d.PhoneNumber, map => map.MapFrom(p => p.Account.PhoneNo))
             .ForMember(d => d.TopUpStatus, map => map.MapFrom(p => p.TopupStatus.StatusName));
         CreateMap<TopUpEntityViewModel, TopUp>();
         CreateMap<TopUp, TopUpCreateRequest>()

@@ -17,9 +17,11 @@ public class AccountController : ControllerBase
 {
     private readonly AccountService _accountService;
     private readonly IMapper _mapper;
+    private readonly ReviewService _reviewService;
 
-    public AccountController(AccountService accountService, IMapper mapper)
+    public AccountController(AccountService accountService,ReviewService reviewService, IMapper mapper)
     {
+        _reviewService = reviewService;
         _accountService = accountService;
         _mapper = mapper;
     }
@@ -146,6 +148,17 @@ public class AccountController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Invalid Request");
         }
+    }
+    [HttpGet("get-all-review-for-a-particular-user")]
+    public async Task<IActionResult> GetAllReviewForUser(int userId)
+    {
+        var reviewsList = await _reviewService.GetAllReviewsByReviewedId(userId);
+        if (reviewsList is null)
+        {
+            return NotFound();
+        }
+        var mappedReviewList = reviewsList.Select(p => _mapper.Map<ReviewEntityViewModel>(p));
+        return Ok(mappedReviewList);
     }
 
 

@@ -18,17 +18,6 @@ namespace SecondhandStore.Controllers
             _reviewService = reviewService;
             _mapper = mapper;
         }
-        [HttpGet("get-all-review-for-a-particular-user")]
-        [Authorize(Roles = "US")]
-        public async Task<IActionResult> GetAllReviewForUser(int reviewedId)
-        {
-            var reviewsList = await _reviewService.GetAllReviewsByReviewedId(reviewedId);
-            if (reviewsList is null) { 
-                return NotFound(); 
-            }
-            var mappedReviewList = reviewsList.Select(p => _mapper.Map<ReviewEntityViewModel>(p));
-            return Ok(mappedReviewList);
-        }
         [HttpPost("submit-review")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> SubmitReviewForUser(ReviewCreateRequest reviewCreateRequest) {
@@ -38,9 +27,7 @@ namespace SecondhandStore.Controllers
             mappedReview.ReviewerId = parseUserId;
             mappedReview.CreatedDate = DateTime.Now;
             await _reviewService.AddReview(mappedReview);
-            return CreatedAtAction(nameof(GetAllReviewForUser),
-                new { id = mappedReview.ReviewId },
-                mappedReview);
+            return Ok("Send successfully!");
         }
     }
     

@@ -35,18 +35,9 @@ public class TopUpRepository : BaseRepository<TopUp>
         }
         await _dbContext.SaveChangesAsync();
     }
-    public async Task RejectTopUp(TopUp rejectedTopup)
+    public async Task<IEnumerable<TopUp>> GetTopUpbyEmailorPhone(string searchString)
     {
-        var topup = await _dbContext.TopUps.FirstOrDefaultAsync(a => a.OrderId == rejectedTopup.OrderId);
-        if (topup != null)
-        {
-            topup.TopupStatusId = 5;
-        }
-        await _dbContext.SaveChangesAsync();
-    }
-    public async Task<IEnumerable<TopUp>> GetTopUpbyEmail(string searchEmail)
-    {
-        return await _dbContext.TopUps.Where(c => c.Account.Email.Contains(searchEmail)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
+        return await _dbContext.TopUps.Where(c => c.Account.Email.Contains(searchString) || c.Account.PhoneNo.Contains(searchString)).Include(p => p.Account).Include(p => p.TopupStatus).ToListAsync();
     }
 
 }

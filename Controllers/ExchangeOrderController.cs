@@ -331,7 +331,7 @@ namespace SecondhandStore.Controllers
                         try
                         {
                             SendMailModel request = new SendMailModel();
-                            request.ReceiveAddress = seller.Email;
+                            request.ReceiveAddress = buyer.Email;
                             request.Subject = "Cancel Order Notification";
                             EmailContent content = new EmailContent();
                             content.Dear = "Dear " + buyer.Fullname + ",";
