@@ -16,12 +16,15 @@ public class TopUpController : ControllerBase
     private readonly IMapper _mapper;
     private readonly TopUpService _topupService;
     private readonly AccountService _accountService;
+    private readonly PostService _postService;
 
-    public TopUpController(TopUpService topUpService, IMapper mapper, AccountService accountService)
+    public TopUpController(TopUpService topUpService, IMapper mapper, AccountService accountService,
+        PostService postService)
     {
         _topupService = topUpService;
         _mapper = mapper;
         _accountService = accountService;
+        _postService = postService;
     }
 
     // GET all action
@@ -36,11 +39,13 @@ public class TopUpController : ControllerBase
         return Ok(mappedExistTopup);
 
     }
+
     [HttpPost("send-topup-order")]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> CreateNewTopUp(TopUpCreateRequest topUpCreateRequest)
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                     string.Empty;
         if (topUpCreateRequest == null)
         {
             return NoContent();
@@ -73,7 +78,8 @@ public class TopUpController : ControllerBase
     [Authorize(Roles = "US")]
     public async Task<IActionResult> GetTopUpByUserId()
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                     string.Empty;
         var id = Int32.Parse(userId);
         var existingTopup = await _topupService.GetTopUpByUserId(id);
 
@@ -84,11 +90,13 @@ public class TopUpController : ControllerBase
         var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
         return Ok(userMappedExistTopUp);
     }
+
     [HttpGet("get-user-total-topuptransaction-value")]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> ReturnTotalTopupTransactionOfUser()
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                     string.Empty;
         var id = Int32.Parse(userId);
         return Ok(await _topupService.GetTotalValueOfUserTransaction(id));
     }
@@ -99,11 +107,13 @@ public class TopUpController : ControllerBase
     {
         return Ok(await _topupService.GetTotalRevenue());
     }
+
     [HttpPut("cancel-topup")]
     [Authorize(Roles = "US")]
     public async Task<IActionResult> cancelTopUp(int id)
     {
-        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                     string.Empty;
         var topup = await _topupService.GetTopUpById(id);
         if (topup is null)
         {
@@ -130,6 +140,7 @@ public class TopUpController : ControllerBase
             }
         }
     }
+
     [HttpPut("accept-topup")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> acceptedTopUp(int id)
@@ -155,6 +166,7 @@ public class TopUpController : ControllerBase
             }
         }
     }
+
     [HttpGet("search-topup-by-email")]
     [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetTopUpByEmail(string searchEmail)
@@ -166,4 +178,4 @@ public class TopUpController : ControllerBase
         var userMappedExistTopUp = existingTopup.Select(p => _mapper.Map<TopUpEntityViewModel>(p));
         return Ok(userMappedExistTopUp);
     }
-}
+} 

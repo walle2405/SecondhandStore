@@ -18,13 +18,16 @@ namespace SecondhandStore.Controllers
         private readonly IMapper _mapper;
         private readonly AzureService _azureService;
         private readonly AccountService _accountService;
+        private readonly ImageService _imageService;
 
-        public PostController(PostService postService, IMapper mapper, AzureService azureService, AccountService accountService)
+        public PostController(PostService postService, IMapper mapper, AzureService azureService,
+            AccountService accountService, ImageService imageService)
         {
             _postService = postService;
             _mapper = mapper;
             _azureService = azureService;
             _accountService = accountService;
+            _imageService = imageService;
         }
 
         [HttpGet("get-post-list")]
@@ -39,7 +42,7 @@ namespace SecondhandStore.Controllers
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
             return Ok(mappedPostList);
         }
-        
+
         [HttpGet("get-all-active-post-list")]
         public async Task<IActionResult> GetActivePostList()
         {
@@ -56,11 +59,16 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "US")]
         public async Task<IActionResult> GetPostsByUserId()
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                         string.Empty;
+
             var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
+
             if (postList is null)
                 return NotFound();
+
             var mappedPostList = postList.Select(c => _mapper.Map<PostEntityViewModel>(c));
+
             return Ok(mappedPostList);
         }
 
@@ -68,7 +76,8 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "US")]
         public async Task<IActionResult> GetPostByUserId(int id)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                         string.Empty;
             var postList = await _postService.GetPostByAccountId(Int32.Parse(userId));
             var post = postList.FirstOrDefault(p => p.PostId == id);
             if (post is null)
@@ -92,7 +101,8 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "US")]
         public async Task<IActionResult> CreateNewPost([FromForm] PostCreateRequest postCreateRequest)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                         string.Empty;
 
             var createdPost = new Post
             {
@@ -106,27 +116,27 @@ namespace SecondhandStore.Controllers
                 Price = postCreateRequest.Price
             };
 
-            if (postCreateRequest.ImageUploadRequest != null)
-                foreach (var image in postCreateRequest.ImageUploadRequest)
-                {
-                    var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
-                    var fileNameCheck = createdPost.Image?.Split('/').LastOrDefault();
+            var postId = await _postService.AddPost(createdPost, int.Parse(userId));
 
-                    var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
+            if (postId == 0)
+                return BadRequest();
 
-                    createdPost.Image = uri;
-                }
+            var imageUrls = new List<string?>();
 
-            Console.Write(createdPost);
+            foreach (var image in postCreateRequest.ImageUploadRequest)
+            {
+                var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
 
-            await _postService.AddPost(createdPost, int.Parse(userId));
-            
+                //var fileNameCheck = createdPost.Images.Split('/').LastOrDefault();
 
-            // return CreatedAtAction(nameof(GetPostList),
-            //     new { id = CreatedPost.AccountId },
-            //     CreatedPost;
-            return Ok(createdPost.PostId);
+                var uri = (await _azureService.UploadImage(image, null, "post", imageExtension, false))?.Blob.Uri;
 
+                imageUrls.Add(uri);
+            }
+
+            await _imageService.AddImage(imageUrls, postId);
+
+            return Ok();
         }
 
         [HttpGet("search-post")]
@@ -141,24 +151,27 @@ namespace SecondhandStore.Controllers
 
         [HttpPut("accept-post")]
         [Authorize(Roles = "AD")]
-        public async Task<IActionResult> AcceptPost(int id) {
+        public async Task<IActionResult> AcceptPost(int id)
+        {
             var existingPost = await _postService.GetPostById(id);
             if (existingPost is null)
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 if (existingPost.PostStatusId == 4)
                 {
                     return NoContent();
                 }
-                else 
+                else
                 {
                     await _postService.AcceptPost(existingPost);
                     return NoContent();
-                }  
+                }
             }
         }
+
         [HttpPut("reject-post")]
         [Authorize(Roles = "AD")]
         public async Task<IActionResult> RejectPost(int id)
@@ -168,16 +181,17 @@ namespace SecondhandStore.Controllers
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 if (existingPost.PostStatusId == 5)
                 {
                     return NoContent();
                 }
-                else 
+                else
                 {
                     await _postService.RejectPost(existingPost);
                     return NoContent();
-                }  
+                }
             }
         }
 
@@ -185,45 +199,15 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> UpdatePost(int postId, [FromForm] PostUpdateRequest postUpdateRequest)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
-            try
-            {
-                var existingPost = await _postService.GetPostById(postId);
-
-                if (existingPost is null)
-                    return NotFound();
-
-                var mappedPost = _mapper.Map<Post>(postUpdateRequest);
-                mappedPost.AccountId = Int32.Parse(userId);
-                mappedPost.PostId = existingPost.PostId;
-                mappedPost.CategoryId = existingPost.CategoryId;
-
-
-                if (postUpdateRequest.ImageUploadRequest != null)
-                    foreach (var image in postUpdateRequest.ImageUploadRequest)
-                    {
-                        var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
-                        var fileNameCheck = mappedPost.Image?.Split('/').LastOrDefault();
-
-                        var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
-
-                        mappedPost.Image = uri;
-                    }
-                await _postService.UpdatePost(mappedPost);
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Invalid Request");
-            }
+            return Ok();
         }
 
         [HttpPut("deactivate-own-post")]
         [Authorize(Roles = "US")]
         public async Task<IActionResult> DeactivatePost(int postId)
         {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ??
+                         string.Empty;
             try
             {
                 var existingPost = await _postService.GetPostById(postId);
@@ -241,6 +225,5 @@ namespace SecondhandStore.Controllers
                 return BadRequest("Post cannot be deactivated");
             }
         }
-
     }
 }

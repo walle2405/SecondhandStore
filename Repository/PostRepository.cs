@@ -18,6 +18,7 @@ public class PostRepository : BaseRepository<Post>
     {
         return await _dbContext.Posts.Where(c => c.ProductName.ToLower()
                 .Contains(ProductName.ToLower()))
+                .Include(p => p.Images)
                 .Include(p => p.Account)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
@@ -33,7 +34,6 @@ public class PostRepository : BaseRepository<Post>
         if (existingPost != null)
         {
             existingPost.ProductName = updatedPost.ProductName;
-            existingPost.Image = updatedPost.Image ?? existingPost.Image;
             existingPost.Description = updatedPost.Description;
             existingPost.Price = updatedPost.Price;
             await _dbContext.SaveChangesAsync();
