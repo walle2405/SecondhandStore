@@ -47,9 +47,9 @@ public class TopUpController : ControllerBase
         }
         else
         {
-            if (topUpCreateRequest.TopUpPoint <= 0)
+            if (topUpCreateRequest.TopUpPoint < 10)
             {
-                return BadRequest("Top Up Point must be > 0");
+                return BadRequest("Minimum point must be 10 point.");
             }
             else
             {
