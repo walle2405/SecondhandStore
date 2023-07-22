@@ -199,6 +199,38 @@ namespace SecondhandStore.Controllers
         [Authorize(Roles = "AD,US")]
         public async Task<IActionResult> UpdatePost(int postId, [FromForm] PostUpdateRequest postUpdateRequest)
         {
+            // var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            // try
+            // {
+            //     var existingPost = await _postService.GetPostById(postId);
+            //
+            //     if (existingPost is null)
+            //         return NotFound();
+            //
+            //     var mappedPost = _mapper.Map<Post>(postUpdateRequest);
+            //     mappedPost.AccountId = Int32.Parse(userId);
+            //     mappedPost.PostId = existingPost.PostId;
+            //     mappedPost.CategoryId = existingPost.CategoryId;
+            //
+            //
+            //     if (postUpdateRequest.ImageUploadRequest != null)
+            //         foreach (var image in postUpdateRequest.ImageUploadRequest)
+            //         {
+            //             var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+            //             var fileNameCheck = mappedPost.Image?.Split('/').LastOrDefault();
+            //
+            //             var uri = (await _azureService.UploadImage(image, fileNameCheck, "post", imageExtension, false))?.Blob.Uri;
+            //
+            //             mappedPost.Image = uri;
+            //         }
+            //     await _postService.UpdatePost(mappedPost);
+            //     return NoContent();
+            // }
+            // catch (Exception)
+            // {
+            //     return StatusCode(StatusCodes.Status500InternalServerError,
+            //         "Invalid Request");
+            // }
             return Ok();
         }
 
