@@ -120,7 +120,7 @@ namespace SecondhandStore.Controllers
             Console.Write(createdPost);
 
             await _postService.AddPost(createdPost, int.Parse(userId));
-            
+
 
             // return CreatedAtAction(nameof(GetPostList),
             //     new { id = CreatedPost.AccountId },
@@ -201,7 +201,6 @@ namespace SecondhandStore.Controllers
                 mappedPost.AccountId = Int32.Parse(userId);
                 mappedPost.PostId = existingPost.PostId;
                 mappedPost.CategoryId = existingPost.CategoryId;
-
 
                 if (postUpdateRequest.ImageUploadRequest != null)
                     foreach (var image in postUpdateRequest.ImageUploadRequest)
