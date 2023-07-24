@@ -1,4 +1,5 @@
 ﻿using System.Security.Policy;
+using SecondhandStore.Models;
 
 namespace SecondhandStore.EntityViewModel
 {
@@ -10,6 +11,7 @@ namespace SecondhandStore.EntityViewModel
         public string ReportedUserEmail { get; set; }
         public string ReportedUserName { get; set; }
         public string Reason { get; set; }
+        public virtual ICollection<ReportImage> Images { get; set; }
         public string Status { get; set; }
         public DateTime ReportDate { get; set;}
     }

@@ -21,6 +21,7 @@ public class AutoMapper : Profile
         MapExchange();
         MapReview();
         MapImage();
+        MapReportImage();
     }
 
     private void MapRole()
@@ -176,6 +177,14 @@ public class AutoMapper : Profile
         CreateMap<Image, ImageViewModel>()
             .ReverseMap();
         CreateMap<ImageViewModel, Image>()
+            .ReverseMap();
+    }
+    
+    public void MapReportImage()
+    {
+        CreateMap<ReportImage, ReportImageViewModel>()
+            .ReverseMap();
+        CreateMap<ReportImageViewModel, ReportImage>()
             .ReverseMap();
     }
 }

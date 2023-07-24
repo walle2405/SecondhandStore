@@ -17,9 +17,9 @@ public class ImageService
         await _imageRepository.Add(image, postId);
     }
 
-    public async Task UpdateImage(Image image)
+    public async Task UpdateImage(List<string?> image, int postId)
     {
-        await _imageRepository.Update(image);
+        await _imageRepository.Update(image, postId);
     }
 
     public async Task DeleteImage(Image image)

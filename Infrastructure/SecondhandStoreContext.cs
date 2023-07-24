@@ -23,6 +23,7 @@ namespace SecondhandStore.Infrastructure
         public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
+        public virtual DbSet<ReportImage> ReportImages { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Status> Statuses { get; set; } = null!;
@@ -253,6 +254,28 @@ namespace SecondhandStore.Infrastructure
                     .HasForeignKey(d => d.ReporterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Report__reporter__3B40CD36");
+            });
+
+            modelBuilder.Entity<ReportImage>(entity =>
+            {
+                entity.HasKey(e => e.ImageId)
+                    .HasName("PK__ReportIm__336E9B55101008E1");
+
+                entity.ToTable("ReportImage");
+
+                entity.Property(e => e.ImageId).HasColumnName("imageId");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(4000)
+                    .HasColumnName("imageUrl");
+
+                entity.Property(e => e.ReportId).HasColumnName("reportId");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.ReportImages)
+                    .HasForeignKey(d => d.ReportId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ReportIma__repor__625A9A57");
             });
 
             modelBuilder.Entity<Review>(entity =>

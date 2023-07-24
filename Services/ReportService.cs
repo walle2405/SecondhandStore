@@ -23,9 +23,10 @@ namespace SecondhandStore.Services
         public async Task<IEnumerable<Report>> GetReportByAccount(string userId) {
             return await _reportRepository.GetByUserId(userId);
         }
-        public async Task AddReport(Report report)
+        public async Task<int> AddReport(Report report)
         {
             await _reportRepository.Add(report);
+            return report.ReportId;
         }
         public async Task AcceptReport(Report acceptReport) { 
             await _reportRepository.AcceptReport(acceptReport);

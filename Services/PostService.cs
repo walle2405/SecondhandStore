@@ -18,6 +18,7 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
+                .Include(p => p.Images)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
                 .ToListAsync();
@@ -27,6 +28,7 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
+                .Include(p => p.Images)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
                 .Where(p => p.PostStatusId == 4)
@@ -47,6 +49,7 @@ namespace SecondhandStore.Services
         {
             return _postRepository.GetAll()
             .Include(p => p.Account)
+            .Include(p => p.Images)
             .Include(p => p.Category)
             .Include(p => p.PostStatus)
             .FirstOrDefault(p => p.PostId == id);

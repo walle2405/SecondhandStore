@@ -36,5 +36,8 @@ public static class ScopedService
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<ImageRepository>();
         services.AddScoped<ImageService>();
+
+        services.AddScoped<ReportImageRepository>();
+        services.AddScoped<ReportImageService>();
     }
 }
