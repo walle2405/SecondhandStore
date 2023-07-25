@@ -18,8 +18,8 @@ namespace SecondhandStore.Repository
         public async Task<IEnumerable<Report>> GetAllReport() { 
             return await _dbContext.Reports
                 .Include(c => c.Reporter)
-                .Include(c=>c.ReportedAccount)
-                .Include(c=>c.ReportStatus)
+                .Include(c=> c.ReportedAccount)
+                .Include(c=> c.ReportStatus)
                 .Include(c => c.ReportImages)
                 .ToListAsync();
         }
