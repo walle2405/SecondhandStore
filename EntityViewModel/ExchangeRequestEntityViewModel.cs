@@ -10,6 +10,7 @@
         public string SellerName { get; set; }
         public string SellerPhoneNumber { get; set; }
         public string SellerEmail { get; set; }
+        public string SellerAddress { get; set; }
         public DateTime OrderDate { get; set; }
         public string OrderStatusName { get; set; }
         

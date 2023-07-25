@@ -213,8 +213,7 @@ namespace SecondhandStore.Controllers
                 mappedPost.AccountId = Int32.Parse(userId);
                 mappedPost.PostId = existingPost.PostId;
                 mappedPost.CategoryId = existingPost.CategoryId;
-            
-            
+
                 var imageUrls = new List<string?>();
                     foreach (var image in postUpdateRequest.ImageUploadRequest)
                     {
