@@ -115,7 +115,8 @@ public class AutoMapper : Profile
             .ForMember(d=> d.ReporterEmail, map => map.MapFrom(d=>d.Reporter.Email))
             .ForMember(d => d.ReportedUserName, map => map.MapFrom(d => d.ReportedAccount.Fullname))
             .ForMember(d => d.ReportedUserEmail, map => map.MapFrom(d => d.ReportedAccount.Email))
-            .ForMember(d => d.Status, map => map.MapFrom(d => d.ReportStatus.StatusName));
+            .ForMember(d => d.Status, map => map.MapFrom(d => d.ReportStatus.StatusName))
+            .ForMember(d=>d.ReportImages, map => map.MapFrom(d => d.ReportImages));
         CreateMap<ReportEntityViewModel, Report>();
         CreateMap<Report,ReportCreateRequest>()
             .ReverseMap();

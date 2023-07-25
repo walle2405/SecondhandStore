@@ -34,8 +34,7 @@ namespace SecondhandStore.Controllers
         {
             var reportList = await _reportService.GetAllReport();
 
-            var mappedReportList = _mapper.Map<List<ReportEntityViewModel>>(reportList);
-
+            var mappedReportList = reportList.Select(c=>_mapper.Map<ReportEntityViewModel>(c));
             if (!reportList.Any())
                 return NotFound();
 
