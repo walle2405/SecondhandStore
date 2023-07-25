@@ -1,4 +1,6 @@
-﻿namespace SecondhandStore.EntityRequest;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SecondhandStore.EntityRequest;
 
 public class PostCreateRequest
 {
@@ -8,5 +10,6 @@ public class PostCreateRequest
     public int CategoryId { get; set; }
     public bool isDonated { get; set; }
     public double Price { get; set; }
-    public IFormFileCollection? ImageUploadRequest { get; set; }
+    [Required(ErrorMessage = "Need to insert at least 1 image")]
+    public IFormFileCollection ImageUploadRequest { get; set; }
 }

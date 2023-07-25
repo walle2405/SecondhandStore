@@ -14,12 +14,13 @@ GO
 
 CREATE TABLE [dbo].Role (
 	[roleId] [nvarchar](2) PRIMARY KEY NOT NULL,
-	[roleName] [nvarchar](6) NOT NULL,
+	[roleName] [nvarchar](50) NOT NULL,
 )
 GO
 INSERT [dbo].[Role] ([roleId], [roleName]) VALUES 
 					('AD', 'Admin'),
-					('US', 'User');
+					('US', 'User'),
+					('DE', 'Deactivated User');
 CREATE TABLE [dbo].Account(
 	[accountId] [int] IDENTITY (1,1) PRIMARY KEY NOT NULL,
 	[password] [varchar](64) NOT NULL,
@@ -53,7 +54,6 @@ CREATE TABLE [dbo].Post(
 	[postId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[accountId][int] REFERENCES Account(accountId) NOT NULL,
 	[productName] [nvarchar](255) NOT NULL,
-	[image] [nvarchar](4000) NOT NULL,
 	[description] [nvarchar](255) NOT NULL,
 	[categoryId] [int] REFERENCES Category(CategoryId) NOT NULL,
 	[price][float] NOT NULL,
@@ -62,6 +62,12 @@ CREATE TABLE [dbo].Post(
 	[createdDate] [date] NOT NULL,
 )
 GO
+
+CREATE TABLE [dbo].Image(
+	[imageId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[postId] [int] REFERENCES Post(postId) NOT NULL,
+	[imageUrl][nvarchar](4000) NOT NULL
+)
 
 CREATE TABLE [dbo].TopUp (
 	[orderId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -92,6 +98,7 @@ CREATE TABLE [dbo].Report(
 	[reportStatusId] [int] REFERENCES Status(statusId) NOT NULL
 )
 GO
+
 CREATE TABLE [dbo].Review(
 	[reviewId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[reviewerId] [int] REFERENCES Account(accountId) NOT NULL,
@@ -102,8 +109,13 @@ CREATE TABLE [dbo].Review(
 	CHECK(ratingStar >= 1 and ratingStar <= 5)
 );
 
+CREATE TABLE [dbo].ReportImage(
+	[imageId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[reportId] [int] REFERENCES Report(reportId) NOT NULL,
+	[imageUrl][nvarchar](4000) NOT NULL
+)
 
-insert into Account (roleId, password, fullname, dob, email, address, phoneNo, isActive, credibilityPoint, pointBalance, createdDate) 
+insert into Account ( roleId, password, fullname, dob, email, address, phoneNo, isActive, credibilityPoint, pointBalance, createdDate) 
 values 
 ( 'AD', '12345', 'Adminstrator', '2023-01-01', 'fptoseservice@fpt.edu.vn', 'FPT University', '0123456789', 1, 50, 0, '2023-01-01'),
 ( 'US', '12345', 'NGUYEN TRUNG TIN', '2023-01-01', 'tinntse171390@fpt.edu.vn', 'VINHOME S303','0123456789', 1, 50, 1300, '2023-01-01'),
@@ -137,25 +149,51 @@ INSERT [dbo].[Status] ([statusName]) VALUES
 ('Rejected'),
 ('Processing'), 
 ('Cancelled'), 
-('Completed')
+('Completed');
 
-insert into Post (accountId, productName, image, price, description, categoryId, isDonated, createdDate, postStatusId)
+insert into Post (accountId, productName, price, description, categoryId, isDonated, createdDate, postStatusId)
 Values
-(2, N'Manchester United Jersey', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 4),
-(4, N'Do Vo Vovinam', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 4),
-(5, N'CASIO FX-580', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 4),
-(3, N'Dan tranh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 300000, N'Like new', 5, 0, '2023-03-27', 4),
-(2, N'Sach tieng Nhat Dekiru', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg',  200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 4),
-(7, 'Mat kinh', 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg', 150000, N'can pass lai', 2, 0, '2023-04-28', 4),
-(7, 'Dac Nhan Tam', 'https://imagesswp391.blob.core.windows.net/post/ff1d181c-e85c-42fa-9a5e-1757d08746334b8ca7d8687072ed6dc73e6c4dd8813b.jpg', 200000, 'dacnhantam', 4, 0, '2023-06-21', 4),
-(9, 'LOGITECH GPRO', 'https://imagesswp391.blob.core.windows.net/post/1c097365-02ce-47da-9fd7-b086fca8913215900362337536.jpg', 800000,  'mouse gpro', 3, 0, '2023-07-10', 4),
-(9, 'DareUEk87',  'https://imagesswp391.blob.core.windows.net/post/fdd7f1ab-de82-4597-b66d-06deff041178keyboard-co-dareu-ek87-blue-sw-usb-chinh-hang-9776.jpg', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 4),
-(11, 'Pencilcase',  'https://imagesswp391.blob.core.windows.net/post/2251cf86-5da7-4ad2-8844-e244eddc9388pencil-case-smiggle-fresh-combo.jpg', 170000, 'hop but', 3, 0, '2023-07-12', 4),
-(11, 'Notebook', 'https://imagesswp391.blob.core.windows.net/post/11e71335-5dba-480f-977b-96488aaee68fa4-spiral-notebook-300-pages-large-grid-wire-bound-good-quality-299.jpg', 170000 , 'so tay', 4, 0, '2023-07-12', 4),
-(13, 'Sao truc', 'https://imagesswp391.blob.core.windows.net/post/7bdbbc65-b394-45b7-8155-1422fe6ef066download%20%283%29.jpg', 200000, 'sao truc', 5, 0, '2023-07-12', 4),
-(10, 'Dan ty ba', 'https://imagesswp391.blob.core.windows.net/post/b76231d5-9ce7-4dbd-9c3b-3ae17cb2dde4Dan%20ty%20ba.jpg', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 3),
-(15, 'Kaki pants',  'https://imagesswp391.blob.core.windows.net/post/a8a82663-96fc-4393-a91b-d5e67ce729d1Kaki%20pants.jpg', 350000,  'quan kaki',  1, 0, '2023-07-13', 3),
-(5, 'Jordan 1',  'https://imagesswp391.blob.core.windows.net/post/2ab43cb0-9f95-4c72-bcc9-dd67b8d9c47bJordan%201.jpg', 300000,  'quan kaki',  1, 0, '2023-07-14', 3);
+(2, N'Manchester United Jersey', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 8),
+(4, N'Do Vo Vovinam', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 1),
+(5, N'CASIO FX-580', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 8),
+(3, N'Dan tranh', 300000, N'Like new', 5, 0, '2023-03-27', 1),
+(2, N'Sach tieng Nhat Dekiru', 200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 1),
+(7, 'Mat kinh', 150000, N'can pass lai', 2, 0, '2023-04-28', 8),
+(7, 'Dac Nhan Tam', 200000, 'dacnhantam', 4, 0, '2023-06-21', 1),
+(9, 'LOGITECH GPRO', 800000,  'mouse gpro', 3, 0, '2023-07-10', 1),
+(9, 'DareUEk87', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 1),
+(11, 'Pencilcase', 170000, 'hop but', 3, 0, '2023-07-12', 1),
+(11, 'Notebook', 170000 , 'so tay', 4, 0, '2023-07-12', 1),
+(13, 'Sao truc', 200000, 'sao truc', 5, 0, '2023-07-12', 1),
+(10, 'Dan ty ba', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 1),
+(15, 'Kaki pants', 350000,  'quan kaki',  1, 0, '2023-07-13', 1),
+(5, 'Jordan 1', 300000,  'quan kaki',  1, 0, '2023-07-14', 1);
+
+insert into Image(postId, imageUrl)
+Values
+(1, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(2, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(3, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(4, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(5, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(6, 'https://imagesswp391.blob.core.windows.net/post/ee6f28e3-b871-4f68-ac9f-891c5e098177kinh-mat-hinh-da-giac-gong-nho-spe-0008-mau-bac-main__62611__1643894339.jpg'),
+(7, 'https://imagesswp391.blob.core.windows.net/post/ff1d181c-e85c-42fa-9a5e-1757d08746334b8ca7d8687072ed6dc73e6c4dd8813b.jpg'),
+(8, 'https://imagesswp391.blob.core.windows.net/post/1c097365-02ce-47da-9fd7-b086fca8913215900362337536.jpg'),
+(9, 'https://imagesswp391.blob.core.windows.net/post/fdd7f1ab-de82-4597-b66d-06deff041178keyboard-co-dareu-ek87-blue-sw-usb-chinh-hang-9776.jpg'),
+(10, 'https://imagesswp391.blob.core.windows.net/post/2251cf86-5da7-4ad2-8844-e244eddc9388pencil-case-smiggle-fresh-combo.jpg'),
+(11, 'https://imagesswp391.blob.core.windows.net/post/11e71335-5dba-480f-977b-96488aaee68fa4-spiral-notebook-300-pages-large-grid-wire-bound-good-quality-299.jpg'),
+(12, 'https://imagesswp391.blob.core.windows.net/post/7bdbbc65-b394-45b7-8155-1422fe6ef066download%20%283%29.jpg'),
+(13, 'https://imagesswp391.blob.core.windows.net/post/b76231d5-9ce7-4dbd-9c3b-3ae17cb2dde4Dan%20ty%20ba.jpg'),
+(14, 'https://imagesswp391.blob.core.windows.net/post/a8a82663-96fc-4393-a91b-d5e67ce729d1Kaki%20pants.jpg'),
+(15, 'https://imagesswp391.blob.core.windows.net/post/2ab43cb0-9f95-4c72-bcc9-dd67b8d9c47bJordan%201.jpg');
+
+insert into ExchangeOrder ( buyerId, sellerId, postId, orderDate, orderStatusId)
+Values
+(11, 3, 4, '2023-04-17', 8),
+(4, 2, 1, '2023-05-24', 8),
+(4, 5, 3, '2023-05-27', 7),
+(7, 5, 3, '2023-06-02', 8),
+(7, 2, 5, '2023-06-06', 8);
 
 insert into TopUp ( accountId, topUpPoint, price, topUpDate, topUpStatusId)
 values
@@ -171,4 +209,3 @@ values
 
 SET NOCOUNT OFF
 raiserror('The Secondhand Store database in now ready for use.',0,1)
-

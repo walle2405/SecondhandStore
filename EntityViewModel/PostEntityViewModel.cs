@@ -1,4 +1,6 @@
-﻿namespace SecondhandStore.EntityViewModel;
+﻿using SecondhandStore.Models;
+
+namespace SecondhandStore.EntityViewModel;
 
 public class PostEntityViewModel
 {
@@ -10,7 +12,9 @@ public class PostEntityViewModel
     public string Address { get; set; }
     public string Email { get; set; }
     public string ProductName { get; set; }
-    public string Image { get; set; }
+    
+    public virtual ICollection<Image> Images { get; set; }
+    
     public string Description { get; set; }
     public string PostStatusId { get; set; }
     public string StatusName { get; set; }

@@ -18,6 +18,7 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
+                .Include(p => p.Images)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
                 .ToListAsync();
@@ -27,6 +28,7 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll()
                 .Include(p => p.Account)
+                .Include(p => p.Images)
                 .Include(p => p.Category)
                 .Include(p => p.PostStatus)
                 .Where(p => p.PostStatusId == 4)
@@ -36,6 +38,7 @@ namespace SecondhandStore.Services
         {
             return await _postRepository.GetAll()
             .Where(p => p.AccountId == id)
+            .Include(p => p.Images)
             .Include(p => p.Account)
             .Include(p => p.Category)
             .Include(p => p.PostStatus)
@@ -46,16 +49,26 @@ namespace SecondhandStore.Services
         {
             return _postRepository.GetAll()
             .Include(p => p.Account)
+            .Include(p => p.Images)
             .Include(p => p.Category)
             .Include(p => p.PostStatus)
             .FirstOrDefault(p => p.PostId == id);
         }
 
+        /*
         public async Task AddPost(Post post, int accountId)
         {
-            
             await _postRepository.AddNewPost(post, accountId);
         }
+        
+        */
+        
+        public async Task<int> AddPost(Post post, int accountId)
+        {
+            await _postRepository.AddNewPost(post, accountId);
+            return post.PostId;
+        }
+    
         public async Task<IEnumerable<Post>> GetPostByProductName(string productName)
         {
             return await _postRepository.GetPostByProductName(productName);

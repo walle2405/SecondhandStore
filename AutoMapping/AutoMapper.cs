@@ -20,6 +20,8 @@ public class AutoMapper : Profile
         MapExchangeRequest();
         MapExchange();
         MapReview();
+        MapImage();
+        MapReportImage();
     }
 
     private void MapRole()
@@ -114,7 +116,8 @@ public class AutoMapper : Profile
             .ForMember(d => d.ReporterEmail, map => map.MapFrom(d => d.Reporter.Email))
             .ForMember(d => d.ReportedUserName, map => map.MapFrom(d => d.ReportedAccount.Fullname))
             .ForMember(d => d.ReportedUserEmail, map => map.MapFrom(d => d.ReportedAccount.Email))
-            .ForMember(d => d.Status, map => map.MapFrom(d => d.ReportStatus.StatusName));
+            .ForMember(d => d.Status, map => map.MapFrom(d => d.ReportStatus.StatusName))
+            .ForMember(d=>d.ReportImages, map => map.MapFrom(d => d.ReportImages));
         CreateMap<ReportEntityViewModel, Report>();
         CreateMap<Report, ReportCreateRequest>()
             .ReverseMap();
@@ -174,6 +177,22 @@ public class AutoMapper : Profile
         CreateMap<Review, ReviewCreateRequest>()
             .ReverseMap();
         CreateMap<ReviewCreateRequest, Review>()
+            .ReverseMap();
+    }
+
+    public void MapImage()
+    {
+        CreateMap<Image, ImageViewModel>()
+            .ReverseMap();
+        CreateMap<ImageViewModel, Image>()
+            .ReverseMap();
+    }
+    
+    public void MapReportImage()
+    {
+        CreateMap<ReportImage, ReportImageViewModel>()
+            .ReverseMap();
+        CreateMap<ReportImageViewModel, ReportImage>()
             .ReverseMap();
     }
 }
