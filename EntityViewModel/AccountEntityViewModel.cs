@@ -4,7 +4,7 @@ namespace SecondhandStore.EntityViewModel;
 
 public class AccountEntityViewModel
 {
-    public string accountId { get; set; }
+    public int accountId { get; set; }
     public string fullName { get; set; }
     public string email { get; set; }
     public string roleId { get; set; }
