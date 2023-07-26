@@ -35,7 +35,7 @@ namespace SecondhandStore.Repository
         }
         public async Task<IEnumerable<Post>> GetPurchasedPost(int userId)
         {
-            return await _dbContext.ExchangeOrders.Where(c => c.BuyerId == userId).Include(p => p.Post).Select(p => p.Post).ToListAsync();
+            return await _dbContext.ExchangeOrders.Where(c => c.BuyerId == userId && c.OrderStatusId == 8).Include(p => p.Post).Select(p => p.Post).ToListAsync();
         }
     }
 }
