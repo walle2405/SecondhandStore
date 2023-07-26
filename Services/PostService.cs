@@ -23,7 +23,7 @@ namespace SecondhandStore.Services
                 .Include(p => p.PostStatus)
                 .ToListAsync();
         }
-        
+
         public async Task<IEnumerable<Post>> GetAllActivePosts()
         {
             return await _postRepository.GetAll()
@@ -78,11 +78,13 @@ namespace SecondhandStore.Services
         {
             await _postRepository.Update(post);
         }
-        
-        public async Task AcceptPost(Post acceptedPost) { 
+
+        public async Task AcceptPost(Post acceptedPost)
+        {
             await _postRepository.AcceptPost(acceptedPost);
         }
-        public async Task RejectPost(Post rejectedPost) { 
+        public async Task RejectPost(Post rejectedPost)
+        {
             await _postRepository.RejectPost(rejectedPost);
         }
     }

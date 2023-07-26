@@ -12,6 +12,5 @@
         public string sellerEmail { get; set; }
         public DateTime orderDate { get; set; }
         public string orderStatusName { get; set; }
-        
     }
 }

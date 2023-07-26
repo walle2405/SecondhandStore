@@ -36,6 +36,7 @@ public class PostRepository : BaseRepository<Post>
             existingPost.ProductName = updatedPost.ProductName;
             existingPost.Description = updatedPost.Description;
             existingPost.Price = updatedPost.Price;
+            existingPost.CreatedDate = DateTime.Today;
             await _dbContext.SaveChangesAsync();
         }
     }

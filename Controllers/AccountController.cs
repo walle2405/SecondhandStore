@@ -96,7 +96,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
-
+        
         await _accountService.AddAccount(mappedAccount);
 
         return CreatedAtAction(nameof(GetAccountList),
