@@ -155,10 +155,10 @@ insert into Post (accountId, productName, price, description, categoryId, isDona
 Values
 (2, N'Manchester United Jersey', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 4),
 (4, N'Do Vo Vovinam', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 4),
-(5, N'CASIO FX-580', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 8),
+(5, N'CASIO FX-580', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 4),
 (3, N'Dan tranh', 300000, N'Like new', 5, 0, '2023-03-27', 4),
 (2, N'Sach tieng Nhat Dekiru', 200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 4),
-(7, 'Mat kinh', 150000, N'can pass lai', 2, 0, '2023-04-28', 8),
+(7, 'Mat kinh', 150000, N'can pass lai', 2, 0, '2023-04-28', 4),
 (7, 'Dac Nhan Tam', 200000, 'dacnhantam', 4, 0, '2023-06-21', 4),
 (9, 'LOGITECH GPRO', 800000,  'mouse gpro', 3, 0, '2023-07-10', 4),
 (9, 'DareUEk87', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 4),
