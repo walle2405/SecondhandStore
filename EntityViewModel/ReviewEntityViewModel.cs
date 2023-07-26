@@ -2,13 +2,13 @@
 {
     public class ReviewEntityViewModel
     {
-        public int ReviewId { get; set; }
-        public string ReviewerName { get; set;}
-        public string ReviewerEmail { get; set; }
-        public string ReviewedName { get; set; }
-        public string ReviewedEmail { get; set;}
-        public int RatingStar { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public int reviewId { get; set; }
+        public string reviewerName { get; set;}
+        public string reviewerEmail { get; set; }
+        public string reviewedName { get; set; }
+        public string reviewedEmail { get; set;}
+        public int ratingStar { get; set; }
+        public string description { get; set; }
+        public DateTime createdDate { get; set; }
     }
 }

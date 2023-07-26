@@ -77,7 +77,8 @@ public class AccountController : ControllerBase
         var existingAccount = await _accountService.GetAccountById(id);
         if (existingAccount is null)
             return NotFound();
-        return Ok(existingAccount);
+        var mappedAccount = _mapper.Map<AccountEntityViewModel>(existingAccount);
+        return Ok(mappedAccount);
     }
 
     [HttpGet("get-user-by-name")]

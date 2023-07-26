@@ -5,25 +5,25 @@ namespace SecondhandStore.EntityViewModel;
 public class PostEntityViewModel
 {
 
-    public int PostId { get; set; }
-    public int AccountId { get; set; }
-    public string Fullname { get; set; }
-    public string PhoneNo { get; set; }
-    public string Address { get; set; }
-    public string Email { get; set; }
-    public string ProductName { get; set; }
+    public int postId { get; set; }
+    public int accountId { get; set; }
+    public string fullname { get; set; }
+    public string phoneNo { get; set; }
+    public string address { get; set; }
+    public string email { get; set; }
+    public string productName { get; set; }
     
-    public virtual ICollection<Image> Images { get; set; }
+    public virtual ICollection<Image> images { get; set; }
     
-    public string Description { get; set; }
-    public string PostStatusId { get; set; }
-    public string StatusName { get; set; }
-    public bool IsDonated { get; set; }
-    public int CategoryId { get; set; }
-    public int CategoryValue { get; set; }
-    public string CategoryName { get; set; }
-    public double Price { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public string description { get; set; }
+    public string postStatusId { get; set; }
+    public string statusName { get; set; }
+    public bool isDonated { get; set; }
+    public int categoryId { get; set; }
+    public int categoryValue { get; set; }
+    public string categoryName { get; set; }
+    public double price { get; set; }
+    public DateTime createdDate { get; set; }
     
 
 }
