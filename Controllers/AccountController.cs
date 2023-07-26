@@ -118,6 +118,14 @@ public class AccountController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("edit-user")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> EditUser(EditAccountRequest editAccountRequest)
+    {
+        var mappedEditAccount = _mapper.Map<Account>(editAccountRequest);
+        await _accountService.UpdateAccount(mappedEditAccount);
+        return NoContent();
+    }
 
     [HttpPut("toggle-account-status")]
     [Authorize(Roles = "AD")]
