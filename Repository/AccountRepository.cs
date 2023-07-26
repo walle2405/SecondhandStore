@@ -52,6 +52,16 @@ public class AccountRepository : BaseRepository<Account>
         {
             existingAccount.IsActive = !existingAccount.IsActive;
         }
+
+        if (existingAccount.IsActive == true)
+        {
+            existingAccount.RoleId = "US";
+        }
+
+        if (existingAccount.IsActive == false)
+        {
+            existingAccount.RoleId = "DE";
+        }
         await _dbContext.SaveChangesAsync();
     }
     public new async Task UpdatePointAutomatic(Account topupAccount)

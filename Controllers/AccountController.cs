@@ -140,16 +140,6 @@ public class AccountController : ControllerBase
 
             await _accountService.ToggleAccountStatus(existingAccount);
 
-            if (!existingAccount.IsActive)
-            {
-                existingAccount.RoleId = "DE";
-            }
-
-            if (existingAccount.IsActive)
-            {
-                existingAccount.RoleId = "US";
-            }
-
             return NoContent();
         }
         catch (Exception)
