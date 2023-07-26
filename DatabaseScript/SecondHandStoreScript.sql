@@ -117,21 +117,21 @@ CREATE TABLE [dbo].ReportImage(
 
 insert into Account ( roleId, password, fullname, dob, email, address, phoneNo, isActive, credibilityPoint, pointBalance, createdDate) 
 values 
-( 'AD', '12345', 'Adminstrator', '2023-01-01', 'fptoseservice@fpt.edu.vn', 'FPT University', '0123456789', 1, 50, 0, '2023-01-01'),
-( 'US', '12345', 'NGUYEN TRUNG TIN', '2023-01-01', 'tinntse171390@fpt.edu.vn', 'VINHOME S303','0123456789', 1, 50, 1300, '2023-01-01'),
-( 'US', '67890', 'NGUYEN MINH KHANG', '2023-01-01', 'khangnmse171557@fpt.edu.vn', 'VINHOME S303','0987654321', 1, 50, 1300, '2023-01-01'),
-( 'US', '12345', 'BUI HOANG HAI', '2023-01-01', 'haibhse171489@fpt.edu.vn', 'VINHOME S205','0987654321', 1, 50, 1300, '2023-01-01'),
-( 'US', '12345', 'PHAM QUANG THAI', '2023-01-01', 'thaipq@fpt.edu.vn', 'THU DUC CITY','0912356821', 1, 50, 1300, '2023-01-01'),
-( 'US', '12345', 'DAO NGO CHI BAO', '2023-01-01', 'baodnc@fpt.edu.vn', 'MAN THIEN','0987623121', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc888de', 'JANE SMITH', '2023-01-01', 'janesmith@fpt.edu.vn', '456 Elm St, Town', '0905555678', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc999cf', 'DAVID BROWN', '2023-01-01', 'davidbrown@fpt.edu.vn', '789 Oak St, Village', '0905559190', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc101', 'SARAH LEE', '2023-01-01', 'sarahlee@fpt.edu.vn', '321 Pine St, County', '0905552345', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc11ee', 'MIA PINK', '2023-01-01', 'miapink@fpt.edu.vn', '873 Sumer, Town', '0905557878', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc12dd', 'ALEX KIM', '2023-01-01', 'alexkim@fpt.edu.vn', '252 Maple St, Town', '0905553233', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc13dd', 'PHAM THANH TOAN', '2023-01-01', 'toanpt@fpt.edu.vn', '7 District', '0901593570', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc14dd', 'TONY TOM', '2023-01-01', 'tonytom@fpt.edu.vn', '445 Pine St, Country', '0909555333', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc15dd', 'DANG KIM THANH', '2023-01-01', 'thanhdk@fpt.edu.vn', '1 District', '0909999666', 1, 50, 1300, '2023-01-01'),
-( 'US', 'abc16ff', 'EVE GRACE', '2023-01-01', 'evegrace@fpt.edu.vn', '55 Summer, Town', '090666999', 1, 50, 1300, '2023-01-01');
+( 'AD', '12345', 'Adminstrator', '2003-01-01', 'fptoseservice@fpt.edu.vn', 'FPT University', '0123456789', 1, 50, 0, '2023-01-01'),
+( 'US', '12345', 'NGUYEN TRUNG TIN', '2003-01-01', 'tinntse171390@fpt.edu.vn', 'VINHOME S303','0123456789', 1, 50, 1300, '2023-01-01'),
+( 'US', '67890', 'NGUYEN MINH KHANG', '2003-01-01', 'khangnmse171557@fpt.edu.vn', 'VINHOME S303','0987654321', 1, 50, 1300, '2023-01-01'),
+( 'US', '12345', 'BUI HOANG HAI', '2003-01-01', 'haibhse171489@fpt.edu.vn', 'VINHOME S205','0987654321', 1, 50, 1300, '2023-01-01'),
+( 'US', '12345', 'PHAM QUANG THAI', '2003-01-01', 'thaipq@fpt.edu.vn', 'THU DUC CITY','0912356821', 1, 50, 1300, '2023-01-01'),
+( 'US', '12345', 'DAO NGO CHI BAO', '2003-01-01', 'baodnc@fpt.edu.vn', 'MAN THIEN','0987623121', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc888de', 'JANE SMITH', '2003-01-01', 'janesmith@fpt.edu.vn', '456 Elm St, Town', '0905555678', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc999cf', 'DAVID BROWN', '2003-01-01', 'davidbrown@fpt.edu.vn', '789 Oak St, Village', '0905559190', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc101', 'SARAH LEE', '2003-01-01', 'sarahlee@fpt.edu.vn', '321 Pine St, County', '0905552345', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc11ee', 'MIA PINK', '2003-01-01', 'miapink@fpt.edu.vn', '873 Sumer, Town', '0905557878', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc12dd', 'ALEX KIM', '2003-01-01', 'alexkim@fpt.edu.vn', '252 Maple St, Town', '0905553233', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc13dd', 'PHAM THANH TOAN', '2003-01-01', 'toanpt@fpt.edu.vn', '7 District', '0901593570', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc14dd', 'TONY TOM', '2003-01-01', 'tonytom@fpt.edu.vn', '445 Pine St, Country', '0909555333', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc15dd', 'DANG KIM THANH', '2003-01-01', 'thanhdk@fpt.edu.vn', '1 District', '0909999666', 1, 50, 1300, '2023-01-01'),
+( 'US', 'abc16ff', 'EVE GRACE', '2003-01-01', 'evegrace@fpt.edu.vn', '55 Summer, Town', '090666999', 1, 50, 1300, '2023-01-01');
 
 INSERT [dbo].[Category] ([categoryName], [categoryValue]) VALUES ('Clothes', 20);
 INSERT [dbo].[Category] ([categoryName], [categoryValue]) VALUES ('Accessories', 10);
@@ -153,21 +153,21 @@ INSERT [dbo].[Status] ([statusName]) VALUES
 
 insert into Post (accountId, productName, price, description, categoryId, isDonated, createdDate, postStatusId)
 Values
-(2, N'Manchester United Jersey', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 8),
-(4, N'Do Vo Vovinam', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 1),
+(2, N'Manchester United Jersey', 100000, N'DASDSDSADADAD', 1, 0, '2023-02-19', 4),
+(4, N'Do Vo Vovinam', 100000, N'Pass lai gia re o FPT XAVALO', 1, 0, '2023-02-21', 4),
 (5, N'CASIO FX-580', 150000, N'DOI MAY 580 SANG VINACAL', 3, 0, '2023-03-12', 8),
-(3, N'Dan tranh', 300000, N'Like new', 5, 0, '2023-03-27', 1),
-(2, N'Sach tieng Nhat Dekiru', 200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 1),
+(3, N'Dan tranh', 300000, N'Like new', 5, 0, '2023-03-27', 4),
+(2, N'Sach tieng Nhat Dekiru', 200000, N'pass lai sau khi hoc xong Nhat 2', 4, 0, '2023-03-30', 4),
 (7, 'Mat kinh', 150000, N'can pass lai', 2, 0, '2023-04-28', 8),
-(7, 'Dac Nhan Tam', 200000, 'dacnhantam', 4, 0, '2023-06-21', 1),
-(9, 'LOGITECH GPRO', 800000,  'mouse gpro', 3, 0, '2023-07-10', 1),
-(9, 'DareUEk87', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 1),
-(11, 'Pencilcase', 170000, 'hop but', 3, 0, '2023-07-12', 1),
-(11, 'Notebook', 170000 , 'so tay', 4, 0, '2023-07-12', 1),
-(13, 'Sao truc', 200000, 'sao truc', 5, 0, '2023-07-12', 1),
-(10, 'Dan ty ba', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 1),
-(15, 'Kaki pants', 350000,  'quan kaki',  1, 0, '2023-07-13', 1),
-(5, 'Jordan 1', 300000,  'quan kaki',  1, 0, '2023-07-14', 1);
+(7, 'Dac Nhan Tam', 200000, 'dacnhantam', 4, 0, '2023-06-21', 4),
+(9, 'LOGITECH GPRO', 800000,  'mouse gpro', 3, 0, '2023-07-10', 4),
+(9, 'DareUEk87', 459000, 'ban phim dareu', 3, 0, '2023-07-11', 4),
+(11, 'Pencilcase', 170000, 'hop but', 3, 0, '2023-07-12', 4),
+(11, 'Notebook', 170000 , 'so tay', 4, 0, '2023-07-12', 4),
+(13, 'Sao truc', 200000, 'sao truc', 5, 0, '2023-07-12', 4),
+(10, 'Dan ty ba', 1500000, 'dan ty ba', 5, 0, '2023-07-13', 4),
+(15, 'Kaki pants', 350000,  'quan kaki',  1, 0, '2023-07-13', 4),
+(5, 'Jordan 1', 300000,  'quan kaki',  1, 0, '2023-07-14', 4);
 
 insert into Image(postId, imageUrl)
 Values
@@ -186,14 +186,6 @@ Values
 (13, 'https://imagesswp391.blob.core.windows.net/post/b76231d5-9ce7-4dbd-9c3b-3ae17cb2dde4Dan%20ty%20ba.jpg'),
 (14, 'https://imagesswp391.blob.core.windows.net/post/a8a82663-96fc-4393-a91b-d5e67ce729d1Kaki%20pants.jpg'),
 (15, 'https://imagesswp391.blob.core.windows.net/post/2ab43cb0-9f95-4c72-bcc9-dd67b8d9c47bJordan%201.jpg');
-
-insert into ExchangeOrder ( buyerId, sellerId, postId, orderDate, orderStatusId)
-Values
-(11, 3, 4, '2023-04-17', 8),
-(4, 2, 1, '2023-05-24', 8),
-(4, 5, 3, '2023-05-27', 7),
-(7, 5, 3, '2023-06-02', 8),
-(7, 2, 5, '2023-06-06', 8);
 
 insert into TopUp ( accountId, topUpPoint, price, topUpDate, topUpStatusId)
 values
