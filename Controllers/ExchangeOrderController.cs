@@ -318,7 +318,7 @@ namespace SecondhandStore.Controllers
                         return BadRequest("Invalid");
                     }
                     var seller = await _accountService.GetAccountById(exchange.SellerId);
-                    var buyer = await _accountService.GetAccountById(exchange.BuyerId);
+                    var completeBuyer = await _accountService.GetAccountById(exchange.BuyerId);
                     chosenPost.PostStatusId = 8;
                     await _postService.UpdatePost(chosenPost);
                     //cancel remaining orders with the same post
@@ -326,7 +326,7 @@ namespace SecondhandStore.Controllers
                     {
                         exchangeComponent.OrderStatusId = 7;
                         await _exchangeOrderService.UpdateExchange(exchangeComponent);
-
+                        var buyer = await _accountService.GetAccountById(exchangeComponent.BuyerId);
                         //send email with the reason of cancellation
                         try
                         {
@@ -352,7 +352,7 @@ namespace SecondhandStore.Controllers
                         request.Subject = "Completed Exchange Notification";
                         EmailContent content = new EmailContent();
                         content.Dear = "Dear " + seller.Fullname + ",";
-                        content.BodyContent = "Your order from " + buyer.Fullname + " for a product: " + chosenPost.ProductName + " has been completed.\nPlease check your exchange order.\nThank you!";
+                        content.BodyContent = "Your order from " + completeBuyer.Fullname + " for a product: " + chosenPost.ProductName + " has been completed.\nPlease check your exchange order.\nThank you!";
                         request.Content = content.ToString();
                         _emailService.SendMail(request);
                     }
