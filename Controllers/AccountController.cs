@@ -51,10 +51,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
-        var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
         if (!accountList.Any())
             return NotFound();
-
+        
+        var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
+        
         return Ok(mappedAccountList);
     }
 
