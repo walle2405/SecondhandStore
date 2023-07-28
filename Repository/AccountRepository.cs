@@ -36,11 +36,41 @@ public class AccountRepository : BaseRepository<Account>
 
          if (existingAccount != null)
          {
-             existingAccount.Password = updatedAccount.Password;
-             existingAccount.Fullname = updatedAccount.Fullname;
-             existingAccount.Address = updatedAccount.Address;
-             existingAccount.PhoneNo = updatedAccount.PhoneNo;
+             existingAccount.Password = existingAccount.Password; 
+             existingAccount.Fullname = updatedAccount.Fullname ?? existingAccount.Fullname;
+             existingAccount.Address = updatedAccount.Address ?? existingAccount.Address;
+             existingAccount.PhoneNo = updatedAccount.PhoneNo ?? existingAccount.PhoneNo;
+             existingAccount.CredibilityPoint = updatedAccount.CredibilityPoint;
              await _dbContext.SaveChangesAsync();
          } 
+    }
+
+    public new async Task ToggleAccountStatus(Account updatedAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == updatedAccount.AccountId);
+        if (existingAccount != null)
+        {
+            existingAccount.IsActive = !existingAccount.IsActive;
+        }
+
+        if (existingAccount.IsActive == true)
+        {
+            existingAccount.RoleId = "US";
+        }
+
+        if (existingAccount.IsActive == false)
+        {
+            existingAccount.RoleId = "DE";
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+    public new async Task UpdatePointAutomatic(Account topupAccount)
+    {
+        var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.AccountId == topupAccount.AccountId);
+        if (existingAccount != null)
+        {
+            existingAccount.PointBalance = topupAccount.PointBalance;
+        }
+        await _dbContext.SaveChangesAsync();
     }
 }

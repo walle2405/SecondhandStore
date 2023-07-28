@@ -17,9 +17,11 @@ public class AccountController : ControllerBase
 {
     private readonly AccountService _accountService;
     private readonly IMapper _mapper;
+    private readonly ReviewService _reviewService;
 
-    public AccountController(AccountService accountService, IMapper mapper)
+    public AccountController(AccountService accountService,ReviewService reviewService, IMapper mapper)
     {
+        _reviewService = reviewService;
         _accountService = accountService;
         _mapper = mapper;
     }
@@ -31,10 +33,10 @@ public class AccountController : ControllerBase
     {
         // Tự tạo method login trong AccountService
         var loggedIn = await _accountService.Login(loginModel);
-        
-        if (loggedIn == null) 
+
+        if (loggedIn == null)
             return BadRequest(new { message = "Invalid username or password." });
-        
+
         var jwtToken = _accountService.CreateToken(loggedIn);
         return Ok(new
         {
@@ -49,23 +51,35 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> GetAccountList()
     {
         var accountList = await _accountService.GetAllAccounts();
-        
         if (!accountList.Any())
             return NotFound();
-
+        
         var mappedAccountList = _mapper.Map<List<AccountEntityViewModel>>(accountList);
+        
         return Ok(mappedAccountList);
     }
 
+    [HttpGet("get-user-account")]
+    [Authorize(Roles = "US")]
+    public async Task<IActionResult> GetAccountByUserId()
+    {
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+        var existingAccount = await _accountService.GetAccountById(int.Parse(userId));
+        if (existingAccount is null)
+            return NotFound();
+        var mappedExistingAccount = _mapper.Map<AccountEntityViewModel>(existingAccount);
+        return Ok(mappedExistingAccount);
+    }
+    
     // GET by Id action
     [HttpGet("get-account-by-id")]
-    [Authorize(Roles = "AD")]
     public async Task<IActionResult> GetAccountById(int id)
     {
         var existingAccount = await _accountService.GetAccountById(id);
         if (existingAccount is null)
             return NotFound();
-        return Ok(existingAccount);
+        var mappedAccount = _mapper.Map<AccountEntityViewModel>(existingAccount);
+        return Ok(mappedAccount);
     }
 
     [HttpGet("get-user-by-name")]
@@ -76,38 +90,46 @@ public class AccountController : ControllerBase
             return NotFound();
         var mappedExistingUser = _mapper.Map<List<AccountEntityViewModel>>(existingUser);
         return Ok(mappedExistingUser);
-        
+
     }
 
     [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateNewAccount(AccountCreateRequest accountCreateRequest)
     {
         var mappedAccount = _mapper.Map<Account>(accountCreateRequest);
-
+        
         await _accountService.AddAccount(mappedAccount);
 
         return CreatedAtAction(nameof(GetAccountList),
             new { id = mappedAccount.AccountId },
             mappedAccount);
     }
-
+    
     [HttpPut("update-account")]
-    [Authorize(Roles="US")]
+    [Authorize(Roles = "US")]
     public async Task<IActionResult> UpdateAccount(AccountUpdateRequest accountUpdateRequest)
     {
-            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId") ?.Value ?? string.Empty;
-            
-            var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);  
-            mappedAccount.AccountId = int.Parse(userId);
+        var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
 
-            await _accountService.UpdateAccount(mappedAccount);
+        var mappedAccount = _mapper.Map<Account>(accountUpdateRequest);
+        mappedAccount.AccountId = int.Parse(userId);
 
-            return NoContent();
+        await _accountService.UpdateAccount(mappedAccount);
+
+        return NoContent();
     }
 
+    [HttpPut("edit-user")]
+    [Authorize(Roles = "AD")]
+    public async Task<IActionResult> EditUser(EditAccountRequest editAccountRequest)
+    {
+        var mappedEditAccount = _mapper.Map<Account>(editAccountRequest);
+        await _accountService.UpdateAccount(mappedEditAccount);
+        return NoContent();
+    }
 
     [HttpPut("toggle-account-status")]
-    [Authorize(Roles="AD")]
+    [Authorize(Roles = "AD")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         try
@@ -117,9 +139,7 @@ public class AccountController : ControllerBase
             if (existingAccount is null)
                 return NotFound();
 
-            existingAccount.IsActive = !existingAccount.IsActive;
-
-            await _accountService.UpdateAccount(existingAccount);
+            await _accountService.ToggleAccountStatus(existingAccount);
 
             return NoContent();
         }
@@ -129,13 +149,17 @@ public class AccountController : ControllerBase
                 "Invalid Request");
         }
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Logout()
+    [HttpGet("get-all-review-for-a-particular-user")]
+    public async Task<IActionResult> GetAllReviewForUser(int userId)
     {
-        HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
-
-        return Ok(new { message = "Logged out successfully." });
+        var reviewsList = await _reviewService.GetAllReviewsByReviewedId(userId);
+        if (reviewsList is null)
+        {
+            return NotFound();
+        }
+        var mappedReviewList = reviewsList.Select(p => _mapper.Map<ReviewEntityViewModel>(p));
+        return Ok(mappedReviewList);
     }
-    
+
+
 }

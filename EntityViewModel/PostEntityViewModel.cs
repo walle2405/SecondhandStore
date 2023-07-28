@@ -1,22 +1,30 @@
-﻿namespace SecondhandStore.EntityViewModel;
+﻿using SecondhandStore.Models;
+
+namespace SecondhandStore.EntityViewModel;
 
 public class PostEntityViewModel
 {
 
-    public int PostId { get; set; }
-    public string AccountId { get; set; }
-    public string Fullname { get; set; }
-    public string ProductName { get; set; }
-    public string Image { get; set; }
-    public string Description { get; set; }
-    public string PostStatus { get; set; }
-    public int CategoryId { get; set; }
-    public string CategoryName { get; set; }
-    public int PointCost { get; set; }
-    public DateTime PostDate { get; set; }
-    public int PostPriority { get; set; }
-    public DateTime PostExpiryDate { get; set; }
-    public double Price { get; set; }
+    public int postId { get; set; }
+    public int accountId { get; set; }
+    public string fullname { get; set; }
+    public string phoneNo { get; set; }
+    public string address { get; set; }
+    public string email { get; set; }
+    public string productName { get; set; }
+    
+    public virtual ICollection<Image> images { get; set; }
+    
+    public string description { get; set; }
+    public string postStatusId { get; set; }
+    public string statusName { get; set; }
+    public bool isDonated { get; set; }
+    public int categoryId { get; set; }
+    public int categoryValue { get; set; }
+    public string categoryName { get; set; }
+    public double price { get; set; }
+    public DateTime createdDate { get; set; }
+    
 
 }
 

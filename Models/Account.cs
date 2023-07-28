@@ -12,20 +12,23 @@ namespace SecondhandStore.Models
             Posts = new HashSet<Post>();
             ReportReportedAccounts = new HashSet<Report>();
             ReportReporters = new HashSet<Report>();
-            Reviews = new HashSet<Review>();
+            ReviewRevieweds = new HashSet<Review>();
+            ReviewReviewers = new HashSet<Review>();
             TopUps = new HashSet<TopUp>();
         }
 
         public int AccountId { get; set; }
-        public string Password { get; set; } 
-        public string Fullname { get; set; } 
-        public string Email { get; set; } 
-        public string RoleId { get; set; } 
-        public string Address { get; set; } 
-        public string PhoneNo { get; set; } 
+        public string Password { get; set; } = null!;
+        public string Fullname { get; set; } = null!;
+        public DateTime Dob { get; set; }
+        public string Email { get; set; } = null!;
+        public string RoleId { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        public string PhoneNo { get; set; } = null!;
         public bool IsActive { get; set; }
-        public double UserRatingScore { get; set; }
+        public int CredibilityPoint { get; set; }
         public int PointBalance { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<ExchangeOrder> ExchangeOrderBuyers { get; set; }
@@ -33,7 +36,8 @@ namespace SecondhandStore.Models
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<Report> ReportReportedAccounts { get; set; }
         public virtual ICollection<Report> ReportReporters { get; set; }
-        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Review> ReviewRevieweds { get; set; }
+        public virtual ICollection<Review> ReviewReviewers { get; set; }
         public virtual ICollection<TopUp> TopUps { get; set; }
     }
 }

@@ -22,7 +22,22 @@ public static class ScopedService
         services.AddScoped<ReportRepository>();
         services.AddScoped<ReportService>();
 
+        services.AddScoped<ExchangeOrderRepository>();
+        services.AddScoped<ExchangeOrderService>();
+
+        services.AddScoped<AzureStorageRepository>();
+        services.AddScoped<AzureService>();
+
         services.AddScoped<ReviewRepository>();
         services.AddScoped<ReviewService>();
+
+        // services.AddScoped<IEmailService>();
+        // services.AddScoped<EmailService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ImageRepository>();
+        services.AddScoped<ImageService>();
+
+        services.AddScoped<ReportImageRepository>();
+        services.AddScoped<ReportImageService>();
     }
 }

@@ -6,13 +6,13 @@ namespace SecondhandStore.Models
     public partial class Review
     {
         public int ReviewId { get; set; }
-        public int PostId { get; set; }
-        public string Content { get; set; } = null!;
-        public int StarRating { get; set; }
-        public int FeedbackUserId { get; set; }
-        public string FeedbackUsername { get; set; } = null!;
+        public int ReviewerId { get; set; }
+        public int ReviewedId { get; set; }
+        public int? RatingStar { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public virtual Account FeedbackUser { get; set; } = null!;
-        public virtual Post Post { get; set; } = null!;
+        public virtual Account Reviewed { get; set; } = null!;
+        public virtual Account Reviewer { get; set; } = null!;
     }
 }

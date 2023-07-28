@@ -54,9 +54,16 @@ public class AccountService
         await _accountRepository.Update(account);
     }
     
+    public async Task ToggleAccountStatus (Account account)
+    {
+        await _accountRepository.ToggleAccountStatus(account);
+    }
     public async Task DeleteAccount(Account account)
     {
         await _accountRepository.Delete(account);
+    }
+    public async Task UpdatePointAutomatic(Account topupAccount) { 
+        await _accountRepository.UpdatePointAutomatic(topupAccount);
     }
 
     public string CreateToken(Account account)

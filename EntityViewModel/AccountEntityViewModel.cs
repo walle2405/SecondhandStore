@@ -4,11 +4,14 @@ namespace SecondhandStore.EntityViewModel;
 
 public class AccountEntityViewModel
 {
-    public string AccountId { get; set; }
-    public string Fullname { get; set; }
-    public string Email { get; set; }
-    public string RoleId { get; set; }
-    public string Address { get; set; }
-    public string PhoneNo { get; set; }
-    public bool IsActive { get; set; }
+    public int accountId { get; set; }
+    public string fullName { get; set; }
+    public string email { get; set; }
+    public DateTime dob { get; set; }
+    public string roleId { get; set; }
+    public string address { get; set; }
+    public string phoneNo { get; set; }
+    public int pointBalance { get; set; }
+    public int credibilityPoint { get; set; }
+    public bool isActive { get; set; }
 }

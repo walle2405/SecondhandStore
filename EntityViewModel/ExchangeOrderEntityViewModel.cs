@@ -2,13 +2,15 @@
 {
     public class ExchangeOrderEntityViewModel
     {
-        public int OrderDetailId { get; set; }
-        public string ReceiverId { get; set; }
-        public string AccountId { get; set; }
-        public DateTime OrderDate { get; set; }
-        public bool OrderStatus { get; set; }
-        public int PostId { get; set; }
-        public string ReceiverPhoneNumber { get; set; }
-        public string ReceiverEmail { get; set; }
+        public int orderId { get; set; }
+        public int? postId { get; set; }
+        public string productName { get; set; }
+        public double price { get; set; }
+        public int buyerId { get; set; }
+        public string buyerName { get; set; }
+        public string buyerPhoneNumber { get; set; }
+        public string buyerEmail { get; set; }
+        public DateTime orderDate { get; set; }
+        public string orderStatusName { get; set; }
     }
 }

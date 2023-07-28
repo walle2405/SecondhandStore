@@ -1,46 +1,34 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecondhandStore.EntityRequest;
+using SecondhandStore.EntityViewModel;
 using SecondhandStore.Models;
-using SecondhandStore.Repository;
 using SecondhandStore.Services;
 
 namespace SecondhandStore.Controllers
 {
+    [ApiController]
     public class ReviewController : ControllerBase
     {
         private readonly ReviewService _reviewService;
         private readonly IMapper _mapper;
-
-        public ReviewController(ReviewService reviewService, IMapper mapper)
-        {
+        public ReviewController(ReviewService reviewService, IMapper mapper) {
             _reviewService = reviewService;
             _mapper = mapper;
         }
-
-        [HttpGet]
-        [Route("api/[controller]/get-review-list")]
-        public async Task<IActionResult> GetReviewList()
-        {
-            var reviewList = await _reviewService.GetAllReview();
-
-            if (!reviewList.Any())
-                return NotFound();
-
-            return Ok(reviewList);
-        }
-
-        [HttpPost]
-        [Route("api/[controller]/create-review")]
-        public async Task<IActionResult> Review(ReviewCreateRequest reviewCreateRequest)
-        {
+        [HttpPost("submit-review")]
+        [Authorize(Roles = "US")]
+        public async Task<IActionResult> SubmitReviewForUser(ReviewCreateRequest reviewCreateRequest) {
+            var userId = User.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == "accountId")?.Value ?? string.Empty;
+            int parseUserId = Int32.Parse(userId);
             var mappedReview = _mapper.Map<Review>(reviewCreateRequest);
-
+            mappedReview.ReviewerId = parseUserId;
+            mappedReview.CreatedDate = DateTime.Now;
             await _reviewService.AddReview(mappedReview);
-
-            return CreatedAtAction(nameof(GetReviewList),
-                new { id = mappedReview.ReviewId },
-                mappedReview);
+            return Ok("Send successfully!");
         }
     }
+    
 }

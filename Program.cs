@@ -1,5 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using SecondhandStore.Infrastructure;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using SecondhandStore.Extension;
 using SecondhandStore.ServiceExtension;
 using SecondhandStore.Services;
 
@@ -22,7 +26,14 @@ builder.Services.AddCors(options =>
 
 var config = builder.Configuration;
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ContractResolver =
+            new DefaultContractResolver();
+        options.SerializerSettings.ReferenceLoopHandling =
+            ReferenceLoopHandling.Ignore;
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -54,18 +65,8 @@ builder.Services.AddResponseCaching(options =>
     options.UseCaseSensitivePaths = true;
 });
 
-builder.Services.AddCors(o =>
-{
-    o.AddPolicy("AllowAnyOrigin", corsPolicyBuilder =>
-    {
-        corsPolicyBuilder
-            .SetIsOriginAllowed(x => _ = true)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-});
-
+// Retrive information from appsettings.json for Email 
+EmailSettingModel.Instance = config.GetSection("EmailSettings").Get<EmailSettingModel>();
 
 var app = builder.Build();
 
